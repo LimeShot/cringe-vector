@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Wpf;
 
-namespace CringeCraft.Client;
+namespace CringeCraft.Client.View;
 
 public partial class MainWindow : Window {
     public MainWindow() {
