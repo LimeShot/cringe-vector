@@ -12,11 +12,8 @@ using System.Windows.Shapes;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Wpf;
 
-namespace CringeCraft.Client;
+namespace CringeCraft.Client.View;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window {
     public MainWindow() {
         InitializeComponent();
@@ -29,7 +26,7 @@ public partial class MainWindow : Window {
 
     private void OnRender(TimeSpan delta) {
         Random random = new Random();
-        GL.ClearColor(new OpenTK.Mathematics.Color4((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble(), 1f));
+        GL.ClearColor(new OpenTK.Mathematics.Color4((float)random.NextDouble() * 0.5f, (float)random.NextDouble() * 0.5f, (float)random.NextDouble() * 0.5f, 1f));
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
     }
 }

@@ -12,4 +12,10 @@
     <PackageReference Include="OpenTK.GLWpfControl" Version="4.3.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="obj\$(Configuration)\$(TargetFramework)\View\*.g.cs">
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
 </Project>
