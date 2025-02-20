@@ -1,6 +1,11 @@
 using OpenTK.Mathematics;
 
+using System.Composition;
+
 namespace CringeCraft.GeometryDash.Shape;
+
+[Export(typeof(IShape))]
+[ExportMetadata("Name", "Ellipse")]
 
 public class Ellipse : IShape {
     public Vector2 Translate { set; get; }

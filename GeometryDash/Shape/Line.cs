@@ -1,6 +1,12 @@
 using OpenTK.Mathematics;
 
+using System.Composition;
+
 namespace CringeCraft.GeometryDash.Shape;
+
+[Export(typeof(IShape))]
+[ExportMetadata("Name", "Line")]
+
 
 public class Line : IShape {
     public Vector2 Translate { set; get; }

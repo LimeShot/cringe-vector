@@ -1,6 +1,11 @@
 using OpenTK.Mathematics;
 
+using System.Composition;
+
 namespace CringeCraft.GeometryDash.Shape;
+
+[Export(typeof(IShape))]
+[ExportMetadata("Name", "Rectangle")]
 
 public class Rectangle : IShape {
     public Vector2 Translate { set; get; }
