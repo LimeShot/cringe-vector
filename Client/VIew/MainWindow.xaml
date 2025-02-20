@@ -12,12 +12,23 @@
 
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_New"/>
-                <MenuItem Header="_Save"/>
-                <MenuItem Header="_Open"/>
+            <MenuItem Header="_Файл">
+                <MenuItem Header="_Создать"></MenuItem>
+                <MenuItem Header="_Сохранить"></MenuItem>
+                <MenuItem Header="_Открыть"></MenuItem>
             </MenuItem>
         </Menu>
+
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="Холст: 500x500"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="Нет выделения"/>
+            </StatusBarItem>
+        </StatusBar>
+
         <Grid>
             <glWpfControl:GLWpfControl
                 x:Name="OpenTkControl"
@@ -25,11 +36,11 @@
 
             <Border
                 BorderThickness="1"
-                CornerRadius="8"
+                CornerRadius="2"
                 Background="#ccefefef"
-                Width="110"
-                Margin="10"
-                Padding="10"
+                Width="75"
+                Margin="5"
+                Padding="5"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top">
 
@@ -40,20 +51,20 @@
 
                 <WrapPanel
                     HorizontalAlignment="Center">
-                    <ToggleButton  Width="40"
-                                   Height="40"
+                    <ToggleButton  Width="30"
+                                   Height="30"
                                    Content="a"/>
-                    <ToggleButton  Width="40"
-                                   Height="40"
+                    <ToggleButton  Width="30"
+                                   Height="30"
                                    Content="b"/>
-                    <ToggleButton  Width="40"
-                                   Height="40"
+                    <ToggleButton  Width="30"
+                                   Height="30"
                                    Content="o"/>
-                    <ToggleButton  Width="40"
-                                   Height="40"
+                    <ToggleButton  Width="30"
+                                   Height="30"
                                    Content="b"/>
-                    <ToggleButton  Width="40"
-                                   Height="40"
+                    <ToggleButton  Width="30"
+                                   Height="30"
                                    Content="a"/>
                 </WrapPanel>
             </Border>
