@@ -1,4 +1,4 @@
-namespace Tools;
+namespace CringeCraft.Client.Model.Tools;
 
 public class ToolController {
     
