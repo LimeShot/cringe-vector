@@ -12,7 +12,7 @@ using CringeCraft.Client.Render;
 namespace CringeCraft.Client.ViewModel;
 public partial class MainViewModel : ObservableObject {
 
-    private readonly ToolController _toolController;
+    // private readonly ToolController _toolController;
 
     private readonly Canvas _canvas;
 
@@ -25,13 +25,13 @@ public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
     private string _statusMessage = "Готово";
     
-    [RelayCommand]
-    private void ClickTool(string tool) {
-        _toolController.ChangeTool(tool);
-    }
+    // [RelayCommand]
+    // private void ClickTool(string tool) {
+    //     _toolController.ChangeTool(tool);
+    // }
 
     public MainViewModel(RenderingService renderingService) {
-        _toolController = new ToolController();
+        // _toolController = new ToolController();
         _renderingService = renderingService;
         _canvas = new Canvas();
         _shapes = new ObservableCollection<IShape>(_canvas.Shapes);
