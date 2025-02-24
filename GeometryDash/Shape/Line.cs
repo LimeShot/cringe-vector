@@ -11,26 +11,16 @@ namespace CringeCraft.GeometryDash.Shape;
 public class Line : IShape {
     public Vector2 Translate { set; get; }
     public float Rotate { set; get; }
-    public float Scale { set; get; }
     public ShapeStyle Style { set; get; }
 
     public Vector2 Point1 { set; get; }
     public Vector2 Point2 { set; get; }
 
-    public Line() {
-        Translate = (0.0f, 0.0f);
+    public Line(float x1, float y1, float x2, float y2, ShapeStyle? shapeStyle = null) {
+        Translate = ((x1 + x2) / 2, (y1 + y2) / 2);
         Rotate = 0.0f;
-        Scale = 1.0f;
-        Style = new ShapeStyle();
-        Point1 = new(1.0f, 1.0f);
-        Point2 = new(-1.0f, -1.0f);
-    }
-
-    public Line(float x1, float y1, float x2, float y2, Vector2 translate, float rotate, float scale, Vector3 colorOutline, Vector3 colorFill, bool fill, bool visible) {
-        Translate = translate;
-        Rotate = rotate;
-        Scale = scale;
-        Style = new ShapeStyle(colorOutline, colorFill, fill, visible);
+        //Надо проверить, не будет ли засорятся память
+        Style = shapeStyle ?? new ShapeStyle();
         Point1 = new(x1, y1);
         Point2 = new(x2, y2);
     }
