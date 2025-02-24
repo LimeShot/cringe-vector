@@ -8,7 +8,6 @@ namespace CringeCraft.GeometryDash.Shape;
 public interface IShape {
     public Vector2 Translate { set; get; }
     public float Rotate { set; get; }
-    public float Scale { set; get; }
     public ShapeStyle Style { set; get; }
 
     //Метод возвращает линии фигуры(без заполнения(Fill=false))
