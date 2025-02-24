@@ -6,13 +6,13 @@ namespace CringeCraft.GeometryDash.Shape;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Ellipse")]
+[ExportMetadata("Icon", "Ellipse.png")]
 
 public class Ellipse : IShape {
     public Vector2 Translate { set; get; }
     public float Rotate { set; get; }
     public float Scale { set; get; }
     public ShapeStyle Style { set; get; }
-    public static string Icon => "Ellipse.png";
     public Vector2 Size { set; get; }
 
     public Ellipse() {

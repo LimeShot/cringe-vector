@@ -10,7 +10,6 @@ public interface IShape {
     public float Rotate { set; get; }
     public float Scale { set; get; }
     public ShapeStyle Style { set; get; }
-    public static string Icon { get => "Shape.png"; }
 
     //Метод возвращает линии фигуры(без заполнения(Fill=false))
     //необходимые для отрисовки
