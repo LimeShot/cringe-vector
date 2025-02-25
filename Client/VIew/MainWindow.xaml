@@ -32,8 +32,7 @@
 
         <Grid>
             <glWpfControl:GLWpfControl
-                x:Name="OpenTkControl"
-                Render="OnRender"/>
+                x:Name="OpenTkControl"/>
 
             <Border
                 BorderThickness="1"

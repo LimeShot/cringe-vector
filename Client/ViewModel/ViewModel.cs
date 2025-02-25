@@ -74,7 +74,7 @@ public partial class MainViewModel : ObservableObject {
     }
 
     public void InitializeOpenGL() {
-        _renderingService.InitializeOpenGL(StatusMessage);
+        _renderingService.Initialize();
     }
 
     public void Render(TimeSpan timeSpan) {

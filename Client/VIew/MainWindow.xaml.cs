@@ -33,10 +33,4 @@ public partial class MainWindow : Window {
         };
         OpenTkControl.Start(settings);
     }
-
-    private void OnRender(TimeSpan delta) {
-        Random random = new Random();
-        GL.ClearColor(new OpenTK.Mathematics.Color4((float)random.NextDouble() * 0.5f, (float)random.NextDouble() * 0.5f, (float)random.NextDouble() * 0.5f, 1f));
-        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-    }
 }
