@@ -7,9 +7,10 @@ using OpenTK.Mathematics;
 namespace CringeCraft.GeometryDash.Shape;
 
 public interface IShape: INotifyPropertyChanged {
-    public Vector2 Translate { set; get; }
-    public float Rotate { set; get; }
-    public ShapeStyle Style { set; get; }
+    
+    //public Vector2 Translate { set; get; }
+    //public float Rotate { set; get; }
+    //public ShapeStyle Style { set; get; }
 
     //Метод возвращает линии фигуры(без заполнения(Fill=false))
     //необходимые для отрисовки

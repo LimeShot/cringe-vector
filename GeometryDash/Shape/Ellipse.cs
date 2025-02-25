@@ -9,7 +9,7 @@ namespace CringeCraft.GeometryDash.Shape;
 [ExportMetadata("Name", "Ellipse")]
 [ExportMetadata("Icon", "Ellipse.png")]
 
-public class Ellipse : ObservableObject, IShape {
+public partial class Ellipse : ObservableObject, IShape {
     
     [ObservableProperty]
     private Vector2 _translate;
