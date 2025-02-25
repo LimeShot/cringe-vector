@@ -26,14 +26,28 @@ public partial class Line : ObservableObject, IShape {
     [ObservableProperty]
     private Vector2 _point2;
 
+    public Line() {
+        Translate = Vector2.Zero;
+        Rotate = 0.0f;
+        Style = new ShapeStyle();
+        Point1 = Vector2.Zero;
+        Point2 = Vector2.Zero;
+    }
+
     public Line(Vector2 p1, Vector2 p2, ShapeStyle? shapeStyle = null) {
         Translate = ((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
-        float lenDev2 = (float)MathHelper.Sqrt(MathHelper.Pow(p1.X - Translate.X, 2) + MathHelper.Pow(p2.Y - Translate.Y, 2));
-        Rotate = (float)MathHelper.Acos(lenDev2 / (p2.X - Translate.X));
         //Надо проверить, не будет ли засорятся память
         Style = shapeStyle ?? new ShapeStyle();
-        Point1 = (Translate.X - lenDev2, Translate.Y);
-        Point2 = (Translate.X - lenDev2, Translate.Y);
+        float lenDev2 = (p2 - p1).Length / 2;
+        if (p1.X > p2.X) {
+            Rotate = (float)MathHelper.Acos(lenDev2 / (p1.X - Translate.X));
+            Point1 = (lenDev2, 0.0f);
+            Point2 = (-lenDev2, 0.0f);
+        } else {
+            Rotate = (float)MathHelper.Acos(lenDev2 / (p2.X - Translate.X));
+            Point1 = (-lenDev2, 0.0f);
+            Point2 = (lenDev2, 0.0f);
+        }
     }
 
     public float[] GetLineVertices() {
