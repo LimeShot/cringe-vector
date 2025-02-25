@@ -40,4 +40,18 @@ public class Ellipse : IShape {
         */
         return [];
     }
+    public bool ContainsPoint(Vector2 point) {
+        float dx = point.X - Translate.X;
+        float dy = point.Y - Translate.Y;
+
+        float angle = -MathHelper.DegreesToRadians(Rotate);
+
+        float xRot = dx * MathF.Cos(angle) - dy * MathF.Sin(angle);
+        float yRot = dx * MathF.Sin(angle) + dy * MathF.Cos(angle);
+
+        float a = Size.X / 2;
+        float b = Size.Y / 2;
+
+        return (xRot * xRot) / (a * a) + (yRot * yRot) / (b * b) <= 1;
+    }
 }

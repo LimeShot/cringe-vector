@@ -58,4 +58,20 @@ public class Rectangle : IShape {
                 new(-Size.X / 2, Size.Y / 2),
                 new(Size.X / 2, Size.Y / 2)];
     }
+    public bool ContainsPoint(Vector2 point) {
+
+        Vector2 localPoint = point - Translate;
+
+        float angle = -MathHelper.DegreesToRadians(Rotate);
+
+        float xRot = localPoint.X * MathF.Cos(angle) - localPoint.Y * MathF.Sin(angle);
+        float yRot = localPoint.X * MathF.Sin(angle) + localPoint.Y * MathF.Cos(angle);
+
+        float halfWidth = Size.X / 2;
+        float halfHeight = Size.Y / 2;
+
+        return (xRot >= -halfWidth && xRot <= halfWidth &&
+                yRot >= -halfHeight && yRot <= halfHeight);
+    }
+
 }

@@ -19,4 +19,7 @@ public interface IShape {
     public float[] GetTriangleVertices();
 
     public Vector2[] GetBoundingBox();
+
+    //Метод для проверки принадлежности точки фигуре 
+    public bool ContainsPoint(Vector2 point);
 }
