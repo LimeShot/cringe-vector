@@ -1,6 +1,7 @@
 using OpenTK.Mathematics;
 
 using System.Composition;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CringeCraft.GeometryDash.Shape;
 
@@ -8,11 +9,19 @@ namespace CringeCraft.GeometryDash.Shape;
 [ExportMetadata("Name", "Rectangle")]
 [ExportMetadata("Icon", "Rectangle.png")]
 
-public class Rectangle : IShape {
-    public Vector2 Translate { set; get; }
-    public float Rotate { set; get; }
-    public ShapeStyle Style { set; get; }
-    public Vector2 Size { set; get; }
+public partial class Rectangle : ObservableObject, IShape {
+    
+    [ObservableProperty]
+    private Vector2 _translate;
+
+    [ObservableProperty]
+    private float _rotate;
+
+    [ObservableProperty]
+    public ShapeStyle _style;
+
+    [ObservableProperty]
+    public Vector2 _size;
 
     public Rectangle() {
         Translate = (0.0f, 0.0f);

@@ -1,14 +1,21 @@
 using CringeCraft.GeometryDash.Shape;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CringeCraft.Client.Model.Canvas;
 /// <summary>
 /// Представляет холст для хранения фигур
 /// </summary>
-public class Canvas {
-    public readonly List<IShape> Shapes;
+public partial class MyCanvas: ObservableObject {
 
-    public Canvas() {
-        Shapes = new List<IShape>();
+    [ObservableProperty]
+    private ObservableCollection<IShape> _shapes = new ObservableCollection<IShape>();
+    public float LengthCanvas {get; set;}
+    public float WeightCanvas {get; set;}
+    public MyCanvas() {
+        LengthCanvas = 500;
+        WeightCanvas = 500;
     }
 
     public void AddShape(IShape shape) {

@@ -20,7 +20,7 @@ public partial class MainWindow : Window {
     public MainWindow() {
         InitializeComponent();
 
-        MainViewModel WViewModel = new MainViewModel(new RenderingService());
+        MainViewModel WViewModel = new MainViewModel(new RenderingService(), this);
         DataContext = WViewModel;
 
         OpenTkControl.Ready += WViewModel.InitializeOpenGL;

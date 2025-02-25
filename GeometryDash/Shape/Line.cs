@@ -1,6 +1,7 @@
 using OpenTK.Mathematics;
 
 using System.Composition;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CringeCraft.GeometryDash.Shape;
 
@@ -8,13 +9,22 @@ namespace CringeCraft.GeometryDash.Shape;
 [ExportMetadata("Name", "Line")]
 [ExportMetadata("Icon", "Line.png")]
 
-public class Line : IShape {
-    public Vector2 Translate { set; get; }
-    public float Rotate { set; get; }
-    public ShapeStyle Style { set; get; }
+public partial class Line : ObservableObject, IShape {
+    
+    [ObservableProperty]
+    private Vector2 _translate;
 
-    public Vector2 Point1 { set; get; }
-    public Vector2 Point2 { set; get; }
+    [ObservableProperty]
+    private float _rotate;
+
+    [ObservableProperty]
+    public ShapeStyle _style;
+
+    [ObservableProperty]
+    private Vector2 _point1;
+
+    [ObservableProperty]
+    private Vector2 _point2;
 
     public Line(float x1, float y1, float x2, float y2, ShapeStyle? shapeStyle = null) {
         Translate = ((x1 + x2) / 2, (y1 + y2) / 2);
