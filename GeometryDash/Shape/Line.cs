@@ -59,4 +59,13 @@ public class Line : IShape {
         Vector2 closestPoint = localP1 + projection * lineVec;
         return (localPoint - closestPoint).Length < 0.01f;
     }
+    public void Move(float x1, float y1, float x2, float y2) {
+        float deltaX = x2 - x1;
+        float deltaY = y2 - y1;
+
+        Translate += new Vector2(deltaX, deltaY);
+
+        Point1 += new Vector2(deltaX, deltaY);
+        Point2 += new Vector2(deltaX, deltaY);
+    }
 }

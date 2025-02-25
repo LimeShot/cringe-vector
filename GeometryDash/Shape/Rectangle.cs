@@ -73,5 +73,11 @@ public class Rectangle : IShape {
         return (xRot >= -halfWidth && xRot <= halfWidth &&
                 yRot >= -halfHeight && yRot <= halfHeight);
     }
+    public void Move(float x1, float y1, float x2, float y2) {
+        float deltaX = x2 - x1;
+        float deltaY = y2 - y1;
+
+        Translate += new Vector2(deltaX, deltaY);
+    }
 
 }
