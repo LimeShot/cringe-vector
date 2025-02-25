@@ -21,14 +21,14 @@ public class Ellipse : IShape {
         Size = new(1.0f, 1.0f);
     }
 
-    public Vector2[] GetLineVertices() {
+    public float[] GetLineVertices() {
         /* TODO 
         Разобраться, что должен возвращать этот метод у элипса
         */
         return [];
     }
 
-    public Vector2[] GetTriangleVertices() {
+    public float[] GetTriangleVertices() {
         /* TODO 
         Разобраться, что должен возвращать этот метод у элипса
         */

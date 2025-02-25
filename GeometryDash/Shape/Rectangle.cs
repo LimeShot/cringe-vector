@@ -22,40 +22,40 @@ public class Rectangle : IShape {
     }
 
 
-    public Vector2[] GetLineVertices() {
-        return [new(Translate.X + Size.X / 2, Translate.Y + Size.Y / 2),
-                new(Translate.X + Size.X / 2, Translate.Y - Size.Y / 2),
+    public float[] GetLineVertices() {
+        return [Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+                Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
 
-                new(Translate.X + Size.X / 2, Translate.Y - Size.Y / 2),
-                new(Translate.X - Size.X / 2, Translate.Y - Size.Y / 2),
+                Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+                -Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
 
-                new(Translate.X - Size.X / 2, Translate.Y - Size.Y / 2),
-                new(Translate.X - Size.X / 2, Translate.Y + Size.Y / 2),
+                -Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+                -Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
 
-                new(Translate.X - Size.X / 2, Translate.Y + Size.Y / 2),
-                new(Translate.X + Size.X / 2, Translate.Y + Size.Y / 2)];
+                -Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+                Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
     }
 
-    public Vector2[] GetTriangleVertices() {
-        return [new(Translate.X + Size.X / 2, Translate.Y + Size.Y / 2),
-                new(Translate.X + Size.X / 2, Translate.Y - Size.Y / 2),
-                new(Translate.X - Size.X / 2, Translate.Y - Size.Y / 2),
+    public float[] GetTriangleVertices() {
+        return [Size.X / 2, Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+                Size.X / 2, -Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+                -Size.X / 2, -Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
 
-                new(Translate.X + Size.X / 2, Translate.Y + Size.Y / 2),
-                new(Translate.X - Size.X / 2, Translate.Y - Size.Y / 2),
-                new(Translate.X - Size.X / 2, Translate.Y + Size.Y / 2)];
+                Size.X / 2, Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+                -Size.X / 2, -Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+                -Size.X / 2, Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z];
     }
     public Vector2[] GetBoundingBox() {
-        return [new(Translate.X + Size.X / 2, Translate.Y + Size.Y / 2),
-                new(Translate.X + Size.X / 2, Translate.Y - Size.Y / 2),
+        return [new(Size.X / 2, Size.Y / 2),
+                new(Size.X / 2, -Size.Y / 2),
 
-                new(Translate.X + Size.X / 2, Translate.Y - Size.Y / 2),
-                new(Translate.X - Size.X / 2, Translate.Y - Size.Y / 2),
+                new(Size.X / 2, -Size.Y / 2),
+                new(-Size.X / 2, -Size.Y / 2),
 
-                new(Translate.X - Size.X / 2, Translate.Y - Size.Y / 2),
-                new(Translate.X - Size.X / 2, Translate.Y + Size.Y / 2),
+                new(-Size.X / 2, Size.Y / 2),
+                new(-Size.X / 2, Size.Y / 2),
 
-                new(Translate.X - Size.X / 2, Translate.Y + Size.Y / 2),
-                new(Translate.X + Size.X / 2, Translate.Y + Size.Y / 2)];
+                new(-Size.X / 2, Size.Y / 2),
+                new(Size.X / 2, Size.Y / 2)];
     }
 }

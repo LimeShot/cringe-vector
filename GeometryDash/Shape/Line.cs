@@ -25,16 +25,16 @@ public class Line : IShape {
         Point2 = new(x2, y2);
     }
 
-    public Vector2[] GetLineVertices() {
-        return [new(Translate.X + Point1.X, Translate.Y + Point1.Y),
-                new(Translate.X + Point2.X, Translate.Y + Point2.Y)];
+    public float[] GetLineVertices() {
+        return [Point1.X, Point1.Y, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+                Point2.X, Point2.Y, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
     }
 
-    public Vector2[] GetTriangleVertices() {
+    public float[] GetTriangleVertices() {
         return [];
     }
     public Vector2[] GetBoundingBox() {
-        return [new(Translate.X + Point1.X, Translate.Y + Point1.Y),
-                new(Translate.X + Point2.X, Translate.Y + Point2.Y)];
+        return [new(Point1.X, Point1.Y),
+                new(Point2.X, Point2.Y)];
     }
 }
