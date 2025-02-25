@@ -24,6 +24,7 @@ public partial class MainWindow : Window {
         DataContext = WViewModel;
 
         MainWindowElement.SizeChanged += WViewModel.Resize;
+        MainWindowElement.Closing += WViewModel.Closing;
         OpenTkControl.Ready += WViewModel.InitializeOpenGL;
         OpenTkControl.Render += WViewModel.Render;
 

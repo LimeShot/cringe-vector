@@ -85,6 +85,10 @@ public partial class MainViewModel : ObservableObject {
         _renderingService.OnResize((int)args.NewSize.Width, (int)args.NewSize.Height);
     }
 
+    public void Closing(object? sender, System.ComponentModel.CancelEventArgs e) {
+        _renderingService.Cleanup();
+    }
+
     // 🟢 Кнопки для добавления фигуры
     private void CreateButtons() {
         foreach (string typeShape in ShapeFabric.AvailableShapes) {

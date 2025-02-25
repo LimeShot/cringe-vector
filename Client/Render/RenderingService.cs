@@ -105,4 +105,15 @@ public class RenderingService {
         _projection = Matrix4.CreateOrthographicOffCenter(-aspect, aspect, -1, 1, -1, 1);
         _view = Matrix4.Identity;
     }
+
+    public void Cleanup() {
+        if (_vaoLine != null) {
+            _vaoLine.Dispose();
+            _vaoLine = null;
+        }
+        if (_shaderLine != null) {
+            _shaderLine.Dispose();
+            _shaderLine = null;
+        }
+    }
 }
