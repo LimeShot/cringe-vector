@@ -1,36 +1,45 @@
 using System.Composition;
 using System.Composition.Hosting;
+using System.Diagnostics;
 
 namespace CringeCraft.GeometryDash.Shape;
 
-public interface ShapeMetadata {
-    string Name { get; }
+public class ShapeMetadata {
+    public string Name { get; init; } = string.Empty;
+    public string Icon { get; init; } = string.Empty;
 }
 
 public static class ShapeFabric {
-    class ImportInfo {
+    private class ImportInfo {
         [ImportMany]
-        public IEnumerable<Lazy<IShape, ShapeMetadata>> AvailableFigures { get; set; } = [];
+        public IEnumerable<Lazy<IShape, ShapeMetadata>> AvailableShapes { get; set; } = [];
     }
-    static readonly ImportInfo info;
+
+    private static readonly ImportInfo info = new();
+
     static ShapeFabric() {
-        //Возможен CRINGE, если другие классы содержатся в других сборках
-        var assemblies = new[] { typeof(Line).Assembly };
-        var conf = new ContainerConfiguration();
         try {
-            conf = conf.WithAssemblies(assemblies);
-        } catch (Exception) {
-            // ignored
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var conf = new ContainerConfiguration().WithAssemblies(assemblies);
+            using var cont = conf.CreateContainer();
+            cont.SatisfyImports(info);
+        } catch (Exception ex) {
+            Debug.WriteLine($"Error loading assemblies: {ex.Message}");
         }
-
-        var cont = conf.CreateContainer();
-        info = new ImportInfo();
-        cont.SatisfyImports(info);
     }
 
-    public static IEnumerable<string> AvailableFigures => info.AvailableFigures.Select(f => f.Metadata.Name);
-    //Выбирает конструктор без параметров
-    public static IShape CreateFigure(string FigureName) {
-        return info.AvailableFigures.First(f => f.Metadata.Name == FigureName).Value;
+    public static IEnumerable<string> AvailableShapes => info.AvailableShapes.Select(f => f.Metadata.Name);
+    public static IEnumerable<string> AvailableShapesIcon => info.AvailableShapes.Select(f => f.Metadata.Icon);
+
+    public static IShape? CreateShape(string shapeName, params object[] args) {
+        var shapeInfo = info.AvailableShapes.FirstOrDefault(f => f.Metadata.Name == shapeName);
+        if (shapeInfo == null) return null;
+
+        try {
+            return (IShape?)Activator.CreateInstance(shapeInfo.Value.GetType(), args);
+        } catch (Exception ex) {
+            Debug.WriteLine($"Error creating shape {shapeName}: {ex.Message}");
+            return null;
+        }
     }
 }

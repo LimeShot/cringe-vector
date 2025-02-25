@@ -6,46 +6,35 @@ namespace CringeCraft.GeometryDash.Shape;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Line")]
-
+[ExportMetadata("Icon", "Line.png")]
 
 public class Line : IShape {
     public Vector2 Translate { set; get; }
     public float Rotate { set; get; }
-    public float Scale { set; get; }
     public ShapeStyle Style { set; get; }
-    public static string Icon => "Line.png";
 
     public Vector2 Point1 { set; get; }
     public Vector2 Point2 { set; get; }
 
-    public Line() {
-        Translate = (0.0f, 0.0f);
+    public Line(float x1, float y1, float x2, float y2, ShapeStyle? shapeStyle = null) {
+        Translate = ((x1 + x2) / 2, (y1 + y2) / 2);
         Rotate = 0.0f;
-        Scale = 1.0f;
-        Style = new ShapeStyle();
-        Point1 = new(1.0f, 1.0f);
-        Point2 = new(-1.0f, -1.0f);
-    }
-
-    public Line(float x1, float y1, float x2, float y2, Vector2 translate, float rotate, float scale, Vector3 colorOutline, Vector3 colorFill, bool fill, bool visible) {
-        Translate = translate;
-        Rotate = rotate;
-        Scale = scale;
-        Style = new ShapeStyle(colorOutline, colorFill, fill, visible);
+        //Надо проверить, не будет ли засорятся память
+        Style = shapeStyle ?? new ShapeStyle();
         Point1 = new(x1, y1);
         Point2 = new(x2, y2);
     }
 
-    public Vector2[] GetLineVertices() {
-        return [new(Translate.X + Point1.X, Translate.Y + Point1.Y),
-                new(Translate.X + Point2.X, Translate.Y + Point2.Y)];
+    public float[] GetLineVertices() {
+        return [Point1.X, Point1.Y, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+                Point2.X, Point2.Y, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
     }
 
-    public Vector2[] GetTriangleVertices() {
+    public float[] GetTriangleVertices() {
         return [];
     }
     public Vector2[] GetBoundingBox() {
-        return [new(Translate.X + Point1.X, Translate.Y + Point1.Y),
-                new(Translate.X + Point2.X, Translate.Y + Point2.Y)];
+        return [new(Point1.X, Point1.Y),
+                new(Point2.X, Point2.Y)];
     }
 }
