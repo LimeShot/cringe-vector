@@ -1,11 +1,12 @@
 ﻿using System.Data;
 using System.Runtime.CompilerServices;
+using System.ComponentModel;
 
 using OpenTK.Mathematics;
 
 namespace CringeCraft.GeometryDash.Shape;
 
-public interface IShape {
+public interface IShape: INotifyPropertyChanged {
     public Vector2 Translate { set; get; }
     public float Rotate { set; get; }
     public ShapeStyle Style { set; get; }
