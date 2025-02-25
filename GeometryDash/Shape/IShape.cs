@@ -6,8 +6,8 @@ using OpenTK.Mathematics;
 
 namespace CringeCraft.GeometryDash.Shape;
 
-public interface IShape: INotifyPropertyChanged {
-    
+public interface IShape : INotifyPropertyChanged {
+
     public Vector2 Translate { set; get; }
     public float Rotate { set; get; }
     public ShapeStyle Style { set; get; }
@@ -27,6 +27,4 @@ public interface IShape: INotifyPropertyChanged {
 
     // Метод для перемещения фигуры на основе разницы между двумя точками
     public void Move(float x1, float y1, float x2, float y2);
-}
-
 }
