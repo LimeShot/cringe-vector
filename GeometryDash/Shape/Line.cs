@@ -10,7 +10,7 @@ namespace CringeCraft.GeometryDash.Shape;
 [ExportMetadata("Icon", "Line.png")]
 
 public partial class Line : ObservableObject, IShape {
-    
+
     [ObservableProperty]
     private Vector2 _translate;
 
@@ -26,13 +26,14 @@ public partial class Line : ObservableObject, IShape {
     [ObservableProperty]
     private Vector2 _point2;
 
-    public Line(float x1, float y1, float x2, float y2, ShapeStyle? shapeStyle = null) {
-        Translate = ((x1 + x2) / 2, (y1 + y2) / 2);
-        Rotate = 0.0f;
+    public Line(Vector2 p1, Vector2 p2, ShapeStyle? shapeStyle = null) {
+        Translate = ((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
+        float lenDev2 = (float)MathHelper.Sqrt(MathHelper.Pow(p1.X - Translate.X, 2) + MathHelper.Pow(p2.Y - Translate.Y, 2));
+        Rotate = (float)MathHelper.Acos(lenDev2 / (p2.X - Translate.X));
         //Надо проверить, не будет ли засорятся память
         Style = shapeStyle ?? new ShapeStyle();
-        Point1 = new(x1, y1);
-        Point2 = new(x2, y2);
+        Point1 = (Translate.X - lenDev2, Translate.Y);
+        Point2 = (Translate.X - lenDev2, Translate.Y);
     }
 
     public float[] GetLineVertices() {
