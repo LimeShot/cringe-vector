@@ -82,7 +82,7 @@ public partial class MainViewModel : ObservableObject {
     }
 
     public void Resize(object sender, SizeChangedEventArgs args) {
-        Console.WriteLine($"Resize: {args.PreviousSize} -> {args.NewSize}");
+        _renderingService.OnResize((int)args.NewSize.Width, (int)args.NewSize.Height);
     }
 
     // 🟢 Кнопки для добавления фигуры
