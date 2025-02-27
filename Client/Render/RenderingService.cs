@@ -1,6 +1,7 @@
 namespace CringeCraft.Client.Render;
 
 using CringeCraft.Client.Model.Canvas;
+using CringeCraft.GeometryDash.Shape;
 
 using ElementalAdventure.Client.Graphics.OpenGL;
 
@@ -227,7 +228,15 @@ public class RenderingService {
         GL.UseProgram(_shaderTriangle.Id);
     }
 
-    public void OnShapesUpdated() {
+    public void OnShapeAdded(IShape shape) {
+        //
+    }
+
+    public void OnShapeUpdated(IShape shape) {
+        //
+    }
+
+    public void OnShapeRemoved(IShape shape) {
         //
     }
 
