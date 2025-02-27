@@ -1,14 +1,21 @@
 namespace CringeCraft.Client.Render;
 
+using CringeCraft.Client.Model.Canvas;
+
 using ElementalAdventure.Client.Graphics.OpenGL;
 
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 public class RenderingService {
+    private readonly MyCanvas _canvas;
     private Shader? _shaderLine, _shaderTriangle, _shaderEllipse;
     private VAO? _vaoLine, _vaoTriangle, _vaoEllipse;
     private Matrix4 _projection = Matrix4.Identity, _view = Matrix4.Identity;
+
+    public RenderingService(MyCanvas Cringe) {
+        _canvas = Cringe;
+    }
 
     public void Initialize() {
         _shaderLine = new Shader(@"

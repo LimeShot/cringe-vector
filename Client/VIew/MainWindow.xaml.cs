@@ -20,7 +20,7 @@ public partial class MainWindow : Window {
     public MainWindow() {
         InitializeComponent();
 
-        MainViewModel WViewModel = new MainViewModel(new RenderingService(), this);
+        MainViewModel WViewModel = new MainViewModel(this);
         DataContext = WViewModel;
 
         MainWindowElement.Closing += WViewModel.Closing;

@@ -1,15 +1,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Specialized;
-
-using CringeCraft.Client.Model.Canvas;
-using System.Printing.IndexedProperties;
-using CringeCraft.GeometryDash.Shape;
-using System.Collections.ObjectModel;
-using CringeCraft.Client.Render;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
+using CringeCraft.Client.Model.Canvas;
+using CringeCraft.GeometryDash;
+using CringeCraft.GeometryDash.Shape;
+using CringeCraft.Client.Render;
+using System.Windows.Shapes;
 
 
 namespace CringeCraft.Client.ViewModel;
@@ -17,33 +16,27 @@ public partial class MainViewModel : ObservableObject {
 
     [ObservableProperty]
     private MyCanvas _canvas;
-
-    [ObservableProperty]
-    private ObservableCollection<IShape> _shapes = new ObservableCollection<IShape>();
-
-
     public Point StartMousePosition { get; set; }
     public Point NextMousePosition { get; set; }
     private readonly RenderingService _renderingService;
     private readonly Window _window;
 
-    // 🟢 Свойство с автоматическим обновлением UI
-    [ObservableProperty]
-    private string _statusMessage = "Готово";
-
-    public string? CurrentTool { get; set; }
+    public string CurrentTool { get; set; }
     private bool _isDragging;
 
-    public MainViewModel(RenderingService renderingService, Window window) {
+    public MainViewModel(Window window) {
         _window = window;
-        _renderingService = renderingService;
+
+        CurrentTool = "GOOOOL";
 
         Canvas = new MyCanvas();
+
         Canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
+
+        _renderingService = new(Canvas);
 
         // Инициализация ViewModelFigures на основе Canvas.Shapes
         foreach (var shape in Canvas.Shapes) {
-            Shapes.Add(shape);
             shape.PropertyChanged += Shapes_PropertyChanged;
         }
     }
@@ -51,14 +44,12 @@ public partial class MainViewModel : ObservableObject {
     private void Shapes_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         if (e.NewItems != null) {
             foreach (IShape newShape in e.NewItems) {
-                Shapes.Add(newShape);
                 newShape.PropertyChanged += Shapes_PropertyChanged; // Подписка на изменения свойств фигур
             }
         }
 
         if (e.OldItems != null) {
             foreach (IShape oldShape in e.OldItems) {
-                Shapes.Remove(oldShape);
                 oldShape.PropertyChanged -= Shapes_PropertyChanged; // Отписка при удалении
             }
         }
@@ -91,7 +82,7 @@ public partial class MainViewModel : ObservableObject {
 
     // 🟢 Кнопки для добавления фигуры
     private void CreateButtons() {
-        foreach (string typeShape in ShapeFabric.AvailableShapes) {
+        foreach (string typeShape in ShapeFactory.AvailableShapes) {
             var button = new Button() {
                 Content = typeShape
             };
@@ -100,7 +91,10 @@ public partial class MainViewModel : ObservableObject {
     }
 
     private void CreateTool() {
-        Canvas.AddShape(ShapeFabric.CreateShape(CurrentTool, 1, 1));
+        var newShape = ShapeFactory.CreateShape(CurrentTool, 1, 1);
+        if (newShape != null) {
+            Canvas.AddShape(newShape);
+        }
     }
 
     [RelayCommand]
