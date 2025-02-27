@@ -23,7 +23,8 @@ public partial class MainWindow : Window {
         MainViewModel WViewModel = new MainViewModel(new RenderingService(), this);
         DataContext = WViewModel;
 
-        MainWindowElement.SizeChanged += WViewModel.Resize;
+        MainWindowElement.Closing += WViewModel.Closing;
+        OpenTkControl.SizeChanged += WViewModel.Resize;
         OpenTkControl.Ready += WViewModel.InitializeOpenGL;
         OpenTkControl.Render += WViewModel.Render;
 
@@ -32,11 +33,5 @@ public partial class MainWindow : Window {
             MinorVersion = 0
         };
         OpenTkControl.Start(settings);
-    }
-
-    private void OnRender(TimeSpan delta) {
-        Random random = new Random();
-        GL.ClearColor(new OpenTK.Mathematics.Color4((float)random.NextDouble() * 0.5f, (float)random.NextDouble() * 0.5f, (float)random.NextDouble() * 0.5f, 1f));
-        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
     }
 }

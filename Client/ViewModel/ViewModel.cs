@@ -74,7 +74,7 @@ public partial class MainViewModel : ObservableObject {
     }
 
     public void InitializeOpenGL() {
-        _renderingService.InitializeOpenGL(StatusMessage);
+        _renderingService.Initialize();
     }
 
     public void Render(TimeSpan timeSpan) {
@@ -82,7 +82,11 @@ public partial class MainViewModel : ObservableObject {
     }
 
     public void Resize(object sender, SizeChangedEventArgs args) {
-        Console.WriteLine($"Resize: {args.PreviousSize} -> {args.NewSize}");
+        _renderingService.OnResize((int)args.NewSize.Width, (int)args.NewSize.Height);
+    }
+
+    public void Closing(object? sender, System.ComponentModel.CancelEventArgs e) {
+        _renderingService.Cleanup();
     }
 
     // 🟢 Кнопки для добавления фигуры
