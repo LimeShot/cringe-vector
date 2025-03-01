@@ -51,14 +51,13 @@ public class Tool {
             Button button = new() {
                 Content = typeShape,
                 Width = 100,
-                Margin = new(5),
+                Margin = new(5)
             };
-            stackPanel.Children.Add(button);
-            // На клик привязываем команду для смены инструмента
             button.Click += (s, e) => {
                 CurrentTool = typeShape;
-                Debug.WriteLine($"Выбран инструмент - {typeShape}");
+                Console.WriteLine($"Выбран инструмент - {typeShape}");
             };
+            stackPanel.Children.Add(button);
         }
     }
 
