@@ -14,9 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="obj\$(Configuration)\$(TargetFramework)\View\*.g.cs">
-      <Visible>false</Visible>
-    </Compile>
+    <Compile Remove="obj\$(Configuration)\$(TargetFramework)\View\*.g.cs"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DesignTimeBuild)' == 'true'">
+    <Compile Include="obj\$(Configuration)\$(TargetFramework)\View\*.g.cs" />
   </ItemGroup>
 
   <ItemGroup>
