@@ -1,4 +1,4 @@
-namespace ElementalAdventure.Client.Graphics.OpenGL;
+namespace CringeCraft.Client.Graphics.OpenGL;
 
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;

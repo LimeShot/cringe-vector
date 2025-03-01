@@ -1,4 +1,4 @@
-namespace ElementalAdventure.Client.Graphics.OpenGL;
+namespace CringeCraft.Client.Graphics.OpenGL;
 
 using OpenTK.Graphics.OpenGL4;
 
@@ -19,9 +19,8 @@ public class VAO : IDisposable {
         _stride = 0;
         _content = [];
 
-        for (int i = 0; i < attribs.Length; i++) {
+        for (int i = 0; i < attribs.Length; i++)
             _stride += attribs[i];
-        }
 
         GL.BindVertexArray(_vao);
         GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);

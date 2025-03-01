@@ -1,16 +1,13 @@
-using OpenTK.Mathematics;
+namespace CringeCraft.GeometryDash.Shape;
 
+using OpenTK.Mathematics;
 using System.Composition;
 using CommunityToolkit.Mvvm.ComponentModel;
-
-namespace CringeCraft.GeometryDash.Shape;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Rectangle")]
 [ExportMetadata("Icon", "Rectangle.png")]
-
 public partial class Rectangle : ObservableObject, IShape {
-    
     [ObservableProperty]
     private Vector2 _translate;
 
@@ -18,57 +15,63 @@ public partial class Rectangle : ObservableObject, IShape {
     private float _rotate;
 
     [ObservableProperty]
-    public ShapeStyle _style;
+    private ShapeStyle _style;
 
     [ObservableProperty]
-    public Vector2 _size;
+    private Vector2 _size;
 
     public Rectangle() {
         Translate = (0.0f, 0.0f);
         Rotate = 0.0f;
-        Style = new ShapeStyle();
+        Style = new();
         Size = new(1.0f, 1.0f);
     }
 
-
     public float[] GetLineVertices() {
-        return [Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
-                Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+        return [
+            Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+            Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
 
-                Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
-                -Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+            Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+            -Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
 
-                -Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
-                -Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+            -Size.X / 2, -Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+            -Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
 
-                -Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
-                Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
+            -Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+            Size.X / 2, Size.Y / 2, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z
+        ];
     }
 
     public float[] GetTriangleVertices() {
-        return [Size.X / 2, Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
-                Size.X / 2, -Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
-                -Size.X / 2, -Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+        return [
+            Size.X / 2, Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+            Size.X / 2, -Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+            -Size.X / 2, -Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
 
-                Size.X / 2, Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
-                -Size.X / 2, -Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
-                -Size.X / 2, Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z];
+            Size.X / 2, Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+            -Size.X / 2, -Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+            -Size.X / 2, Size.Y / 2, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z
+        ];
     }
+
     public Vector2[] GetBoundingBox() {
-        return [new(Size.X / 2, Size.Y / 2),
-                new(Size.X / 2, -Size.Y / 2),
+        return [
+            new(Size.X / 2, Size.Y / 2),
+            new(Size.X / 2, -Size.Y / 2),
 
-                new(Size.X / 2, -Size.Y / 2),
-                new(-Size.X / 2, -Size.Y / 2),
+            new(Size.X / 2, -Size.Y / 2),
+            new(-Size.X / 2, -Size.Y / 2),
 
-                new(-Size.X / 2, Size.Y / 2),
-                new(-Size.X / 2, Size.Y / 2),
+            new(-Size.X / 2, Size.Y / 2),
+            new(-Size.X / 2, Size.Y / 2),
 
-                new(-Size.X / 2, Size.Y / 2),
-                new(Size.X / 2, Size.Y / 2)];
+            new(-Size.X / 2, Size.Y / 2),
+            new(Size.X / 2, Size.Y / 2)
+        ];
     }
-    public bool ContainsPoint(Vector2 point) {
 
+    public bool ContainsPoint(Vector2 point) {
         Vector2 localPoint = point - Translate;
 
         float angle = -MathHelper.DegreesToRadians(Rotate);
@@ -79,14 +82,14 @@ public partial class Rectangle : ObservableObject, IShape {
         float halfWidth = Size.X / 2;
         float halfHeight = Size.Y / 2;
 
-        return (xRot >= -halfWidth && xRot <= halfWidth &&
-                yRot >= -halfHeight && yRot <= halfHeight);
+        return xRot >= -halfWidth && xRot <= halfWidth &&
+            yRot >= -halfHeight && yRot <= halfHeight;
     }
+
     public void Move(float x1, float y1, float x2, float y2) {
         float deltaX = x2 - x1;
         float deltaY = y2 - y1;
 
         Translate += new Vector2(deltaX, deltaY);
     }
-
 }

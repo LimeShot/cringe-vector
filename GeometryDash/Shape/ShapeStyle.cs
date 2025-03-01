@@ -1,6 +1,6 @@
-using OpenTK.Mathematics;
-
 namespace CringeCraft.GeometryDash.Shape;
+
+using OpenTK.Mathematics;
 
 public class ShapeStyle {
     public Vector3 ColorOutline { set; get; }

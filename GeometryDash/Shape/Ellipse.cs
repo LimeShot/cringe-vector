@@ -1,16 +1,13 @@
-using OpenTK.Mathematics;
-
-using System.Composition;
-using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace CringeCraft.GeometryDash.Shape;
+
+using OpenTK.Mathematics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Composition;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Ellipse")]
 [ExportMetadata("Icon", "Ellipse.png")]
-
 public partial class Ellipse : ObservableObject, IShape {
-    
     [ObservableProperty]
     private Vector2 _translate;
 
@@ -26,29 +23,25 @@ public partial class Ellipse : ObservableObject, IShape {
     public Ellipse() {
         Translate = (0.0f, 0.0f);
         Rotate = 0.0f;
-        Style = new ShapeStyle();
+        Style = new();
         Size = new(1.0f, 1.0f);
     }
 
     public float[] GetLineVertices() {
-        /* TODO 
-        Разобраться, что должен возвращать этот метод у элипса
-        */
+        // TODO: Разобраться, что должен возвращать этот метод у элипса
         return [];
     }
 
     public float[] GetTriangleVertices() {
-        /* TODO 
-        Разобраться, что должен возвращать этот метод у элипса
-        */
+        // TODO: Разобраться, что должен возвращать этот метод у элипса
         return [];
     }
+
     public Vector2[] GetBoundingBox() {
-        /* TODO 
-        Разобраться, что должен возвращать этот метод у элипса
-        */
+        // TODO: Разобраться, что должен возвращать этот метод у элипса
         return [];
     }
+
     public bool ContainsPoint(Vector2 point) {
         float dx = point.X - Translate.X;
         float dy = point.Y - Translate.Y;
@@ -63,6 +56,7 @@ public partial class Ellipse : ObservableObject, IShape {
 
         return (xRot * xRot) / (a * a) + (yRot * yRot) / (b * b) <= 1;
     }
+
     public void Move(float x1, float y1, float x2, float y2) {
         float deltaX = x2 - x1;
         float deltaY = y2 - y1;

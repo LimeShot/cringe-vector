@@ -1,9 +1,8 @@
 namespace CringeCraft.Client.Render;
 
+using CringeCraft.Client.Graphics.OpenGL;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash.Shape;
-
-using ElementalAdventure.Client.Graphics.OpenGL;
 
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -19,7 +18,7 @@ public class RenderingService {
     }
 
     public void Initialize() {
-        _shaderLine = new Shader(@"
+        _shaderLine = new(@"
             #version 330 core
 
             layout (location = 0) in vec3 aPos;
@@ -43,9 +42,9 @@ public class RenderingService {
             void main() {
                 FragColor = vec4(VertColor, 1.0);
             }");
-        _vaoLine = new VAO([3, 3]);
+        _vaoLine = new([3, 3]);
 
-        _shaderTriangle = new Shader(@"
+        _shaderTriangle = new(@"
             #version 330 core
 
             layout (location = 0) in vec3 aPos;
@@ -69,9 +68,9 @@ public class RenderingService {
             void main() {
                 FragColor = vec4(VertColor, 1.0);
             }");
-        _vaoTriangle = new VAO([3, 3]);
+        _vaoTriangle = new([3, 3]);
 
-        _shaderEllipse = new Shader(@"
+        _shaderEllipse = new(@"
             #version 330 core
 
             layout (location = 0) in vec3 aPos;
@@ -140,7 +139,7 @@ public class RenderingService {
             void main() {
                 FragColor = vec4(GeomColor, 1.0);
             }");
-        _vaoEllipse = new VAO([3, 2, 3]);
+        _vaoEllipse = new([3, 2, 3]);
 
         _vaoLine.Append([
             -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,

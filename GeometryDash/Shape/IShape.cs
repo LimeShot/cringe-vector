@@ -1,23 +1,18 @@
-﻿using System.Data;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
+﻿namespace CringeCraft.GeometryDash.Shape;
 
 using OpenTK.Mathematics;
 
-namespace CringeCraft.GeometryDash.Shape;
+using System.ComponentModel;
 
 public interface IShape : INotifyPropertyChanged {
-
     public Vector2 Translate { set; get; }
     public float Rotate { set; get; }
     public ShapeStyle Style { set; get; }
 
-    //Метод возвращает линии фигуры(без заполнения(Fill=false))
-    //необходимые для отрисовки
+    //Метод возвращает линии фигуры(без заполнения(Fill=false)), необходимые для отрисовки
     public float[] GetLineVertices();
 
-    //Метод возвращает треугольники(с заполнением(Fill=true))
-    //необходимые для отрисовки фигуры
+    //Метод возвращает треугольники(с заполнением(Fill=true)), необходимые для отрисовки фигуры
     public float[] GetTriangleVertices();
 
     public Vector2[] GetBoundingBox();
