@@ -9,6 +9,7 @@ using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Render;
 using CringeCraft.Client.Model.Tool;
+using CringeCraft.Client.View;
 
 
 namespace CringeCraft.Client.ViewModel;
@@ -22,21 +23,21 @@ public partial class MainViewModel : ObservableObject {
     public Point StartMousePosition { get; set; }
     public Point NextMousePosition { get; set; }
     private readonly RenderingService _renderingService;
-    private readonly Window _window;
+    private readonly MainWindow _window;
     private bool _isDragging;
 
-    public MainViewModel(Window window) {
+    public MainViewModel(MainWindow window) {
         _window = window;
 
-        Canvas = new MyCanvas();
+        _canvas = new MyCanvas();
 
-        _tool = new Tool();
+        _tool = new Tool(window, _canvas);
 
-        Canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
+        _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
 
         _tool.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
 
-        _renderingService = new(Canvas);
+        _renderingService = new(_canvas);
     }
 
     private void Shapes_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
@@ -79,23 +80,6 @@ public partial class MainViewModel : ObservableObject {
 
     public void Closing(object? sender, System.ComponentModel.CancelEventArgs e) {
         _renderingService.Cleanup();
-    }
-
-    // 🟢 Кнопки для добавления фигуры
-    private void CreateButtons() {
-        foreach (string typeShape in ShapeFactory.AvailableShapes) {
-            var button = new Button() {
-                Content = typeShape
-            };
-            button.Click += (s, e) => _tool.CurrentTool = typeShape;
-        }
-    }
-
-    private void CreateTool() {
-        var newShape = ShapeFactory.CreateShape(_tool.CurrentTool, 1, 1);
-        if (newShape != null) {
-            Canvas.AddShape(newShape);
-        }
     }
 
     [RelayCommand]

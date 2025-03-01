@@ -30,7 +30,7 @@
             </StatusBarItem>
         </StatusBar>
 
-        <Grid>
+        <Grid x:Name="MainGrid">
             <glWpfControl:GLWpfControl
                 x:Name="OpenTkControl"/>
 
