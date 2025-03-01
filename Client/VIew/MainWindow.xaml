@@ -14,9 +14,27 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Файл">
-                <MenuItem Header="_Создать"></MenuItem>
-                <MenuItem Header="_Сохранить"></MenuItem>
-                <MenuItem Header="_Открыть"></MenuItem>
+                <MenuItem Header="_Создать">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/new.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Сохранить">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/save.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Открыть">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/open.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
 

@@ -22,6 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="assets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GeometryDash\GeometryDash.csproj" />
     <ProjectReference Include="..\IO\IO.csproj" />
   </ItemGroup>
