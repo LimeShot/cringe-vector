@@ -68,22 +68,8 @@
                 </Border.Effect>
 
                 <WrapPanel
+                    x:Name="ToolsPanel"
                     HorizontalAlignment="Center">
-                    <ToggleButton  Width="30"
-                                   Height="30"
-                                   Content="a"/>
-                    <ToggleButton  Width="30"
-                                   Height="30"
-                                   Content="b"/>
-                    <ToggleButton  Width="30"
-                                   Height="30"
-                                   Content="o"/>
-                    <ToggleButton  Width="30"
-                                   Height="30"
-                                   Content="b"/>
-                    <ToggleButton  Width="30"
-                                   Height="30"
-                                   Content="a"/>
                 </WrapPanel>
             </Border>
         </Grid>
