@@ -2,7 +2,7 @@
 
 using System.Text;
 
-using CringeCraft.GeometryDash.Canvas;
+using CringeCraft.GeometryDash;
 
 interface IOutput {
     public void Export(ICanvas field); // функция, берущая класс с фигурами
