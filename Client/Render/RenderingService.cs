@@ -10,8 +10,10 @@ using OpenTK.Mathematics;
 public class RenderingService {
     private readonly MyCanvas _canvas;
     private Shader? _shaderLine, _shaderTriangle, _shaderEllipse;
-    private VAO? _vaoLine, _vaoTriangle, _vaoEllipse;
+    private VAO? _vaoLine, _vaoTriangle, _vaoEllipse, _vaoBackground;
     private Matrix4 _projection = Matrix4.Identity, _view = Matrix4.Identity;
+
+    public float ScreenPerWorld = 1.0f;
 
     public RenderingService(MyCanvas Cringe) {
         _canvas = Cringe;
@@ -141,87 +143,101 @@ public class RenderingService {
             }");
         _vaoEllipse = new([3, 2, 3]);
 
+        _vaoBackground = new([3, 3]);
+
         _vaoLine.Append([
-            -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.8f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.8f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.6f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.9f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.7f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -100.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -80.0f, 100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -80.0f, 100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -60.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -90.0f, 50.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -70.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 
-            -0.58f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.58f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.58f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.4f, 0.75f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.4f, 0.75f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.58f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.58f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.4f, 0.25f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.4f, 0.25f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.58f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -58.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -58.0f, 100.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -58.0f, 100.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -40.0f, 75.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -40.0f, 75.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -58.0f, 50.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -58.0f, 50.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -40.0f, 25.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -40.0f, 25.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -58.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 
-            -0.35f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.3f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.3f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.25f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.25f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.35f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -35.0f, 50.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -30.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -30.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -25.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -25.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -30.0f, 100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -30.0f, 100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -35.0f, 50.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 
-            -0.18f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.18f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.18f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.0f, 0.75f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.0f, 0.75f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.18f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.18f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-            -0.0f, 0.25f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.0f, 0.25f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -0.18f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -18.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -18.0f, 100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -18.0f, 100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -0.0f, 75.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -0.0f, 75.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            -18.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -18.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -0.0f, 25.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -0.0f, 25.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -18.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 
             0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            0.2f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-            0.2f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-            0.4f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-            0.1f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-            0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+            20.0f, 100.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            20.0f, 100.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            40.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            10.0f, 50.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+            30.0f, 50.0f, 0.0f, 0.0f, 1.0f, 0.0f,
         ]);
 
         _vaoTriangle.Append([
-            -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-            1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-            -1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f
+            -100.0f, -100.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+            100.0f, 100.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -100.0f, 100.0f, 0.0f, 0.0f, 0.0f, 1.0f
         ]);
 
         _vaoEllipse.Append([
-            0.0f, 0.0f, 0.0f, 2.0f, 2.0f, 0.5f, 0.5f, 0.5f
+            0.0f, 0.0f, 0.0f, 200.0f, 200.0f, 0.5f, 0.5f, 0.5f
+        ]);
+
+        _vaoBackground.Append([
+            -_canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+            _canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+            _canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+
+            -_canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+            _canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+            -_canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f
         ]);
 
         GL.Enable(EnableCap.DepthTest);
     }
 
     public void Render(TimeSpan timeSpan) {
-        if (_shaderLine == null || _vaoLine == null || _shaderTriangle == null || _vaoTriangle == null || _shaderEllipse == null || _vaoEllipse == null)
+        if (_shaderLine == null || _vaoLine == null || _shaderTriangle == null || _vaoTriangle == null || _shaderEllipse == null || _vaoEllipse == null || _vaoBackground == null)
             return;
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
         GL.UseProgram(_shaderLine.Id);
-        GL.BindVertexArray(_vaoLine.Id);
         _shaderLine.SetUniform("uProjection", _projection);
         _shaderLine.SetUniform("uView", _view);
+        GL.BindVertexArray(_vaoLine.Id);
         GL.DrawArrays(PrimitiveType.Lines, 0, _vaoLine.Length / _vaoLine.Stride);
 
         GL.UseProgram(_shaderTriangle.Id);
-        GL.BindVertexArray(_vaoTriangle.Id);
         _shaderTriangle.SetUniform("uProjection", _projection);
         _shaderTriangle.SetUniform("uView", _view);
+        GL.BindVertexArray(_vaoTriangle.Id);
         GL.DrawArrays(PrimitiveType.Triangles, 0, _vaoTriangle.Length / _vaoTriangle.Stride);
+        GL.BindVertexArray(_vaoBackground.Id);
+        GL.DrawArrays(PrimitiveType.Triangles, 0, _vaoBackground.Length / _vaoBackground.Stride);
 
         GL.UseProgram(_shaderEllipse.Id);
-        GL.BindVertexArray(_vaoEllipse.Id);
         _shaderEllipse.SetUniform("uProjection", _projection);
         _shaderEllipse.SetUniform("uView", _view);
+        GL.BindVertexArray(_vaoEllipse.Id);
         GL.DrawArrays(PrimitiveType.Points, 0, _vaoEllipse.Length / _vaoEllipse.Stride);
 
         GL.UseProgram(_shaderTriangle.Id);
@@ -240,9 +256,21 @@ public class RenderingService {
     }
 
     public void OnResize(int width, int height) {
-        float aspect = (float)width / height;
-        _projection = Matrix4.CreateOrthographicOffCenter(-aspect, aspect, -1, 1, -1, 1);
+        (float newWidth, float newHeight) = (width * ScreenPerWorld, height * ScreenPerWorld);
+        _projection = Matrix4.CreateOrthographicOffCenter(-newWidth / 2.0f, newWidth / 2.0f, -newHeight / 2.0f, newHeight / 2.0f, -1, 1);
         _view = Matrix4.Identity;
+    }
+
+    public void OnCanvasResize(float width, float height) {
+        if (_vaoBackground != null) _vaoBackground.ReplaceRange(0, _vaoBackground.Length, [
+            -_canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+            _canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+            _canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+
+            -_canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+            _canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+            -_canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f
+        ]);
     }
 
     public void Cleanup() {
