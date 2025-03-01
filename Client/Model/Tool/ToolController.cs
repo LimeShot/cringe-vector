@@ -8,6 +8,8 @@ using CringeCraft.Client.View;
 using System.Diagnostics;
 using CringeCraft.Client.Model.Canvas;
 using System.Numerics;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media.Imaging;
 
 public class Tool {
     private readonly MainWindow _window;
@@ -38,26 +40,27 @@ public class Tool {
 
     // 🟢 Кнопки для добавления фигуры
     public void CreateButtonsShapes() {
-        StackPanel stackPanel = new() {
-            Orientation = Orientation.Vertical, // Расположение кнопок в столбик
-            HorizontalAlignment = HorizontalAlignment.Right, // Выравнивание по правому краю
-            VerticalAlignment = VerticalAlignment.Top, // Выравнивание по верхнему краю
-            Margin = new(10) // Отступ от краёв
-        };
-
-        _window.MainGrid.Children.Add(stackPanel);
-
         foreach (string typeShape in ShapeFactory.AvailableShapes) {
-            Button button = new() {
-                Content = typeShape,
-                Width = 100,
-                Margin = new(5)
+            ToggleButton toggleButton = new() {
+                Height = 30,
+                Width = 30
             };
-            button.Click += (s, e) => {
+
+            string imagePath = $"pack://siteoforigin:,,,/assets/tools/{typeShape}.png";
+            Image toggleImage = new() {
+                Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute)),
+            };
+            toggleButton.Content = toggleImage;
+
+            toggleButton.Checked += (s, e) => {
                 CurrentTool = typeShape;
-                Console.WriteLine($"Выбран инструмент - {typeShape}");
+                Debug.WriteLine($"Выбран инструмент - {typeShape}");
             };
-            stackPanel.Children.Add(button);
+            toggleButton.Unchecked += (s, e) => {
+                Debug.WriteLine($"Смена инструмента");
+            };
+
+            _window.ToolsPanel.Children.Add(toggleButton);
         }
     }
 
