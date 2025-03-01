@@ -227,15 +227,15 @@ public class RenderingService {
         GL.UseProgram(_shaderTriangle.Id);
     }
 
-    public void OnShapeAdded(IShape shape) {
+    public void OnShapeAdded(params IShape[] shapes) {
         //
     }
 
-    public void OnShapeUpdated(IShape shape) {
+    public void OnShapeUpdated(params IShape[] shapes) {
         //
     }
 
-    public void OnShapeRemoved(IShape shape) {
+    public void OnShapeRemoved(params IShape[] shapes) {
         //
     }
 

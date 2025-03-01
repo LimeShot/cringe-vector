@@ -35,23 +35,17 @@ public partial class MainViewModel : ObservableObject {
 
     private void Shapes_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         if (e.NewItems != null) {
-            // var newShapes = e.NewItems.Cast<IShape>().ToList();
-            // _renderingService.OnShapeAdded(newShapes);
-
-            foreach (IShape newShape in e.NewItems)
-                _renderingService.OnShapeAdded(newShape); // Обработка новых фигур
+            var newShapes = e.NewItems.Cast<IShape>().ToArray();
+            _renderingService.OnShapeAdded(newShapes);
         }
         if (e.OldItems != null) {
-            // var oldShapes = e.OldItems.Cast<IShape>().ToList();
-            // _renderingService.OnShapeRemoved(newShapes);
-
-            foreach (IShape oldShape in e.OldItems)
-                _renderingService.OnShapeRemoved(oldShape); // Обработка удаленных фигур
+            var oldShapes = e.OldItems.Cast<IShape>().ToArray();
+            _renderingService.OnShapeRemoved(oldShapes);
         }
     }
 
     private void Shapes_PropertyChanged(object? sender, List<IShape> selectedShapes) {
-        // _renderingService.OnShapeUpdated(selectedShapes);
+        _renderingService.OnShapeUpdated([.. selectedShapes]);
     }
 
     public void InitializeOpenGL() {
