@@ -8,7 +8,7 @@ using CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Render;
-using System.Windows.Shapes;
+using CringeCraft.Client.Model.Tool;
 
 
 namespace CringeCraft.Client.ViewModel;
@@ -16,52 +16,53 @@ public partial class MainViewModel : ObservableObject {
 
     [ObservableProperty]
     private MyCanvas _canvas;
+
+    private readonly Tool _tool;
+
     public Point StartMousePosition { get; set; }
     public Point NextMousePosition { get; set; }
     private readonly RenderingService _renderingService;
     private readonly Window _window;
-
-    public string CurrentTool { get; set; }
     private bool _isDragging;
 
     public MainViewModel(Window window) {
         _window = window;
 
-        CurrentTool = "GOOOOL";
-
         Canvas = new MyCanvas();
+
+        _tool = new Tool();
 
         Canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
 
-        _renderingService = new(Canvas);
+        _tool.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
 
-        // Инициализация ViewModelFigures на основе Canvas.Shapes
-        foreach (var shape in Canvas.Shapes) {
-            shape.PropertyChanged += Shapes_PropertyChanged;
-        }
+        _renderingService = new(Canvas);
     }
 
     private void Shapes_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         if (e.NewItems != null) {
+
+            // var newShapes = e.NewItems.Cast<IShape>().ToList();
+            // _renderingService.OnShapeAdded(newShapes);
+
             foreach (IShape newShape in e.NewItems) {
-                newShape.PropertyChanged += Shapes_PropertyChanged; // Подписка на изменения свойств фигур
+                _renderingService.OnShapeAdded(newShape); // Обработка новых фигур
             }
         }
 
         if (e.OldItems != null) {
+
+            // var oldShapes = e.OldItems.Cast<IShape>().ToList();
+            // _renderingService.OnShapeRemoved(newShapes);
+
             foreach (IShape oldShape in e.OldItems) {
-                oldShape.PropertyChanged -= Shapes_PropertyChanged; // Отписка при удалении
+                _renderingService.OnShapeRemoved(oldShape); // Обработка удаленных фигур
             }
         }
-
-        // Что-то сделать при изменении списка фигур
     }
 
-    private void Shapes_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
-        // Обработка изменений свойств фигуры
-        if (sender is IShape changedFigure) {
-            // Что-то сделать при изменении свойст фигуры
-        }
+    private void Shapes_PropertyChanged(object? sender, List<IShape> selectedShapes) {
+        // _renderingService.OnShapeUpdated(selectedShapes);
     }
 
     public void InitializeOpenGL() {
@@ -86,12 +87,12 @@ public partial class MainViewModel : ObservableObject {
             var button = new Button() {
                 Content = typeShape
             };
-            button.Click += (s, e) => CurrentTool = typeShape;
+            button.Click += (s, e) => _tool.CurrentTool = typeShape;
         }
     }
 
     private void CreateTool() {
-        var newShape = ShapeFactory.CreateShape(CurrentTool, 1, 1);
+        var newShape = ShapeFactory.CreateShape(_tool.CurrentTool, 1, 1);
         if (newShape != null) {
             Canvas.AddShape(newShape);
         }
