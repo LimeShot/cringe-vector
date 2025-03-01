@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <Compile Include="obj\$(Configuration)\$(TargetFramework)\View\*.g.cs">
-      <AutoGen>True</AutoGen>
+      <Visible>false</Visible>
     </Compile>
   </ItemGroup>
 
