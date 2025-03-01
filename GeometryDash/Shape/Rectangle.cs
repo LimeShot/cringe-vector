@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Rectangle")]
-[ExportMetadata("Icon", "Rectangle.png")]
+[ExportMetadata("Icon", "rectangle.png")]
 public partial class Rectangle : ObservableObject, IShape {
     [ObservableProperty]
     private Vector2 _translate;

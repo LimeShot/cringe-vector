@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Line")]
-[ExportMetadata("Icon", "Line.png")]
+[ExportMetadata("Icon", "line.png")]
 public partial class Line : ObservableObject, IShape {
     [ObservableProperty]
     private Vector2 _translate;

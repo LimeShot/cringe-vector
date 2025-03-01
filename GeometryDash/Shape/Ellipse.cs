@@ -6,7 +6,7 @@ using System.Composition;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Ellipse")]
-[ExportMetadata("Icon", "Ellipse.png")]
+[ExportMetadata("Icon", "ellipse.png")]
 public partial class Ellipse : ObservableObject, IShape {
     [ObservableProperty]
     private Vector2 _translate;
