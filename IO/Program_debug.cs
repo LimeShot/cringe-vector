@@ -1,6 +1,6 @@
 using System;
 
-using IO.Method;
+namespace CringeCraft.IO;
 
 class Program {
     static void Main(string[] args) {
