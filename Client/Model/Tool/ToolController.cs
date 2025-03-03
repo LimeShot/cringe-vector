@@ -72,8 +72,9 @@ public class ToolController {
     }
 
     private void AddShape(MyCanvas canvas, Point startPoint) {
-        var newShape = ShapeFactory.CreateShape(CurrentTool, new OpenTK.Mathematics.Vector2((float)startPoint.X, (float)startPoint.Y),
-        new OpenTK.Mathematics.Vector2((float)startPoint.X, (float)startPoint.Y));
+        var z = canvas.GetNewZ();
+        var newShape = ShapeFactory.CreateShape(CurrentTool,
+            new OpenTK.Mathematics.Vector2((float)startPoint.X, (float)startPoint.Y), z);
         if (newShape != null)
             canvas.AddShape(newShape);
     }
