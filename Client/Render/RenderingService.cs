@@ -13,8 +13,6 @@ public class RenderingService {
     private VAO? _vaoLine, _vaoTriangle, _vaoEllipse, _vaoBackground;
     private Matrix4 _projection = Matrix4.Identity, _view = Matrix4.Identity;
 
-    public float ScreenPerWorld = 1.0f;
-
     public RenderingService(MyCanvas Cringe) {
         _canvas = Cringe;
     }
@@ -256,7 +254,7 @@ public class RenderingService {
     }
 
     public void OnResize(int width, int height) {
-        (float newWidth, float newHeight) = (width * ScreenPerWorld, height * ScreenPerWorld);
+        (float newWidth, float newHeight) = (width * _canvas.ScreenPerWorld, height * _canvas.ScreenPerWorld);
         _projection = Matrix4.CreateOrthographicOffCenter(-newWidth / 2.0f, newWidth / 2.0f, -newHeight / 2.0f, newHeight / 2.0f, -1, 1);
         _view = Matrix4.Identity;
     }
