@@ -2,12 +2,10 @@
 
 using OpenTK.Mathematics;
 
-using System.ComponentModel;
-
 public interface IShape {
     public Vector2 Translate { get; }
     public float Z { set; get; }
-    public float Rotate { get; }
+    public float Rotate { get; } // Угол в градусах
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { get; }
     public Vector2[] Nodes { set; get; }

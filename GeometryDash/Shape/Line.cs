@@ -8,16 +8,20 @@ using System.Composition;
 [ExportMetadata("Name", "Line")]
 [ExportMetadata("Icon", "line.png")]
 public partial class Line : IShape {
-    public Vector2 Translate { get; }
+    // TODO: Добавить event OnChange в методы set
+    public Vector2 Translate { private set; get; }
     public float Z { set; get; }
-    public float Rotate { get; }
+    public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
-    public Vector2[] BoundingBox { get; }
+    public Vector2[] BoundingBox { private set; get; }
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
-        // TODO: Посчитать в абсолютных координатах, с учетом Rotate и Translate, и запихнуть в BoundingBox
-        return;
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
+        BoundingBox[0] = result * Nodes[0] + Translate;
+        BoundingBox[1] = result * new Vector2(Nodes[0].X, Nodes[1].Y) + Translate;
+        BoundingBox[2] = result * Nodes[1] + Translate;
+        BoundingBox[3] = result * new Vector2(Nodes[1].X, Nodes[0].Y) + Translate;
     }
 
     public Line() {
@@ -27,29 +31,20 @@ public partial class Line : IShape {
         Style = new();
         BoundingBox = new Vector2[4];
         Nodes = new Vector2[2];
+        Nodes[0] = Vector2.Zero;
+        Nodes[1] = Vector2.Zero;
+        CalcBB();
     }
 
-    public Line(Vector2 p1, Vector2 p2, float z, ShapeStyle? shapeStyle = null) {
-        // TODO: Доделать конструктор по двум точкам
-        Translate = ((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
-        //Надо проверить, не будет ли засорятся память
-        Style = shapeStyle ?? new();
+    public Line(Vector2 p1, float z, ShapeStyle? shapeStyle = null) : this() {
+        Translate = p1;
         Z = z;
-        float lenDev2 = (p2 - p1).Length / 2;
-        if (p1.X > p2.X) {
-            Rotate = (float)MathHelper.Acos(lenDev2 / (p1.X - Translate.X));
-            Nodes[0] = (lenDev2, 0.0f);
-            Nodes[1] = (-lenDev2, 0.0f);
-        } else {
-            Rotate = (float)MathHelper.Acos(lenDev2 / (p2.X - Translate.X));
-            Nodes[0] = (-lenDev2, 0.0f);
-            Nodes[1] = (lenDev2, 0.0f);
-        }
+        Style = shapeStyle ?? new();
         CalcBB();
     }
 
     public float[] GetLineVertices() {
-        // TODO: Необходимо возвращать [x,y,Z,color.x,color.y,,color.z]
+        // TODO: Необходимо возвращать [x,y,Z,color.x,color.y,,color.z] 2 вершины
         return [];
     }
 
@@ -96,7 +91,7 @@ public partial class Line : IShape {
     }
 
     public void Move(Vector2 oldPoint, Vector2 newPoint) {
-        // TODO: Переделать под новый интерфейс
+        // TODO: Переделать под новый интерфейс + добавить вызов ивента OnChange
 
         /*float deltaX = x2 - x1;
         float deltaY = y2 - y1;
@@ -113,6 +108,23 @@ public partial class Line : IShape {
 
     public void Resize(int index, Vector2 newNode) {
         // TODO: Реализовать метод
+        switch (index) {
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+            case 3:
+
+                break;
+            case 4:
+
+                break;
+            default:
+
+                break;
+        }
         return;
     }
 

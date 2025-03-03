@@ -8,12 +8,18 @@ using System.Composition;
 [ExportMetadata("Name", "Rectangle")]
 [ExportMetadata("Icon", "rectangle.png")]
 public partial class Rectangle : IShape {
-    public Vector2 Translate { get; }
+    // TODO: Добавить event OnChange в методы set
+    public Vector2 Translate { private set; get; }
     public float Z { set; get; }
-    public float Rotate { get; }
+    public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
-    public Vector2[] BoundingBox { get; }
+    public Vector2[] BoundingBox { private set; get; }
     public Vector2[] Nodes { set; get; }
+
+    private void CalcBB() {
+        // TODO: Посчитать в абсолютных координатах, с учетом Rotate и Translate, и запихнуть в BoundingBox
+        return;
+    }
 
     public Rectangle() {
         Translate = Vector2.Zero;
@@ -22,10 +28,11 @@ public partial class Rectangle : IShape {
         Style = new();
         BoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
+        CalcBB();
     }
 
     public float[] GetLineVertices() {
-        // TODO: Необходимо возвращать [x,y,Z,color.x,color.y,,color.z]
+        // TODO: Необходимо возвращать [x,y,Z,color.x,color.y,,color.z] по две вершины на одну линию
         return [];
     }
 
@@ -66,7 +73,7 @@ public partial class Rectangle : IShape {
     }
 
     public void Move(Vector2 oldPoint, Vector2 newPoint) {
-        // TODO: Переделать под новый интерфейс
+        // TODO: Переделать под новый интерфейс + добавить вызов ивента OnChange
 
         /*float deltaX = x2 - x1;
         float deltaY = y2 - y1;

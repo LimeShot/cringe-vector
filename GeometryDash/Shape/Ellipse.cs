@@ -8,11 +8,12 @@ using System.Composition;
 [ExportMetadata("Name", "Ellipse")]
 [ExportMetadata("Icon", "ellipse.png")]
 public partial class Ellipse : IShape {
-    public Vector2 Translate { get; }
+    // TODO: Добавить event OnChange в методы set
+    public Vector2 Translate { private set; get; }
     public float Z { set; get; }
-    public float Rotate { get; }
+    public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
-    public Vector2[] BoundingBox { get; }
+    public Vector2[] BoundingBox { private set; get; }
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
@@ -27,25 +28,24 @@ public partial class Ellipse : IShape {
         Style = new();
         BoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
+        CalcBB();
     }
 
     public float[] GetLineVertices() {
-        // TODO: Разобраться, что должен возвращать этот метод у элипса
         return [];
     }
 
     public float[] GetTriangleVertices() {
-        // TODO: Разобраться, что должен возвращать этот метод у элипса
         return [];
     }
 
     public float[] GetCircumferenceVertices() {
-        // TODO: Реализовать метод
+        // TODO: [Translate.X,Translate.Y,Z,width,height,ColorOutline.X,ColorOutline.Y,ColorOutline.Z]
         return [];
     }
 
     public float[] GetCircleVertices() {
-        // TODO: Реализовать метод
+        // TODO: [Translate.X,Translate.Y,Z,width,height,ColorFill.X,ColorFill.Y,ColorFill.Z]
         return [];
     }
 
@@ -73,7 +73,7 @@ public partial class Ellipse : IShape {
     }
 
     public void Move(Vector2 oldPoint, Vector2 newPoint) {
-        // TODO: Переделать под новый интерфейс
+        // TODO: Переделать под новый интерфейс + добавить вызов ивента OnChange
 
         /*float deltaX = x2 - x1;
         float deltaY = y2 - y1;
