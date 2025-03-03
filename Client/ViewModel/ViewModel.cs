@@ -14,6 +14,7 @@ using CringeCraft.Client.View;
 using CringeCraft.GeometryDash;
 using System.Diagnostics;
 
+
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
     private MyCanvas _canvas;
@@ -73,8 +74,8 @@ public partial class MainViewModel : ObservableObject {
             //&& e.Source not is подложка под кнопочки clickedподложка под кнопочки
             isDrawing = true;
             StartPoint = e.GetPosition((IInputElement)e.Source);
-            Debug.WriteLine($"Мышка нажата: X={StartPoint.X}, Y={StartPoint.Y}");
-            //_toolController.MouseDownEvent(StartPoint, StartPoint);
+            //Debug.WriteLine($"Мышка нажата: X={StartPoint.X}, Y={StartPoint.Y}");
+            //_toolController.MouseDownEvent(StartPoint);
         }
     }
 
@@ -82,7 +83,8 @@ public partial class MainViewModel : ObservableObject {
     private void OnMouseMove(MouseEventArgs e) {
         if (e != null && isDrawing == true) {
             CurrentPoint = e.GetPosition((IInputElement)e.Source);
-            Debug.WriteLine($"Мышка зажата: X={CurrentPoint.X}, Y={CurrentPoint.Y}");
+            //Debug.WriteLine($"Мышка зажата: X={CurrentPoint.X}, Y={CurrentPoint.Y}");
+            //_toolController.MouseMoveEvent(StartPoint, CurrentPoint);
         }
     }
 
