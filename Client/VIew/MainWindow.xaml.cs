@@ -3,6 +3,7 @@
 using System.Windows;
 using OpenTK.Wpf;
 using CringeCraft.Client.ViewModel;
+using System.Windows.Input;
 
 public partial class MainWindow : Window {
     public MainWindow() {

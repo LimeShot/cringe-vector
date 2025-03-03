@@ -4,33 +4,36 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 using System.Windows;
+using System.Windows.Controls;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Render;
 using CringeCraft.Client.Model.Tool;
 using System.Collections.Specialized;
 using CringeCraft.Client.View;
+using CringeCraft.GeometryDash;
+using System.Diagnostics;
 
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
     private MyCanvas _canvas;
 
-    private Tool _tool;
+    private readonly ToolController _toolController;
     private readonly RenderingService _renderingService;
     private readonly MainWindow _window;
-    private bool _isDragging;
+    private bool isDrawing = false;
 
-    public Point StartMousePosition { get; set; }
-    public Point NextMousePosition { get; set; }
+    public Point StartPoint { get; set; }
+    public Point CurrentPoint { get; set; }
 
     public MainViewModel(MainWindow window) {
         _window = window;
         _canvas = new();
-        _tool = new(window, _canvas);
+        _toolController = new(window, _canvas, "Line");
         _renderingService = new(_canvas);
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
-        _tool.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
+        _toolController.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
     }
 
     private void Shapes_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
@@ -65,21 +68,27 @@ public partial class MainViewModel : ObservableObject {
     }
 
     [RelayCommand]
-    private void OnMouseDown(MouseButtonEventArgs e) {
-        if (e.LeftButton == MouseButtonState.Pressed) {
-            StartMousePosition = e.GetPosition((IInputElement)e.Source);
-            _isDragging = true;
-            if (e.Source is UIElement element)
-                element.CaptureMouse();
+    private void OnMouseDown(MouseEventArgs e) {
+        if (e != null && e.LeftButton == MouseButtonState.Pressed) { //добавить клик на холст
+            //&& e.Source not is подложка под кнопочки clickedподложка под кнопочки
+            isDrawing = true;
+            StartPoint = e.GetPosition((IInputElement)e.Source);
+            Debug.WriteLine($"Мышка нажата: X={StartPoint.X}, Y={StartPoint.Y}");
+            //_toolController.MouseDownEvent(StartPoint, StartPoint);
         }
     }
 
     [RelayCommand]
-    private void OnMouseMove(MouseButtonEventArgs e) {
-        if (_isDragging == true)
-            NextMousePosition = e.GetPosition((IInputElement)e.Source);
+    private void OnMouseMove(MouseEventArgs e) {
+        if (e != null && isDrawing == true) {
+            CurrentPoint = e.GetPosition((IInputElement)e.Source);
+            Debug.WriteLine($"Мышка зажата: X={CurrentPoint.X}, Y={CurrentPoint.Y}");
+        }
     }
 
     [RelayCommand]
-    private void OnMouseUp(MouseButtonEventArgs e) { }
+    private void OnMouseUp(MouseEventArgs e) {
+        if (e != null)
+            isDrawing = false;
+    }
 }
