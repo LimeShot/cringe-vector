@@ -3,7 +3,7 @@ namespace CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash.Shape;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CringeCraft.GeometryDash.Canvas;
+using CringeCraft.GeometryDash;
 
 /// <summary>
 /// Представляет холст для хранения фигур
