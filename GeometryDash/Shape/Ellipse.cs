@@ -1,30 +1,32 @@
 namespace CringeCraft.GeometryDash.Shape;
 
 using OpenTK.Mathematics;
-using CommunityToolkit.Mvvm.ComponentModel;
+
 using System.Composition;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Ellipse")]
 [ExportMetadata("Icon", "ellipse.png")]
-public partial class Ellipse : ObservableObject, IShape {
-    [ObservableProperty]
-    private Vector2 _translate;
+public partial class Ellipse : IShape {
+    public Vector2 Translate { get; }
+    public float Z { set; get; }
+    public float Rotate { get; }
+    public ShapeStyle Style { set; get; }
+    public Vector2[] BoundingBox { get; }
+    public Vector2[] Nodes { set; get; }
 
-    [ObservableProperty]
-    private float _rotate;
-
-    [ObservableProperty]
-    public ShapeStyle _style;
-
-    [ObservableProperty]
-    public Vector2 _size;
+    private void CalcBB() {
+        // TODO: Посчитать в абсолютных координатах, с учетом Rotate и Translate, и запихнуть в BoundingBox
+        return;
+    }
 
     public Ellipse() {
-        Translate = (0.0f, 0.0f);
+        Translate = Vector2.Zero;
+        Z = 0.0f;
         Rotate = 0.0f;
         Style = new();
-        Size = new(1.0f, 1.0f);
+        BoundingBox = new Vector2[4];
+        Nodes = new Vector2[4];
     }
 
     public float[] GetLineVertices() {
@@ -37,13 +39,20 @@ public partial class Ellipse : ObservableObject, IShape {
         return [];
     }
 
-    public Vector2[] GetBoundingBox() {
-        // TODO: Разобраться, что должен возвращать этот метод у элипса
+    public float[] GetCircumferenceVertices() {
+        // TODO: Реализовать метод
         return [];
     }
 
-    public bool ContainsPoint(Vector2 point) {
-        float dx = point.X - Translate.X;
+    public float[] GetCircleVertices() {
+        // TODO: Реализовать метод
+        return [];
+    }
+
+    public bool IsBelongsShape(Vector2 point) {
+        // TODO: Переделать под новый интерфейс
+
+        /*float dx = point.X - Translate.X;
         float dy = point.Y - Translate.Y;
 
         float angle = -MathHelper.DegreesToRadians(Rotate);
@@ -54,13 +63,32 @@ public partial class Ellipse : ObservableObject, IShape {
         float a = Size.X / 2;
         float b = Size.Y / 2;
 
-        return (xRot * xRot) / (a * a) + (yRot * yRot) / (b * b) <= 1;
+        return (xRot * xRot) / (a * a) + (yRot * yRot) / (b * b) <= 1;*/
+        return false;
     }
 
-    public void Move(float x1, float y1, float x2, float y2) {
-        float deltaX = x2 - x1;
+    public int IsBBNode(Vector2 point) {
+        // TODO: Реализовать метод
+        return 0;
+    }
+
+    public void Move(Vector2 oldPoint, Vector2 newPoint) {
+        // TODO: Переделать под новый интерфейс
+
+        /*float deltaX = x2 - x1;
         float deltaY = y2 - y1;
 
-        Translate += new Vector2(deltaX, deltaY);
+        Translate += new Vector2(deltaX, deltaY);*/
     }
+
+    public void MoveNode(int index, Vector2 newNode) {
+
+    }
+
+    public void Resize(int index, Vector2 newNode) {
+        // TODO: Реализовать метод
+        return;
+    }
+
+    public event Action? OnChange;
 }
