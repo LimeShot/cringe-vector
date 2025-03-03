@@ -15,6 +15,8 @@ public partial class MyCanvas : ObservableObject, ICanvas {
 
     private const float _stepZ = 0.0000001f;
 
+    public readonly List<IShape> SelectedShapes = new(); // Список выделенных фигур
+
     public float Width { get; set; }
     public float Height { get; set; }
 

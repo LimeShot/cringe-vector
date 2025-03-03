@@ -16,7 +16,6 @@ public class ToolController {
     private readonly MainWindow _window;
     private readonly MyCanvas _canvas;
     private ToggleButton? selectedButton; // 🔹 Ссылка на текущую активную кнопку
-    private readonly List<IShape> _selectedShapes = new(); // Список выделенных фигур
 
     public enum Tools { Move, Rotate, Resize };
     public string CurrentTool { get; private set; }
@@ -30,15 +29,15 @@ public class ToolController {
     }
 
     public void MoveShape() {
-        OnShapeChanged?.Invoke(this, _selectedShapes);
+        OnShapeChanged?.Invoke(this, _canvas.SelectedShapes);
     }
 
     public void ResizeShape() {
-        OnShapeChanged?.Invoke(this, _selectedShapes);
+        OnShapeChanged?.Invoke(this, _canvas.SelectedShapes);
     }
 
     public void TurnShape() {
-        OnShapeChanged?.Invoke(this, _selectedShapes);
+        OnShapeChanged?.Invoke(this, _canvas.SelectedShapes);
     }
 
     // 🟢 Кнопки для добавления фигуры
