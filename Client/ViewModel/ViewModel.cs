@@ -13,7 +13,7 @@ using System.Collections.Specialized;
 using CringeCraft.Client.View;
 using CringeCraft.GeometryDash;
 using System.Diagnostics;
-
+using OpenTK.Wpf;
 
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
@@ -70,20 +70,19 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void OnMouseDown(MouseEventArgs e) {
-        if (e != null && e.LeftButton == MouseButtonState.Pressed) { //добавить клик на холст
-            //&& e.Source not is подложка под кнопочки clickedподложка под кнопочки
+        if (e != null && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) { //добавить клик на холст
             isDrawing = true;
             StartPoint = e.GetPosition((IInputElement)e.Source);
-            //Debug.WriteLine($"Мышка нажата: X={StartPoint.X}, Y={StartPoint.Y}");
+            Debug.WriteLine($"Мышка нажата: X={StartPoint.X}, Y={StartPoint.Y}");
             //_toolController.MouseDownEvent(StartPoint);
         }
     }
 
     [RelayCommand]
     private void OnMouseMove(MouseEventArgs e) {
-        if (e != null && isDrawing == true) {
+        if (e != null && isDrawing == true && e.Source is GLWpfControl) {
             CurrentPoint = e.GetPosition((IInputElement)e.Source);
-            //Debug.WriteLine($"Мышка зажата: X={CurrentPoint.X}, Y={CurrentPoint.Y}");
+            Debug.WriteLine($"Мышка зажата: X={CurrentPoint.X}, Y={CurrentPoint.Y}");
             //_toolController.MouseMoveEvent(StartPoint, CurrentPoint);
         }
     }
@@ -92,5 +91,22 @@ public partial class MainViewModel : ObservableObject {
     private void OnMouseUp(MouseEventArgs e) {
         if (e != null)
             isDrawing = false;
+    }
+
+    [RelayCommand]
+    public void OpenFile() {
+        string? content = FileService.OpenFile();
+        if (content != null) {
+            Debug.WriteLine($"Файл открыт:\n{content}");
+        }
+    }
+
+    [RelayCommand]
+    private void SaveFile() {
+        string content = "Текст для сохранения"; // Тут можно передавать данные из ViewModel
+        string? filePath = FileService.SaveFile(content);
+        if (filePath != null) {
+            Debug.WriteLine($"Файл сохранён: {filePath}");
+        }
     }
 }

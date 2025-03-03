@@ -22,14 +22,16 @@
                                Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Сохранить">
+                <MenuItem Header="_Сохранить"
+                          Command="{Binding SaveFileCommand}">
                     <MenuItem.Icon>
                         <Image Source="pack://siteoforigin:,,,/assets/icons/save.png"
                                Width="16"
                                Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Открыть">
+                <MenuItem Header="_Открыть"
+                          Command="{Binding OpenFileCommand}">
                     <MenuItem.Icon>
                         <Image Source="pack://siteoforigin:,,,/assets/icons/open.png"
                                Width="16"
@@ -50,22 +52,22 @@
         </StatusBar>
 
         <Grid x:Name="MainGrid">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDown">
-                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}"
-                                           PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseMove">
-                    <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"
-                                           PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseUp">
-                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}"
-                                           PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <glWpfControl:GLWpfControl
-                x:Name="OpenTkControl"/>
+            <glWpfControl:GLWpfControl x:Name="OpenTkControl">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <i:InvokeCommandAction Command="{Binding MouseDownCommand}"
+                                               PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseMove">
+                        <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"
+                                               PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseUp">
+                        <i:InvokeCommandAction Command="{Binding MouseUpCommand}"
+                                               PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </glWpfControl:GLWpfControl>
 
             <Border
                 BorderThickness="1"
