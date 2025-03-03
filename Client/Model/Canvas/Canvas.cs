@@ -19,6 +19,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
 
     public float Width { get; set; }
     public float Height { get; set; }
+    public float ScreenPerWorld = 1.0f;
 
     public MyCanvas() {
         Width = 500;
