@@ -10,11 +10,12 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="OpenTK.GLWpfControl" Version="4.3.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="obj\$(Configuration)\$(TargetFramework)\View\*.g.cs"/>
+    <Compile Remove="obj\$(Configuration)\$(TargetFramework)\View\*.g.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(DesignTimeBuild)' == 'true'">

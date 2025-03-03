@@ -11,18 +11,18 @@ using System.Numerics;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
 
-public class Tool {
+public class ToolController {
     private readonly MainWindow _window;
     private readonly MyCanvas _canvas;
     private readonly List<IShape> _selectedShapes = new(); // Список выделенных фигур
-
-    public string CurrentTool { get; set; }
+    public enum Tools { Move, Rotate, Resize };
+    public string CurrentTool { get; private set; }
     public event EventHandler<List<IShape>>? OnShapeChanged; // Событие на изменение фигуры
 
-    public Tool(MainWindow window, MyCanvas canvas) {
+    public ToolController(MainWindow window, MyCanvas canvas, string currentTool) {
         _canvas = canvas;
         _window = window;
-        CurrentTool = "Line";
+        CurrentTool = currentTool;
         CreateButtonsShapes();
     }
 
@@ -69,4 +69,10 @@ public class Tool {
         if (newShape != null)
             canvas.AddShape(newShape);
     }
+
+    public void MouseDownEvent(Point startPoint, Point nextPoint) {
+        if (ShapeFactory.AvailableShapes.Contains(CurrentTool))
+            AddShape(_canvas, startPoint, nextPoint);
+    }
+
 }
