@@ -11,7 +11,7 @@ public class ShapeStyle {
     public ShapeStyle() {
         ColorOutline = (0.0f, 0.0f, 0.0f);
         ColorFill = (0.0f, 0.0f, 0.0f);
-        Fill = true;
+        Fill = false;
         Visible = true;
     }
 
