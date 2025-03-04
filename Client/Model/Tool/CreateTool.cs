@@ -14,6 +14,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     public string Name { get; set; } = name;
 
     public void MouseDownEvent(Point startPoint) {
+        _startPoint = startPoint;
         Console.WriteLine(startPoint);
         AddShape(_canvas, new OpenTK.Mathematics.Vector2((float)startPoint.X, (float)startPoint.Y));
     }
@@ -25,7 +26,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     public void MouseUpEvent(Point endPoint) {
         if (endPoint == _startPoint) {
             _canvas.Shapes.Remove(_canvas.Shapes[_canvas.Shapes.Count - 1]);
-            AddShape(_canvas, new OpenTK.Mathematics.Vector2((float)_startPoint.X, (float)_startPoint.Y), 25);
+            AddShape(_canvas, new OpenTK.Mathematics.Vector2((float)_startPoint.X, (float)_startPoint.Y), 100);
             //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
         }
     }

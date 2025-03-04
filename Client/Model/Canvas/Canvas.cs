@@ -22,8 +22,8 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     public float ScreenPerWorld = 1.0f;
 
     public MyCanvas() {
-        Width = 500;
-        Height = 500;
+        Width = 2000;
+        Height = 1000;
     }
 
     private void recalculateZFromRemove(int index) {
