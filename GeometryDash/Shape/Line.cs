@@ -56,6 +56,7 @@ public partial class Line : IShape {
     }
 
     public float[] GetLineVertices() {
+        if (!Style.Fill) return [];
         return [Nodes[0].X, Nodes[0].Y, Z, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
                 Nodes[1].X, Nodes[1].Y, Z, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
     }

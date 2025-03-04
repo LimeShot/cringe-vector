@@ -65,6 +65,7 @@ public partial class Rectangle : IShape {
     }
 
     public float[] GetLineVertices() {
+        if (!Style.Fill) return [];
         return [Nodes[0].X / 2, Nodes[0].Y / 2, Z, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
                 Nodes[1].X / 2, Nodes[1].Y / 2, Z, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
 
@@ -79,6 +80,7 @@ public partial class Rectangle : IShape {
     }
 
     public float[] GetTriangleVertices() {
+        if (!Style.Fill) return [];
         return [Nodes[0].X / 2, Nodes[0].Y / 2, Z, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
                 Nodes[1].X / 2, Nodes[1].Y / 2, Z, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
                 Nodes[2].X / 2, Nodes[2].Y / 2, Z, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
