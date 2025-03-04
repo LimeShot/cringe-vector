@@ -18,10 +18,10 @@ public partial class Line : IShape {
 
     private void CalcBB() {
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
-        BoundingBox[0] = result * Nodes[0] + Translate;
-        BoundingBox[1] = result * new Vector2(Nodes[0].X, Nodes[1].Y) + Translate;
-        BoundingBox[2] = result * Nodes[1] + Translate;
-        BoundingBox[3] = result * new Vector2(Nodes[1].X, Nodes[0].Y) + Translate;
+        BoundingBox[0] = result * new Vector2(Nodes[0].X, Nodes[1].Y) + Translate;
+        BoundingBox[1] = result * Nodes[1] + Translate;
+        BoundingBox[2] = result * new Vector2(Nodes[1].X, Nodes[0].Y) + Translate;
+        BoundingBox[3] = result * Nodes[0] + Translate;
     }
 
     public Line() {
@@ -40,6 +40,18 @@ public partial class Line : IShape {
         Translate = p1;
         Z = z;
         Style = shapeStyle ?? new();
+        CalcBB();
+    }
+
+    public Line(Vector2 p1, float length, float z, ShapeStyle? shapeStyle = null) : this() {
+        Translate = p1;
+        Z = z;
+        Style = shapeStyle ?? new();
+        BoundingBox = new Vector2[4];
+        Nodes = new Vector2[2];
+        float lengthDev2 = length / 2;
+        Nodes[0] = new(-lengthDev2, 0.0f);
+        Nodes[1] = new(lengthDev2, 0.0f);
         CalcBB();
     }
 
@@ -95,7 +107,7 @@ public partial class Line : IShape {
     }
 
     public void Move(Vector2 oldPoint, Vector2 newPoint) {
-        // TODO: Переделать под новый интерфейс + добавить вызов ивента OnChange
+        // TODO: Переделать под новый интерфейс
 
         /*float deltaX = x2 - x1;
         float deltaY = y2 - y1;
@@ -111,25 +123,13 @@ public partial class Line : IShape {
     }
 
     public void Resize(int index, Vector2 newNode) {
-        // TODO: Реализовать метод
-        switch (index) {
-            case 1:
-
-                break;
-            case 2:
-
-                break;
-            case 3:
-
-                break;
-            case 4:
-
-                break;
-            default:
-
-                break;
-        }
-        return;
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 result);
+        Vector2 deltaDev2 = (newNode - BoundingBox[index]) / 2;
+        Translate += deltaDev2;
+        deltaDev2 = result * deltaDev2;
+        Nodes[index] += deltaDev2;
+        Nodes[(index + 1) % 2] -= deltaDev2;
+        CalcBB();
     }
 
     public event Action? OnChange;
