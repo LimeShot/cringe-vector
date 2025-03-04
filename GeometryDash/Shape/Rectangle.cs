@@ -66,29 +66,29 @@ public partial class Rectangle : IShape {
 
     public float[] GetLineVertices() {
         float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
-        return [Nodes[0].X / 2, Nodes[0].Y / 2, ..args,
-                Nodes[1].X / 2, Nodes[1].Y / 2, ..args,
+        return [Nodes[0].X , Nodes[0].Y , ..args,
+                Nodes[1].X , Nodes[1].Y , ..args,
 
-                Nodes[1].X / 2, Nodes[1].Y / 2, ..args,
-                Nodes[2].X / 2, Nodes[2].Y / 2, ..args,
+                Nodes[1].X , Nodes[1].Y , ..args,
+                Nodes[2].X , Nodes[2].Y , ..args,
 
-                Nodes[2].X / 2, Nodes[2].Y / 2, ..args,
-                Nodes[3].X / 2, Nodes[3].Y / 2, ..args,
+                Nodes[2].X , Nodes[2].Y , ..args,
+                Nodes[3].X , Nodes[3].Y , ..args,
 
-                Nodes[3].X / 2, Nodes[3].Y / 2, ..args,
-                Nodes[0].X / 2, Nodes[0].Y / 2, ..args];
+                Nodes[3].X , Nodes[3].Y , ..args,
+                Nodes[0].X , Nodes[0].Y , ..args];
     }
 
     public float[] GetTriangleVertices() {
         if (!Style.Fill) return [];
         float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
-        return [Nodes[0].X / 2, Nodes[0].Y / 2, ..args,
-                Nodes[1].X / 2, Nodes[1].Y / 2, ..args,
-                Nodes[2].X / 2, Nodes[2].Y / 2, ..args,
+        return [Nodes[0].X , Nodes[0].Y , ..args,
+                Nodes[1].X , Nodes[1].Y , ..args,
+                Nodes[2].X , Nodes[2].Y , ..args,
 
-                Nodes[0].X / 2, Nodes[0].Y / 2, ..args,
-                Nodes[2].X / 2, Nodes[2].Y / 2, ..args,
-                Nodes[3].X / 2, Nodes[3].Y / 2, ..args];
+                Nodes[0].X , Nodes[0].Y , ..args,
+                Nodes[2].X , Nodes[2].Y , ..args,
+                Nodes[3].X , Nodes[3].Y , ..args];
     }
 
     public float[] GetCircumferenceVertices() {
