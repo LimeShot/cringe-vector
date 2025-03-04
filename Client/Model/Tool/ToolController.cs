@@ -84,22 +84,6 @@ public class ToolController {
     }
 
     public void MouseMoveEvent(Point startPoint, Point currentPoint) {
-        foreach (IShape item in _canvas.Shapes) {
-            if (item.IsBelongsShape(new OpenTK.Mathematics.Vector2((float)currentPoint.X, (float)currentPoint.Y))) {
-
-                int verticeIndex = item.IsBBNode(new OpenTK.Mathematics.Vector2((float)currentPoint.X, (float)currentPoint.Y));
-
-                if (verticeIndex == 0)
-                    CurrentTool = Tools.Move.ToString();
-
-                if (verticeIndex >= 1 && verticeIndex <= 4)
-                    CurrentTool = Tools.Resize.ToString();
-
-                if (verticeIndex == 5)
-                    CurrentTool = Tools.Rotate.ToString();
-                break;
-            }
-        }
     }
 
 }
