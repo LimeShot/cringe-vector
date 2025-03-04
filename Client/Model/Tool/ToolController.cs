@@ -37,10 +37,12 @@ public class ToolController {
 
     public void OnMouseMove(Point currentPoint) {
         _currentTool!.MouseMoveEvent(currentPoint);
+        OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
     public void OnMouseUp(Point endPoint) {
         _currentTool!.MouseUpEvent(endPoint);
+        OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
     public void SetTool(string toolName) {

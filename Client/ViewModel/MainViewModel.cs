@@ -87,8 +87,10 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void OnMouseUp(MouseEventArgs e) {
-        if (e != null)
+        if (e != null) {
+            _toolController.OnMouseUp(e.GetPosition((IInputElement)e.Source));
             isDrawing = false;
+        }
     }
 
     [RelayCommand]
