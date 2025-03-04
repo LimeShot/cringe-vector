@@ -73,6 +73,11 @@ public class VAO : IDisposable {
         return InsertRange(_content.Count(), data);
     }
 
+    public void Clear() {
+        _content.Clear();
+        Commit();
+    }
+
     public void Dispose() {
         if (!_disposed) {
             GL.DeleteBuffer(_vbo);
