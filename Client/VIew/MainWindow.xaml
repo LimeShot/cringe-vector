@@ -110,90 +110,97 @@
                     HorizontalAlignment="Center"
                     Orientation="Vertical">
 
-                    <!-- Линия -->
                     <StackPanel Orientation="Horizontal" Margin="5">
-                        <ToggleButton x:Name="LineVisibilityToggle" IsChecked="True" VerticalAlignment="Center">
-                            <ToggleButton.Style>
-                                <Style TargetType="ToggleButton">
-                                    <Setter Property="Content">
-                                        <Setter.Value>
-                                            <Image Source="pack://siteoforigin:,,,/assets/icons/view.png" Width="16" Height="16"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsChecked" Value="False">
+                        <Image Source="pack://siteoforigin:,,,/assets/tools/line.png" Width="20" Height="20" Margin="5,0,5,0"/>
+                        <StackPanel>
+                            <TextBlock Text="Линия" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ToggleButton x:Name="LineVisibilityToggle" IsChecked="True" VerticalAlignment="Center">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton">
                                             <Setter Property="Content">
                                                 <Setter.Value>
-                                                    <Image Source="pack://siteoforigin:,,,/assets/icons/hide.png" Width="16" Height="16"/>
+                                                    <Image Source="pack://siteoforigin:,,,/assets/icons/view.png" Width="16" Height="16"/>
                                                 </Setter.Value>
                                             </Setter>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ToggleButton.Style>
-                        </ToggleButton>
-                        <Image Source="pack://siteoforigin:,,,/assets/tools/line.png" Width="16" Height="16" Margin="5,0,5,0"/>
-                        <TextBlock Text="Линия" VerticalAlignment="Center"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <Image Source="pack://siteoforigin:,,,/assets/icons/hide.png" Width="16" Height="16"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                </ToggleButton>
+                                <CheckBox Content="Обводка" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
 
-                    <!-- Прямоугольник -->
                     <StackPanel Orientation="Horizontal" Margin="5">
-                        <ToggleButton x:Name="RectangleVisibilityToggle" IsChecked="True" VerticalAlignment="Center">
-                            <ToggleButton.Style>
-                                <Style TargetType="ToggleButton">
-                                    <Setter Property="Content">
-                                        <Setter.Value>
-                                            <Image Source="pack://siteoforigin:,,,/assets/icons/view.png" Width="16" Height="16"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsChecked" Value="False">
+                        <Image Source="pack://siteoforigin:,,,/assets/tools/rectangle.png" Width="20" Height="20" Margin="5,0,5,0"/>
+                        <StackPanel>
+                            <TextBlock Text="Прямоугольник" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ToggleButton x:Name="RectangleVisibilityToggle" IsChecked="True" VerticalAlignment="Center">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton">
                                             <Setter Property="Content">
                                                 <Setter.Value>
-                                                    <Image Source="pack://siteoforigin:,,,/assets/icons/hide.png" Width="16" Height="16"/>
+                                                    <Image Source="pack://siteoforigin:,,,/assets/icons/view.png" Width="16" Height="16"/>
                                                 </Setter.Value>
                                             </Setter>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ToggleButton.Style>
-                        </ToggleButton>
-                        <Image Source="pack://siteoforigin:,,,/assets/tools/rectangle.png" Width="16" Height="16" Margin="5,0,5,0"/>
-                        <TextBlock Text="Прямоугольник" VerticalAlignment="Center"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <Image Source="pack://siteoforigin:,,,/assets/icons/hide.png" Width="16" Height="16"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                </ToggleButton>
+                                <CheckBox Content="Обводка" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
 
-                    <!-- Эллипс -->
                     <StackPanel Orientation="Horizontal" Margin="5">
-                        <ToggleButton x:Name="EllipseVisibilityToggle" IsChecked="True" VerticalAlignment="Center">
-                            <ToggleButton.Style>
-                                <Style TargetType="ToggleButton">
-                                    <Setter Property="Content">
-                                        <Setter.Value>
-                                            <Image Source="pack://siteoforigin:,,,/assets/icons/view.png" Width="16" Height="16"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsChecked" Value="False">
+                        <Image Source="pack://siteoforigin:,,,/assets/tools/ellipse.png" Width="20" Height="20" Margin="5,0,5,0"/>
+                        <StackPanel>
+                            <TextBlock Text="Прямоугольник" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ToggleButton x:Name="EllipseVisibilityToggle" IsChecked="True" VerticalAlignment="Center">
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton">
                                             <Setter Property="Content">
                                                 <Setter.Value>
-                                                    <Image Source="pack://siteoforigin:,,,/assets/icons/hide.png" Width="16" Height="16"/>
+                                                    <Image Source="pack://siteoforigin:,,,/assets/icons/view.png" Width="16" Height="16"/>
                                                 </Setter.Value>
                                             </Setter>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ToggleButton.Style>
-                        </ToggleButton>
-                        <Image Source="pack://siteoforigin:,,,/assets/tools/ellipse.png" Width="16" Height="16" Margin="5,0,5,0"/>
-                        <TextBlock Text="Эллипс" VerticalAlignment="Center"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter Property="Content">
+                                                        <Setter.Value>
+                                                            <Image Source="pack://siteoforigin:,,,/assets/icons/hide.png" Width="16" Height="16"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ToggleButton.Style>
+                                </ToggleButton>
+                                <CheckBox Content="Обводка" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
-
                 </WrapPanel>
-
-
             </Border>
         </Grid>
     </DockPanel>
-
-
 </Window>
