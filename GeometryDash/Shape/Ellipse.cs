@@ -17,7 +17,10 @@ public partial class Ellipse : IShape {
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
-        // TODO: Посчитать в абсолютных координатах, с учетом Rotate и Translate, и запихнуть в BoundingBox
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
+        for (int i = 0; i < 4; i++) {
+            BoundingBox[i] = result * Nodes[i] + Translate;
+        }
         return;
     }
 
@@ -28,6 +31,34 @@ public partial class Ellipse : IShape {
         Style = new();
         BoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
+        CalcBB();
+    }
+
+    public Ellipse(Vector2 p1, float z, ShapeStyle? shapeStyle = null) {
+        Translate = p1;
+        Z = z;
+        Rotate = 0.0f;
+        Style = shapeStyle ?? new();
+        BoundingBox = new Vector2[4];
+        Nodes = new Vector2[4];
+        for (int i = 0; i < 4; i++) {
+            Nodes[i] = Vector2.Zero;
+        }
+        CalcBB();
+    }
+
+    public Ellipse(Vector2 p1, float diagonal, float z, ShapeStyle? shapeStyle = null) {
+        Translate = p1;
+        Z = z;
+        Rotate = 0.0f;
+        Style = shapeStyle ?? new();
+        BoundingBox = new Vector2[4];
+        Nodes = new Vector2[4];
+        float diagonalDev2 = diagonal / 2;
+        Nodes[0] = new(-diagonalDev2, diagonalDev2);
+        Nodes[1] = new(diagonalDev2, diagonalDev2);
+        Nodes[2] = new(diagonalDev2, -diagonalDev2);
+        Nodes[3] = new(-diagonalDev2, -diagonalDev2);
         CalcBB();
     }
 
@@ -74,7 +105,7 @@ public partial class Ellipse : IShape {
     }
 
     public void Move(Vector2 oldPoint, Vector2 newPoint) {
-        // TODO: Переделать под новый интерфейс + добавить вызов ивента OnChange
+        // TODO: Переделать под новый интерфейс
 
         /*float deltaX = x2 - x1;
         float deltaY = y2 - y1;
@@ -87,7 +118,15 @@ public partial class Ellipse : IShape {
     }
 
     public void Resize(int index, Vector2 newNode) {
-        // TODO: Реализовать метод
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 result);
+        Vector2 deltaDev2 = (newNode - BoundingBox[index]) / 2;
+        Translate += deltaDev2;
+        deltaDev2 = result * deltaDev2;
+        Nodes[index] += deltaDev2;
+        Nodes[(index + 2) % 4] -= deltaDev2;
+        Nodes[(index + 1) % 4] = (Nodes[(index + 2) % 4].X, Nodes[index].Y);
+        Nodes[(index + 3) % 4] = (Nodes[index].X, Nodes[(index + 2) % 4].Y);
+        CalcBB();
         return;
     }
 
