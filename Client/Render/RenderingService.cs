@@ -23,7 +23,9 @@ public class RenderingService {
             #version 330 core
 
             layout (location = 0) in vec3 aPos;
-            layout (location = 1) in vec3 aColor;
+            layout (location = 1) in vec2 aTranslate;
+            layout (location = 2) in float aRotate;
+            layout (location = 3) in vec3 aColor;
 
             out vec3 VertColor;
 
@@ -43,13 +45,15 @@ public class RenderingService {
             void main() {
                 FragColor = vec4(VertColor, 1.0);
             }");
-        _vaoLine = new([3, 3]);
+        _vaoLine = new([3, 2, 1, 3]);
 
         _shaderTriangle = new(@"
             #version 330 core
 
             layout (location = 0) in vec3 aPos;
-            layout (location = 1) in vec3 aColor;
+            layout (location = 1) in vec2 aTranslate;
+            layout (location = 2) in float aRotate;
+            layout (location = 3) in vec3 aColor;
 
             out vec3 VertColor;
 
@@ -69,7 +73,7 @@ public class RenderingService {
             void main() {
                 FragColor = vec4(VertColor, 1.0);
             }");
-        _vaoTriangle = new([3, 3]);
+        _vaoTriangle = new([3, 2, 1, 3]);
 
         _shaderCircle = new(@"
             #version 330 core
@@ -210,7 +214,7 @@ public class RenderingService {
             }");
         _vaoCircumference = new([3, 2, 3]);
 
-        _vaoBackground = new([3, 3]);
+        _vaoBackground = new([3, 2, 1, 3]);
 
         GL.Enable(EnableCap.DepthTest);
         rebuildVBOs();
@@ -231,13 +235,13 @@ public class RenderingService {
             _vaoCircumference.Append(shape.GetCircumferenceVertices());
         }
         _vaoBackground.Append([
-            -_canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
-            _canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
-            _canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
+            -_canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+            _canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+            _canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 
-            -_canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
-            _canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f,
-            -_canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 1.0f, 1.0f, 1.0f
+            -_canvas.Width / 2.0f, -_canvas.Height / 2.0f, -0.9999f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+            _canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+            -_canvas.Width / 2.0f, _canvas.Height / 2.0f, -0.9999f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f
         ]);
     }
 
