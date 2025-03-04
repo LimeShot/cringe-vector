@@ -44,8 +44,8 @@ public partial class Line : IShape {
     }
 
     public float[] GetLineVertices() {
-        // TODO: Необходимо возвращать [x,y,Z,color.x,color.y,,color.z] 2 вершины
-        return [];
+        return [Nodes[0].X, Nodes[0].Y, Z, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+                Nodes[1].X, Nodes[1].Y, Z, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
     }
 
     public float[] GetTriangleVertices() {
