@@ -65,28 +65,30 @@ public partial class Rectangle : IShape {
     }
 
     public float[] GetLineVertices() {
-        return [Nodes[0].X / 2, Nodes[0].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
-                Nodes[1].X / 2, Nodes[1].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+        float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
+        return [Nodes[0].X / 2, Nodes[0].Y / 2, ..args,
+                Nodes[1].X / 2, Nodes[1].Y / 2, ..args,
 
-                Nodes[1].X / 2, Nodes[1].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
-                Nodes[2].X / 2, Nodes[2].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+                Nodes[1].X / 2, Nodes[1].Y / 2, ..args,
+                Nodes[2].X / 2, Nodes[2].Y / 2, ..args,
 
-                Nodes[2].X / 2, Nodes[2].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
-                Nodes[3].X / 2, Nodes[3].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
+                Nodes[2].X / 2, Nodes[2].Y / 2, ..args,
+                Nodes[3].X / 2, Nodes[3].Y / 2, ..args,
 
-                Nodes[3].X / 2, Nodes[3].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z,
-                Nodes[0].X / 2, Nodes[0].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
+                Nodes[3].X / 2, Nodes[3].Y / 2, ..args,
+                Nodes[0].X / 2, Nodes[0].Y / 2, ..args];
     }
 
     public float[] GetTriangleVertices() {
         if (!Style.Fill) return [];
-        return [Nodes[0].X / 2, Nodes[0].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
-                Nodes[1].X / 2, Nodes[1].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
-                Nodes[2].X / 2, Nodes[2].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
+        float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
+        return [Nodes[0].X / 2, Nodes[0].Y / 2, ..args,
+                Nodes[1].X / 2, Nodes[1].Y / 2, ..args,
+                Nodes[2].X / 2, Nodes[2].Y / 2, ..args,
 
-                Nodes[0].X / 2, Nodes[0].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
-                Nodes[2].X / 2, Nodes[2].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z,
-                Nodes[3].X / 2, Nodes[3].Y / 2, Z, Translate.X, Translate.Y, Rotate, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z];
+                Nodes[0].X / 2, Nodes[0].Y / 2, ..args,
+                Nodes[2].X / 2, Nodes[2].Y / 2, ..args,
+                Nodes[3].X / 2, Nodes[3].Y / 2, ..args];
     }
 
     public float[] GetCircumferenceVertices() {
