@@ -30,7 +30,7 @@ public partial class MainViewModel : ObservableObject {
     public MainViewModel(MainWindow window) {
         _window = window;
         _canvas = new();
-        _toolController = new(window, _canvas, "Line");
+        _toolController = new(window, _canvas);
         _renderingService = new(_canvas);
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
@@ -73,7 +73,7 @@ public partial class MainViewModel : ObservableObject {
         if (e != null && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) { //добавить клик на холст
             isDrawing = true;
             StartPoint = e.GetPosition((IInputElement)e.Source);
-            //_toolController.MouseDownEvent(StartPoint);
+            _toolController.OnMouseDown(StartPoint);
         }
     }
 
@@ -81,7 +81,7 @@ public partial class MainViewModel : ObservableObject {
     private void OnMouseMove(MouseEventArgs e) {
         if (e != null && isDrawing == true && e.Source is GLWpfControl) {
             CurrentPoint = e.GetPosition((IInputElement)e.Source);
-            //_toolController.MouseMoveEvent(StartPoint, CurrentPoint);
+            _toolController.OnMouseMove(CurrentPoint);
         }
     }
 
