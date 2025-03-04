@@ -77,6 +77,7 @@ public partial class Ellipse : IShape {
     }
 
     public float[] GetCircleVertices() {
+        if (!Style.Fill) return [];
         float width = Math.Abs(Nodes[0].X - Nodes[2].X);
         float height = Math.Abs(Nodes[0].Y - Nodes[2].Y);
         return [Translate.X, Translate.Y, Z, width, height, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z];
