@@ -32,7 +32,7 @@ public class RenderingService {
             uniform mat4 uProjection, uView;
 
             void main() {
-                gl_Position = uProjection * uView * vec4(aPos, 1.0);
+                gl_Position = uProjection * uView * vec4(aPos + vec3(aTranslate, 0.0), 1.0);
                 VertColor = aColor;
             }
             ", @"
@@ -60,7 +60,7 @@ public class RenderingService {
             uniform mat4 uProjection, uView;
 
             void main() {
-                gl_Position = uProjection * uView * vec4(aPos, 1.0);
+                gl_Position = uProjection * uView * vec4(aPos + vec3(aTranslate, 0.0), 1.0);
                 VertColor = aColor;
             }
             ", @"
