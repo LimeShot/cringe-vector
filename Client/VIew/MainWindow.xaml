@@ -135,7 +135,7 @@
                                         </Style>
                                     </ToggleButton.Style>
                                 </ToggleButton>
-                                <CheckBox Content="Обводка" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                <CheckBox Content="Заливка" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
@@ -165,7 +165,7 @@
                                         </Style>
                                     </ToggleButton.Style>
                                 </ToggleButton>
-                                <CheckBox Content="Обводка" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                <CheckBox Content="Заливка" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
@@ -195,7 +195,7 @@
                                         </Style>
                                     </ToggleButton.Style>
                                 </ToggleButton>
-                                <CheckBox Content="Обводка" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                                <CheckBox Content="Заливка" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
