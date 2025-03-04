@@ -23,7 +23,7 @@ public interface IShape {
     public float[] GetCircleVertices();
 
     //Метод для проверки принадлежности точки фигуре 
-    public bool IsBelongsShape(Vector2 point);
+    public bool IsBelongsShape(Vector2 point, float radiusPoint);
 
     //Метод для проверки принадлежности точки BoundingBox, возвращает индекс вершины
     public int IsBBNode(Vector2 point);

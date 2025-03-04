@@ -49,23 +49,22 @@ public partial class Ellipse : IShape {
         return [];
     }
 
-    public bool IsBelongsShape(Vector2 point) {
-        // TODO: Переделать под новый интерфейс
-
-        /*float dx = point.X - Translate.X;
-        float dy = point.Y - Translate.Y;
+    public bool IsBelongsShape(Vector2 point, float radiusPoint) {
+        Vector2 localPoint = point - Translate;
 
         float angle = -MathHelper.DegreesToRadians(Rotate);
+        float xRot = localPoint.X * MathF.Cos(angle) - localPoint.Y * MathF.Sin(angle);
+        float yRot = localPoint.X * MathF.Sin(angle) + localPoint.Y * MathF.Cos(angle);
 
-        float xRot = dx * MathF.Cos(angle) - dy * MathF.Sin(angle);
-        float yRot = dx * MathF.Sin(angle) + dy * MathF.Cos(angle);
+        Vector2 localP1 = Nodes[0] - Translate;
+        Vector2 localP2 = Nodes[1] - Translate;
 
-        float a = Size.X / 2;
-        float b = Size.Y / 2;
+        float a = Math.Abs(localP2.X - localP1.X) / 2 + radiusPoint;
+        float b = Math.Abs(localP2.Y - localP1.Y) / 2 + radiusPoint;
 
-        return (xRot * xRot) / (a * a) + (yRot * yRot) / (b * b) <= 1;*/
-        return false;
+        return (xRot * xRot) / (a * a) + (yRot * yRot) / (b * b) <= 1;
     }
+
 
     public int IsBBNode(Vector2 point) {
         // TODO: Реализовать метод

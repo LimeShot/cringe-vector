@@ -63,22 +63,19 @@ public partial class Rectangle : IShape {
         return [];
     }
 
-    public bool IsBelongsShape(Vector2 point) {
-        // TODO: Переделать под новый интерфейс
-
-        /*Vector2 localPoint = point - Translate;
+    public bool IsBelongsShape(Vector2 point, float radiusPoint) {
+        Vector2 localPoint = point - Translate;
 
         float angle = -MathHelper.DegreesToRadians(Rotate);
-
         float xRot = localPoint.X * MathF.Cos(angle) - localPoint.Y * MathF.Sin(angle);
         float yRot = localPoint.X * MathF.Sin(angle) + localPoint.Y * MathF.Cos(angle);
+        localPoint = new Vector2(xRot, yRot);
 
-        float halfWidth = Size.X / 2;
-        float halfHeight = Size.Y / 2;
+        float halfWidth = (Nodes[1].X - Nodes[0].X) / 2 + radiusPoint;
+        float halfHeight = (Nodes[1].Y - Nodes[0].Y) / 2 + radiusPoint;
 
         return xRot >= -halfWidth && xRot <= halfWidth &&
-            yRot >= -halfHeight && yRot <= halfHeight;*/
-        return false;
+               yRot >= -halfHeight && yRot <= halfHeight;
     }
 
     public int IsBBNode(Vector2 point) {

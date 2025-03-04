@@ -60,30 +60,34 @@ public partial class Line : IShape {
         return [];
     }
 
-    public bool IsBelongsShape(Vector2 point) {
-        // TODO: Переделать под новый интерфейс
-
-        /*Vector2 localPoint = point - Translate;
+    public bool IsBelongsShape(Vector2 point, float radiusPoint) {
+        Vector2 localPoint = point - Translate;
 
         float angle = -MathHelper.DegreesToRadians(Rotate);
-
         float xRot = localPoint.X * MathF.Cos(angle) - localPoint.Y * MathF.Sin(angle);
         float yRot = localPoint.X * MathF.Sin(angle) + localPoint.Y * MathF.Cos(angle);
-        localPoint = new(xRot, yRot);
+        localPoint = new Vector2(xRot, yRot);
 
-        Vector2 localP1 = Point1 - Translate;
-        Vector2 localP2 = Point2 - Translate;
+        Vector2 localP1 = Nodes[0] - Translate;
+        Vector2 localP2 = Nodes[1] - Translate;
+        Vector2 lineVector = localP2 - localP1;
+        float lineLength = lineVector.Length;
 
-        Vector2 lineVec = localP2 - localP1;
+        Vector2 lineDir = lineVector.Normalized();
+
         Vector2 pointVec = localPoint - localP1;
+        float projection = Vector2.Dot(pointVec, lineDir);
 
-        float projection = Vector2.Dot(pointVec, lineVec) / lineVec.LengthSquared;
-        if (projection < 0 || projection > 1) return false;
+        bool withinLength = projection >= -radiusPoint && projection <= lineLength + radiusPoint;
 
-        Vector2 closestPoint = localP1 + projection * lineVec;
-        return (localPoint - closestPoint).Length < 0.01f;*/
-        return false;
+        Vector2 normal = new Vector2(-lineDir.Y, lineDir.X);
+        float distanceToLine = Math.Abs(Vector2.Dot(normal, pointVec));
+
+        bool withinWidth = distanceToLine <= radiusPoint;
+
+        return withinLength && withinWidth;
     }
+
 
     public int IsBBNode(Vector2 point) {
         // TODO: Реализовать метод
