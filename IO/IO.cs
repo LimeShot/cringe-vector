@@ -1,7 +1,6 @@
 ﻿using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 using CringeCraft.GeometryDash;
-
 namespace CringeCraft.IO;
 interface IOutput {
     public void Export(ICanvas Field); // функция, берущая класс с фигурами
@@ -21,24 +20,23 @@ public class OutputToCRNG : IOutput {
         using (FileStream fstream = new FileStream(Path, FileMode.OpenOrCreate)) {
 
             // Настройки сериализации
-            var options = new JsonSerializerOptions {
-                WriteIndented = true, 
-                Converters = { new ShapeConverter() } // Добавляем кастомный конвертер
+            var settings = new JsonSerializerSettings {
+                ContractResolver = new PrivateSetterContractResolver(),
+                Converters = new List<JsonConverter> { new Vector2Converter(), new Vector3Converter() },
+                Formatting = Formatting.Indented,
+                TypeNameHandling = TypeNameHandling.Auto
             };
 
-          // Сериализация в JSON
-            string json = JsonSerializer.Serialize(Field, options);
-          
+            // Сериализация в JSON
+            string json = JsonConvert.SerializeObject(Field, settings);
 
-            string text = "<svg>\n</svg>";
             if (!File.Exists(Path)) {
                 File.Create(Path);
             }
             // преобразуем строку в байты
-            byte[] buffer = Encoding.Default.GetBytes(text);
+            byte[] buffer = Encoding.Default.GetBytes(json);
             // запись массива байтов в файл
-            fstream.WriteAsync(buffer, 0, buffer.Length);
-            Console.WriteLine("Текст записан в файл");
+            fstream.WriteAsync(buffer, 0, buffer.Length);            
         }
     }
 }
