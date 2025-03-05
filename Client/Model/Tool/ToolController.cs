@@ -40,8 +40,8 @@ public class ToolController {
     }
 
     public void UpdateSize() {
-        _actualWidth = _window.ActualWidth;
-        _actualHeight = _window.ActualHeight;
+        _actualWidth = _window.OpenTkControl.ActualWidth;
+        _actualHeight = _window.OpenTkControl.ActualHeight;
 
         Console.WriteLine(_actualWidth);
         Console.WriteLine(_actualHeight);
@@ -49,18 +49,18 @@ public class ToolController {
 
     public void OnMouseDown(Point startPoint) {
         UpdateSize();
-        startPoint = new Point(startPoint.X - _actualWidth / 2, -startPoint.Y + _actualHeight / 2.4);
+        startPoint = new Point(startPoint.X - _actualWidth / 2, -startPoint.Y + _actualHeight / 2);
         _currentTool.MouseDownEvent(startPoint);
     }
 
     public void OnMouseMove(Point currentPoint) {
-        currentPoint = new Point(currentPoint.X - _actualWidth / 2, -currentPoint.Y + _actualHeight / 2.4);
+        currentPoint = new Point(currentPoint.X - _actualWidth / 2, -currentPoint.Y + _actualHeight / 2);
         _currentTool.MouseMoveEvent(currentPoint);
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
     public void OnMouseUp(Point endPoint) {
-        endPoint = new Point(endPoint.X - _actualWidth / 2, -endPoint.Y + _actualHeight / 2.4);
+        endPoint = new Point(endPoint.X - _actualWidth / 2, -endPoint.Y + _actualHeight / 2);
         _currentTool.MouseUpEvent(endPoint);
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
