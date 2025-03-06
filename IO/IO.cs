@@ -51,7 +51,7 @@ public class ExportToSVG : IExporter {
                 line = $"<rect class=\"st0\" x=\"{shape.Nodes[0].X}\" y=\"{shape.Nodes[0].Y}\" width=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[1].X)}\" height=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[3].Y)}\" transform=\"rotate({shape.Rotate})\"/>";
                 break;
             case "CringeCraft.GeometryDash.Shape.Ellipse":
-                line = $"<ellipse class=\"st0\" cx=\"{shape.Translate.X}\" cy=\"{shape.Translate.X}\" rx=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[1].X)}\" ry=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[3].Y)}\" transform=\"rotate({shape.Rotate})\"/>";
+                line = $"<ellipse class=\"st0\" cx=\"{shape.Translate.X}\" cy=\"{shape.Translate.Y * (-1)}\" rx=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[2].X) / 2}\" ry=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[2].Y) / 2}\" transform=\"rotate({shape.Rotate})\"/>";
                 break;
             default:
                 throw new Exception("Это не просто кринж, это не живет в IShape");
