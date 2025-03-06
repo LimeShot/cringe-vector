@@ -1,23 +1,21 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
 using CringeCraft.GeometryDash;
+using CringeCraft.GeometryDash.Shape;
+using System.Reflection.Metadata;
 namespace CringeCraft.IO;
-interface IOutput {
-    public void Export(ICanvas Field); // функция, берущая класс с фигурами
+public interface IExporter {
+    public void Export(string path,ICanvas field); // функция, берущая класс с фигурами
 }
 
-interface IInput {
+public interface IImporter {
     public void Import(); // функция, возвращающая класс с фигурами
 }
 
-public class OutputToCRNG : IOutput {
-    public string Path;
-    public OutputToCRNG(string path) {
-        Path = path;
-    }
-    
-    public void Export(ICanvas Field) {
-        using (FileStream fstream = new FileStream(Path, FileMode.OpenOrCreate)) {
+public class OutputToCRNG : IExporter {
+
+    public void Export(string path,ICanvas Field) {
+        using (FileStream fstream = new FileStream(path, FileMode.OpenOrCreate)) {
 
             // Настройки сериализации
             var settings = new JsonSerializerSettings {
@@ -30,8 +28,8 @@ public class OutputToCRNG : IOutput {
             // Сериализация в JSON
             string json = JsonConvert.SerializeObject(Field, settings);
 
-            if (!File.Exists(Path)) {
-                File.Create(Path);
+            if (!File.Exists(path)) {
+                File.Create(path);
             }
             // преобразуем строку в байты
             byte[] buffer = Encoding.Default.GetBytes(json);
@@ -40,13 +38,43 @@ public class OutputToCRNG : IOutput {
         }
     }
 }
-public class OutputToSVG : IOutput {
-    public string Path;
-    public OutputToSVG(string path) {
-        Path = path;
+
+public class OutputToSVG : IExporter {
+
+
+    private string shapeToSVG(IShape shape)
+    {
+        string line;
+        Console.WriteLine(shape.GetType().ToString());
+        switch (shape.GetType().ToString())
+        {
+            case "CringeCraft.GeometryDash.Shape.Line":
+                line=$"<line class=\"st0\" x1=\"{shape.BoundingBox[1].X}\" y1=\"{shape.BoundingBox[1].Y}\" x2=\"{shape.BoundingBox[3].X}\" y2=\"{shape.BoundingBox[3].Y}\"/>";
+                break;
+            case "CringeCraft.GeometryDash.Shape.Rectangle":
+                line=$"<rect class=\"st0\" x=\"{shape.Nodes[0].X}\" y=\"{shape.Nodes[0].Y}\" width=\"{Math.Abs(shape.Nodes[0].X-shape.Nodes[1].X)}\" height=\"{Math.Abs(shape.Nodes[0].Y-shape.Nodes[3].Y)}\", transform=\"rotate({shape.Rotate})\"/>";
+                break;
+            case "CringeCraft.GeometryDash.Shape.Ellipse":
+                line=$"<ellipse class=\"st0\" cx=\"{shape.Translate.X}\" cy=\"{shape.Translate.X}\" rx=\"{Math.Abs(shape.Nodes[0].X-shape.Nodes[1].X)}\" ry=\"{Math.Abs(shape.Nodes[0].Y-shape.Nodes[3].Y)}\", transform=\"rotate({shape.Rotate})\"/>";
+                break;
+            default:
+            throw new Exception("Это не просто кринж, это не живет в IShape");
+        }
+        return line;
     }
-    public void Export(ICanvas Field) {
-        using (FileStream fstream = new FileStream(Path, FileMode.OpenOrCreate)) { }
+    public void Export(string path,ICanvas Field) {
+        using (FileStream fstream = new FileStream(path, FileMode.OpenOrCreate)) {
+            string text=$"<svg width=\"{Field.Width}\" height=\"{Field.Height}\" xmlns=\"http://www.w3.org/2000/svg\">\n";
+            text+="<defs>\n<style>\n.st0 {\nstroke: #000000;\nfill: blue;\n}\n</style>\n</defs>";
+            for (int i = 0; i < Field.Shapes.Count; i++) 
+            {
+                text+=$"{shapeToSVG(Field.Shapes[i])}\n";
+            }
+            text+="</svg>";
+            byte[] buffer = Encoding.Default.GetBytes(text);
+            fstream.WriteAsync(buffer, 0, buffer.Length);
+
+        }
             
     }
 }
