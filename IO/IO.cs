@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using System.Reflection.Metadata;
+using System.ComponentModel.DataAnnotations;
 namespace CringeCraft.IO;
 public interface IExporter {
     public void Export(string path, ICanvas field); // функция, берущая класс с фигурами
@@ -48,7 +49,7 @@ public class ExportToSVG : IExporter {
                 line = $"<line class=\"st0\" x1=\"{shape.BoundingBox[1].X}\" y1=\"{shape.BoundingBox[1].Y * (-1)}\" x2=\"{shape.BoundingBox[3].X}\" y2=\"{shape.BoundingBox[3].Y * (-1)}\"/>";
                 break;
             case "CringeCraft.GeometryDash.Shape.Rectangle":
-                line = $"<rect class=\"st0\" x=\"{shape.Nodes[0].X}\" y=\"{shape.Nodes[0].Y}\" width=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[1].X)}\" height=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[3].Y)}\" transform=\"rotate({shape.Rotate})\"/>";
+                line = $"<rect class=\"st0\" x=\"{Math.Min(shape.Nodes[0].X, shape.Nodes[2].X)}\" y=\"{Math.Max(shape.Nodes[0].Y, shape.Nodes[2].Y) * (-1)}\" width=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[2].X)}\" height=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[2].Y)}\" transform=\"translate({shape.Translate.X}, {shape.Translate.Y * (-1)}) rotate({shape.Rotate})\"/>";
                 break;
             case "CringeCraft.GeometryDash.Shape.Ellipse":
                 line = $"<ellipse class=\"st0\" cx=\"{shape.Translate.X}\" cy=\"{shape.Translate.Y * (-1)}\" rx=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[2].X) / 2}\" ry=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[2].Y) / 2}\" transform=\"rotate({shape.Rotate})\"/>";
