@@ -96,7 +96,7 @@ public partial class Line : IShape {
         Vector2 normal = new Vector2(-lineDir.Y, lineDir.X);
         float distanceToLine = Math.Abs(Vector2.Dot(normal, pointVec));
 
-        bool withinWidth = distanceToLine <= radiusPoint;
+        bool withinWidth = distanceToLine <= (radiusPoint + 3);
 
         return withinLength && withinWidth;
     }
@@ -107,16 +107,10 @@ public partial class Line : IShape {
         return 0;
     }
 
-    public void Move(Vector2 oldPoint, Vector2 newPoint) {
+    public void Move(Vector2 delta) {
         // TODO: Переделать под новый интерфейс
-
-        /*float deltaX = x2 - x1;
-        float deltaY = y2 - y1;
-
-        Translate += new Vector2(deltaX, deltaY);
-
-        Point1 += new Vector2(deltaX, deltaY);
-        Point2 += new Vector2(deltaX, deltaY);*/
+        Translate += delta;
+        CalcBB();
     }
 
     public void MoveNode(int index, Vector2 newNode) {
@@ -132,6 +126,4 @@ public partial class Line : IShape {
         Nodes[(index + 1) % 2] -= deltaDev2;
         CalcBB();
     }
-
-    public event Action? OnChange;
 }

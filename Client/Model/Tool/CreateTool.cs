@@ -1,5 +1,5 @@
-using System.Numerics;
 using System.Windows;
+using OpenTK.Mathematics;
 
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash;
@@ -8,25 +8,25 @@ using CringeCraft.GeometryDash.Shape;
 namespace CringeCraft.Client.Model.Tool;
 public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>? e) : ITool {
     private readonly MyCanvas _canvas = canvas;
-    private Point _startPoint;
+    private Vector2 _startPoint;
     public event EventHandler<List<IShape>>? OnShapeChanged = e;
 
     public string Name { get; set; } = name;
 
-    public void MouseDownEvent(Point startPoint) {
+    public void MouseDownEvent(Vector2 startPoint) {
         _startPoint = startPoint;
         Console.WriteLine(startPoint);
         AddShape(_canvas, new OpenTK.Mathematics.Vector2((float)startPoint.X, (float)startPoint.Y));
     }
 
-    public void MouseMoveEvent(Point currentPoint) {
-        _canvas.Shapes[_canvas.Shapes.Count - 1].Resize(1, new OpenTK.Mathematics.Vector2((float)currentPoint.X, (float)currentPoint.Y));
+    public void MouseMoveEvent(Vector2 currentPoint) {
+        _canvas.Shapes[_canvas.Shapes.Count - 1].Resize(1, currentPoint);
         //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
-    public void MouseUpEvent(Point endPoint) {
+    public void MouseUpEvent(Vector2 endPoint) {
         if (endPoint == _startPoint) {
             _canvas.Shapes.Remove(_canvas.Shapes[_canvas.Shapes.Count - 1]);
-            AddShape(_canvas, new OpenTK.Mathematics.Vector2((float)_startPoint.X, (float)_startPoint.Y), 100);
+            AddShape(_canvas, endPoint, 100);
             //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
         }
     }

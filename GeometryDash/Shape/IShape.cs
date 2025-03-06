@@ -29,13 +29,11 @@ public interface IShape {
     public int IsBBNode(Vector2 point);
 
     // Метод для перемещения фигуры на основе разницы между двумя точками
-    public void Move(Vector2 oldPoint, Vector2 newPoint);
+    public void Move(Vector2 delta);
 
     // Метод чисто для Безье(но это не точно)
     public void MoveNode(int index, Vector2 newNode);
 
     // Метод изменения фигуры при изменении координат только одного узла BoundingBox
     public void Resize(int index, Vector2 newNode);
-
-    public event Action? OnChange;
 }

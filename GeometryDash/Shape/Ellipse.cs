@@ -91,7 +91,7 @@ public partial class Ellipse : IShape {
         float yRot = localPoint.X * MathF.Sin(angle) + localPoint.Y * MathF.Cos(angle);
 
         Vector2 localP1 = Nodes[0] - Translate;
-        Vector2 localP2 = Nodes[1] - Translate;
+        Vector2 localP2 = Nodes[2] - Translate;
 
         float a = Math.Abs(localP2.X - localP1.X) / 2 + radiusPoint;
         float b = Math.Abs(localP2.Y - localP1.Y) / 2 + radiusPoint;
@@ -105,13 +105,9 @@ public partial class Ellipse : IShape {
         return 0;
     }
 
-    public void Move(Vector2 oldPoint, Vector2 newPoint) {
-        // TODO: Переделать под новый интерфейс
-
-        /*float deltaX = x2 - x1;
-        float deltaY = y2 - y1;
-
-        Translate += new Vector2(deltaX, deltaY);*/
+    public void Move(Vector2 delta) {
+        Translate += delta;
+        CalcBB();
     }
 
     public void MoveNode(int index, Vector2 newNode) {
@@ -133,16 +129,6 @@ public partial class Ellipse : IShape {
             Nodes[(index + 1) % 4] = (Nodes[index].X, Nodes[diagIndex].Y);
             Nodes[(index + 3) % 4] = (Nodes[diagIndex].X, Nodes[index].Y);
         }
-        if (Nodes[0].X - Nodes[1].X > 0.0f && MathF.Abs(Nodes[0].X - Nodes[1].X) > 1E-6) {
-            (Nodes[0], Nodes[1]) = (Nodes[1], Nodes[0]);
-            (Nodes[3], Nodes[2]) = (Nodes[2], Nodes[3]);
-        }
-        if (Nodes[0].Y - Nodes[3].Y < 0.0f && MathF.Abs(Nodes[0].Y - Nodes[3].Y) > 1E-6) {
-            (Nodes[1], Nodes[2]) = (Nodes[2], Nodes[1]);
-            (Nodes[0], Nodes[3]) = (Nodes[3], Nodes[0]);
-        }
         CalcBB();
     }
-
-    public event Action? OnChange;
 }

@@ -106,9 +106,8 @@ public partial class Rectangle : IShape {
         float xRot = localPoint.X * MathF.Cos(angle) - localPoint.Y * MathF.Sin(angle);
         float yRot = localPoint.X * MathF.Sin(angle) + localPoint.Y * MathF.Cos(angle);
         localPoint = new Vector2(xRot, yRot);
-
-        float halfWidth = (Nodes[1].X - Nodes[0].X) / 2 + radiusPoint;
-        float halfHeight = (Nodes[1].Y - Nodes[0].Y) / 2 + radiusPoint;
+        float halfWidth = Nodes[1].X - Nodes[0].X + radiusPoint;
+        float halfHeight = Nodes[1].Y - Nodes[3].Y + radiusPoint;
 
         return xRot >= -halfWidth && xRot <= halfWidth &&
                yRot >= -halfHeight && yRot <= halfHeight;
@@ -119,13 +118,10 @@ public partial class Rectangle : IShape {
         return 0;
     }
 
-    public void Move(Vector2 oldPoint, Vector2 newPoint) {
+    public void Move(Vector2 delta) {
         // TODO: Переделать под новый интерфейс
-
-        /*float deltaX = x2 - x1;
-        float deltaY = y2 - y1;
-
-        Translate += new Vector2(deltaX, deltaY);*/
+        Translate += delta;
+        CalcBB();
     }
 
     public void MoveNode(int index, Vector2 newNode) {
@@ -147,16 +143,6 @@ public partial class Rectangle : IShape {
             Nodes[(index + 1) % 4] = (Nodes[index].X, Nodes[diagIndex].Y);
             Nodes[(index + 3) % 4] = (Nodes[diagIndex].X, Nodes[index].Y);
         }
-        if (Nodes[0].X - Nodes[1].X > 0.0f && MathF.Abs(Nodes[0].X - Nodes[1].X) > 1E-6) {
-            (Nodes[0], Nodes[1]) = (Nodes[1], Nodes[0]);
-            (Nodes[3], Nodes[2]) = (Nodes[2], Nodes[3]);
-        }
-        if (Nodes[0].Y - Nodes[3].Y < 0.0f && MathF.Abs(Nodes[0].Y - Nodes[3].Y) > 1E-6) {
-            (Nodes[1], Nodes[2]) = (Nodes[2], Nodes[1]);
-            (Nodes[0], Nodes[3]) = (Nodes[3], Nodes[0]);
-        }
         CalcBB();
     }
-
-    public event Action? OnChange;
 }
