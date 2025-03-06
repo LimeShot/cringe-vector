@@ -6,12 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-<<<<<<< HEAD
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-
-=======
     <ItemGroup>
     <ProjectReference Include="..\GeometryDash\GeometryDash.csproj" />
   </ItemGroup>
@@ -19,5 +13,4 @@
     <ItemGroup>
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
->>>>>>> dev
 </Project>

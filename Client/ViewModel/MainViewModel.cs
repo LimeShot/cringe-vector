@@ -103,8 +103,7 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void SaveFile() {
-        string content = "Текст для сохранения"; // Тут можно передавать данные из ViewModel
-        string? filePath = FileService.SaveFile(content);
+        string? filePath = FileService.SaveFile(Canvas);
         if (filePath != null) {
             Debug.WriteLine($"Файл сохранён: {filePath}");
         }

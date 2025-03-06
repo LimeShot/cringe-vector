@@ -5,18 +5,16 @@ using CringeCraft.GeometryDash.Shape;
 using System.Reflection.Metadata;
 namespace CringeCraft.IO;
 public interface IExporter {
-    public void Export(string path,ICanvas field); // функция, берущая класс с фигурами
+    public void Export(string path, ICanvas field); // функция, берущая класс с фигурами
 }
 
 public interface IImporter {
     public void Import(); // функция, возвращающая класс с фигурами
 }
 
-public class OutputToCRNG : IExporter {
-
-    public void Export(string path,ICanvas Field) {
+public class ExportToCRNG : IExporter {
+    public void Export(string path, ICanvas Field) {
         using (FileStream fstream = new FileStream(path, FileMode.OpenOrCreate)) {
-
             // Настройки сериализации
             var settings = new JsonSerializerSettings {
                 ContractResolver = new PrivateSetterContractResolver(),
@@ -34,47 +32,44 @@ public class OutputToCRNG : IExporter {
             // преобразуем строку в байты
             byte[] buffer = Encoding.Default.GetBytes(json);
             // запись массива байтов в файл
-            fstream.WriteAsync(buffer, 0, buffer.Length);            
+            fstream.WriteAsync(buffer, 0, buffer.Length);
         }
     }
 }
 
-public class OutputToSVG : IExporter {
+public class ExportToSVG : IExporter {
 
 
-    private string shapeToSVG(IShape shape)
-    {
+    private string shapeToSVG(IShape shape) {
         string line;
         Console.WriteLine(shape.GetType().ToString());
-        switch (shape.GetType().ToString())
-        {
+        switch (shape.GetType().ToString()) {
             case "CringeCraft.GeometryDash.Shape.Line":
-                line=$"<line class=\"st0\" x1=\"{shape.BoundingBox[1].X}\" y1=\"{shape.BoundingBox[1].Y}\" x2=\"{shape.BoundingBox[3].X}\" y2=\"{shape.BoundingBox[3].Y}\"/>";
+                line = $"<line class=\"st0\" x1=\"{shape.BoundingBox[1].X}\" y1=\"{shape.BoundingBox[1].Y}\" x2=\"{shape.BoundingBox[3].X}\" y2=\"{shape.BoundingBox[3].Y}\"/>";
                 break;
             case "CringeCraft.GeometryDash.Shape.Rectangle":
-                line=$"<rect class=\"st0\" x=\"{shape.Nodes[0].X}\" y=\"{shape.Nodes[0].Y}\" width=\"{Math.Abs(shape.Nodes[0].X-shape.Nodes[1].X)}\" height=\"{Math.Abs(shape.Nodes[0].Y-shape.Nodes[3].Y)}\", transform=\"rotate({shape.Rotate})\"/>";
+                line = $"<rect class=\"st0\" x=\"{shape.Nodes[0].X}\" y=\"{shape.Nodes[0].Y}\" width=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[1].X)}\" height=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[3].Y)}\", transform=\"rotate({shape.Rotate})\"/>";
                 break;
             case "CringeCraft.GeometryDash.Shape.Ellipse":
-                line=$"<ellipse class=\"st0\" cx=\"{shape.Translate.X}\" cy=\"{shape.Translate.X}\" rx=\"{Math.Abs(shape.Nodes[0].X-shape.Nodes[1].X)}\" ry=\"{Math.Abs(shape.Nodes[0].Y-shape.Nodes[3].Y)}\", transform=\"rotate({shape.Rotate})\"/>";
+                line = $"<ellipse class=\"st0\" cx=\"{shape.Translate.X}\" cy=\"{shape.Translate.X}\" rx=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[1].X)}\" ry=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[3].Y)}\", transform=\"rotate({shape.Rotate})\"/>";
                 break;
             default:
-            throw new Exception("Это не просто кринж, это не живет в IShape");
+                throw new Exception("Это не просто кринж, это не живет в IShape");
         }
         return line;
     }
-    public void Export(string path,ICanvas Field) {
+    public void Export(string path, ICanvas Field) {
         using (FileStream fstream = new FileStream(path, FileMode.OpenOrCreate)) {
-            string text=$"<svg width=\"{Field.Width}\" height=\"{Field.Height}\" xmlns=\"http://www.w3.org/2000/svg\">\n";
-            text+="<defs>\n<style>\n.st0 {\nstroke: #000000;\nfill: blue;\n}\n</style>\n</defs>";
-            for (int i = 0; i < Field.Shapes.Count; i++) 
-            {
-                text+=$"{shapeToSVG(Field.Shapes[i])}\n";
+            string text = $"<svg width=\"{Field.Width}\" height=\"{Field.Height}\" xmlns=\"http://www.w3.org/2000/svg\">\n";
+            text += "<defs>\n<style>\n.st0 {\nstroke: #000000;\nfill: blue;\n}\n</style>\n</defs>";
+            for (int i = 0; i < Field.Shapes.Count; i++) {
+                text += $"{shapeToSVG(Field.Shapes[i])}\n";
             }
-            text+="</svg>";
+            text += "</svg>";
             byte[] buffer = Encoding.Default.GetBytes(text);
             fstream.WriteAsync(buffer, 0, buffer.Length);
 
         }
-            
+
     }
 }
