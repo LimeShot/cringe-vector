@@ -40,12 +40,12 @@ public class ExportToCRNG : IExporter {
 public class ExportToSVG : IExporter {
 
 
-    private string shapeToSVG(IShape shape,float height) {
+    private string shapeToSVG(IShape shape, float height) {
         string line;
         Console.WriteLine(shape.GetType().ToString());
         switch (shape.GetType().ToString()) {
             case "CringeCraft.GeometryDash.Shape.Line":
-                line = $"<line class=\"st0\" x1=\"{shape.BoundingBox[1].X}\" y1=\"{shape.BoundingBox[1].Y}\" x2=\"{shape.BoundingBox[3].X}\" y2=\"{shape.BoundingBox[3].Y}\"/>";
+                line = $"<line class=\"st0\" x1=\"{shape.BoundingBox[1].X}\" y1=\"{shape.BoundingBox[1].Y * (-1)}\" x2=\"{shape.BoundingBox[3].X}\" y2=\"{shape.BoundingBox[3].Y * (-1)}\"/>";
                 break;
             case "CringeCraft.GeometryDash.Shape.Rectangle":
                 line = $"<rect class=\"st0\" x=\"{shape.Nodes[0].X}\" y=\"{shape.Nodes[0].Y}\" width=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[1].X)}\" height=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[3].Y)}\" transform=\"rotate({shape.Rotate})\"/>";
@@ -59,15 +59,18 @@ public class ExportToSVG : IExporter {
         return line;
     }
     public void Export(string path, ICanvas Field) {
-        using (FileStream fstream = new FileStream(path, FileMode.OpenOrCreate)) {
+        var fileInfo = new FileInfo(path);
+        var fileMode = fileInfo.Exists ? FileMode.Truncate : FileMode.CreateNew; //FileStream fs = File.Open(path, fileMode
+        using (FileStream fstream = File.Open(path, fileMode)) {
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-            string text = $"<svg width=\"{Field.Width}\" height=\"{Field.Height}\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"{-Field.Width/2} {-Field.Height/2} {Field.Width} {Field.Height}\">\n";
-            text += "<defs>\n<style>\n.st0 {\nstroke: #000000;\nfill: blue;\n}\n</style>\n</defs>";
+            string text = $"<svg width=\"{Field.Width}\" height=\"{Field.Height}\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"{-Field.Width / 2} {-Field.Height / 2} {Field.Width} {Field.Height}\">\n";
+            text += "<defs>\n<style>\n.st0 {\nstroke: #000000;\nfill: blue;\n}\n</style>\n</defs>\n";
             for (int i = 0; i < Field.Shapes.Count; i++) {
                 text += $"{shapeToSVG(Field.Shapes[i], Field.Height)}\n";
             }
             text += "</svg>";
             byte[] buffer = Encoding.Default.GetBytes(text);
+            fstream.Flush();
             fstream.WriteAsync(buffer, 0, buffer.Length);
 
         }
