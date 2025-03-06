@@ -137,10 +137,24 @@ public partial class Rectangle : IShape {
         Vector2 deltaDev2 = (newNode - BoundingBox[index]) / 2;
         Translate += deltaDev2;
         deltaDev2 = result * deltaDev2;
+        int diagIndex = (index + 2) % 4;
         Nodes[index] += deltaDev2;
-        Nodes[(index + 2) % 4] -= deltaDev2;
-        Nodes[(index + 1) % 4] = (Nodes[(index + 2) % 4].X, Nodes[index].Y);
-        Nodes[(index + 3) % 4] = (Nodes[index].X, Nodes[(index + 2) % 4].Y);
+        Nodes[diagIndex] -= deltaDev2;
+        if (index % 2 == 0) {
+            Nodes[(index + 1) % 4] = (Nodes[diagIndex].X, Nodes[index].Y);
+            Nodes[(index + 3) % 4] = (Nodes[index].X, Nodes[diagIndex].Y);
+        } else {
+            Nodes[(index + 1) % 4] = (Nodes[index].X, Nodes[diagIndex].Y);
+            Nodes[(index + 3) % 4] = (Nodes[diagIndex].X, Nodes[index].Y);
+        }
+        if (Nodes[0].X - Nodes[1].X > 0.0f && MathF.Abs(Nodes[0].X - Nodes[1].X) > 1E-6) {
+            (Nodes[0], Nodes[1]) = (Nodes[1], Nodes[0]);
+            (Nodes[3], Nodes[2]) = (Nodes[2], Nodes[3]);
+        }
+        if (Nodes[0].Y - Nodes[3].Y < 0.0f && MathF.Abs(Nodes[0].Y - Nodes[3].Y) > 1E-6) {
+            (Nodes[1], Nodes[2]) = (Nodes[2], Nodes[1]);
+            (Nodes[0], Nodes[3]) = (Nodes[3], Nodes[0]);
+        }
         CalcBB();
     }
 
