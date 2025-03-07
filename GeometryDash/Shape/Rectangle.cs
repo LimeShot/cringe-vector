@@ -106,8 +106,8 @@ public partial class Rectangle : IShape {
         float xRot = localPoint.X * MathF.Cos(angle) - localPoint.Y * MathF.Sin(angle);
         float yRot = localPoint.X * MathF.Sin(angle) + localPoint.Y * MathF.Cos(angle);
         localPoint = new Vector2(xRot, yRot);
-        float halfWidth = Nodes[1].X - Nodes[0].X + radiusPoint;
-        float halfHeight = Nodes[1].Y - Nodes[3].Y + radiusPoint;
+        float halfWidth = (Nodes[1].X - Nodes[0].X) / 2.0f + radiusPoint;
+        float halfHeight = (Nodes[1].Y - Nodes[3].Y) / 2.0f + radiusPoint;
 
         return xRot >= -halfWidth && xRot <= halfWidth &&
                yRot >= -halfHeight && yRot <= halfHeight;
