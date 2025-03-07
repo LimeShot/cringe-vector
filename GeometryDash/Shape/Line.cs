@@ -74,34 +74,35 @@ public partial class Line : IShape {
     }
 
     public bool IsBelongsShape(Vector2 point, float radiusPoint) {
-        Vector2 localPoint = point - Translate;
+        Vector2 localPoint = point;
 
         float angle = -MathHelper.DegreesToRadians(Rotate);
         float xRot = localPoint.X * MathF.Cos(angle) - localPoint.Y * MathF.Sin(angle);
         float yRot = localPoint.X * MathF.Sin(angle) + localPoint.Y * MathF.Cos(angle);
         localPoint = new Vector2(xRot, yRot);
 
-        Vector2 localP1 = Nodes[0] - Translate;
-        Vector2 localP2 = Nodes[1] - Translate;
+        Vector2 localP1 = Nodes[0];
+        Vector2 localP2 = Nodes[1];
+
         Vector2 lineVector = localP2 - localP1;
         float lineLength = lineVector.Length;
 
         Vector2 lineDir = lineVector.Normalized();
 
         Vector2 pointVec = localPoint - localP1;
+
         float projection = Vector2.Dot(pointVec, lineDir);
 
         bool withinLength = projection >= -radiusPoint && projection <= lineLength + radiusPoint;
 
-        Vector2 normal = new Vector2(-lineDir.Y, lineDir.X);
-        float distanceToLine = Math.Abs(Vector2.Dot(normal, pointVec));
+        Vector2 closestPointOnLine = localP1 + lineDir * Math.Clamp(projection, 0, lineLength);
 
-        bool withinWidth = distanceToLine <= (radiusPoint + 3);
+        float distanceToLine = (localPoint - closestPointOnLine).Length;
+
+        bool withinWidth = distanceToLine <= radiusPoint;
 
         return withinLength && withinWidth;
     }
-
-
     public int IsBBNode(Vector2 point) {
         // TODO: Реализовать метод
         return 0;
