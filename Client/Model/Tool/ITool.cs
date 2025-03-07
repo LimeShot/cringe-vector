@@ -3,7 +3,7 @@ using System.Windows;
 using OpenTK.Mathematics;
 
 public interface ITool {
-    string Name { get; set; }
+    string Name { get; }
 
     void MouseMoveEvent(Vector2 currentPoint);
     void MouseDownEvent(Vector2 startPoint);

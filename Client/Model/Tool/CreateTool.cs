@@ -16,7 +16,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     public void MouseDownEvent(Vector2 startPoint) {
         _startPoint = startPoint;
         Console.WriteLine(startPoint);
-        AddShape(_canvas, new OpenTK.Mathematics.Vector2((float)startPoint.X, (float)startPoint.Y));
+        AddShape(_canvas, startPoint);
     }
 
     public void MouseMoveEvent(Vector2 currentPoint) {
