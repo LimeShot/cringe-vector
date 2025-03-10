@@ -115,47 +115,45 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal"
-                                        Margin="5">
+                            <Grid Width="110" Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="25"/>
+                                </Grid.ColumnDefinitions>
                                 <Image Source="{Binding IconPath}"
-                                       Width="20"
-                                       Height="20"
-                                       Margin="5,0,5,0"/>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding ShapeType}"
-                                               VerticalAlignment="Center"/>
-                                    <StackPanel Orientation="Horizontal"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center">
-                                        <ToggleButton IsChecked="{Binding Style.Visible, Mode=TwoWay}"
-                                                      VerticalAlignment="Center">
-                                            <ToggleButton.Style>
-                                                <Style TargetType="ToggleButton">
-                                                    <Setter Property="Content">
-                                                        <Setter.Value>
-                                                            <Image Source="pack://siteoforigin:,,,/assets/icons/view.png"
-                                                                   Width="16"
-                                                                   Height="16"/>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsChecked"
-                                                                 Value="False">
-                                                            <Setter Property="Content">
-                                                                <Setter.Value>
-                                                                    <Image Source="pack://siteoforigin:,,,/assets/icons/hide.png"
-                                                                           Width="16"
-                                                                           Height="16"/>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ToggleButton.Style>
-                                        </ToggleButton>
-                                    </StackPanel>
-                                </StackPanel>
-                            </StackPanel>
+                                    Width="20"
+                                    Height="20"
+                                    VerticalAlignment="Center"
+                                    Margin="5"
+                                    Grid.Column="0"/>
+                                <TextBlock Text="{Binding ShapeType}"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="1"/>
+                                <ToggleButton IsChecked="{Binding Style.Visible, Mode=TwoWay}"
+                                            Grid.Column="2"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Image x:Name="VisibilityIcon"
+                                                Width="16"
+                                                Height="16"
+                                                Source="pack://siteoforigin:,,,/assets/icons/view.png"/>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsChecked" Value="False">
+                                                    <Setter TargetName="VisibilityIcon" Property="Source"
+                                                            Value="pack://siteoforigin:,,,/assets/icons/hide.png"/>
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter TargetName="VisibilityIcon" Property="Source"
+                                                            Value="pack://siteoforigin:,,,/assets/icons/view.png"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
