@@ -1,6 +1,7 @@
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows;
 using OpenTK.Mathematics;
 
@@ -8,11 +9,11 @@ using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.Client.View;
-
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CringeCraft.Client.Model.Tool;
 
-public class ToolController {
+public partial class ToolController : ObservableObject {
     public Dictionary<string, ITool> Tools = new();
     private readonly MainWindow _window;
     private ToggleButton? _selectedButton;
@@ -21,6 +22,9 @@ public class ToolController {
 
     private double _actualWidth;
     private double _actualHeight;
+
+    [ObservableProperty]
+    private Cursor _currentCursor = Cursors.Arrow;
 
     public event EventHandler<List<IShape>>? OnShapeChanged; // Событие на изменение фигуры
 
@@ -47,7 +51,6 @@ public class ToolController {
     }
 
     public void OnMouseDown(Point startPoint) {
-        UpdateSize();
         startPoint = new Point(startPoint.X - _actualWidth / 2, -startPoint.Y + _actualHeight / 2);
         _currentTool.MouseDownEvent(new Vector2((float)startPoint.X, (float)startPoint.Y));
     }
@@ -55,6 +58,7 @@ public class ToolController {
     public void OnMouseMove(Point currentPoint) {
         currentPoint = new Point(currentPoint.X - _actualWidth / 2, -currentPoint.Y + _actualHeight / 2);
         _currentTool.MouseMoveEvent(new Vector2((float)currentPoint.X, (float)currentPoint.Y));
+        UpdateCursor();
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
@@ -68,6 +72,25 @@ public class ToolController {
         if (Tools.TryGetValue(toolName, out var tool)) {
             _currentTool.OnChanged();
             _currentTool = tool;
+        }
+    }
+
+    private void UpdateCursor() {
+        if (_currentTool is ChangeTool changeTool) {
+            CurrentCursor = changeTool.Mode switch {
+                ChangeToolMode.Resize => changeTool.bbIndex switch {
+                    0 => Cursors.SizeNWSE,
+                    1 => Cursors.SizeNESW,
+                    2 => Cursors.SizeNWSE,
+                    3 => Cursors.SizeNESW,
+                    _ => Cursors.Arrow
+                },
+                ChangeToolMode.Rotate => Cursors.Cross,
+                ChangeToolMode.Move => Cursors.SizeAll,
+                _ => Cursors.Arrow
+            };
+        } else {
+            CurrentCursor = Cursors.Arrow;
         }
     }
 

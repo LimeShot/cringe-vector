@@ -12,7 +12,7 @@ using System.IO.Compression;
 public partial class MyCanvas : ObservableObject, ICanvas {
     public ObservableCollection<IShape> Shapes { get; set; }
 
-    private const float _stepZ = 0.0000001f;
+    private const float _stepZ = 0.00002f;
 
     public readonly List<IShape> SelectedShapes = new(); // Список выделенных фигур
 

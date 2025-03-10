@@ -4,6 +4,7 @@ using System.Diagnostics;
 using OpenTK.Mathematics;
 
 using CringeCraft.Client.Model.Canvas;
+using System.Windows.Input;
 
 //Может стоит сделать отдельный контроллер для определения режима работы этого тула?
 
@@ -14,8 +15,8 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
 
     private readonly MyCanvas _canvas = canvas;
     private Vector2 _startPoint;
-    private int _bbIndex = -1;
-    private ChangeToolMode _mode = ChangeToolMode.None;
+    public int bbIndex { get; private set; } = -1;
+    public ChangeToolMode Mode { get; private set; } = ChangeToolMode.None;
 
     public string Name { get; } = name;
 
@@ -25,52 +26,49 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
         if (_canvas.SelectedShapes.Count == 0) {
             SelectShape(startPoint);
             if (_canvas.SelectedShapes.Count > 0)
-                _mode = ChangeToolMode.Move;
+                Mode = ChangeToolMode.Move;
         } else {
-            _bbIndex = TryGetBBNode(startPoint);
-            if (_bbIndex >= 0 && _bbIndex < 4)
-                _mode = ChangeToolMode.Resize; // Изменение размера для узлов 0-3
-            else if (_bbIndex == 4)
-                _mode = ChangeToolMode.Rotate; // Поворот для клика снаружи рядом с углом
-            else if (IsPointInsideSelectedShape(startPoint))
-                _mode = ChangeToolMode.Move;
-            else {
+            SelectMode(startPoint);
+            if (Mode == ChangeToolMode.None)
                 _canvas.SelectedShapes.Clear();
-                _mode = ChangeToolMode.None;
-            }
         }
 
-        Debug.WriteLine($"Mode: {_mode}, BB Index: {_bbIndex}, Selected Shapes: {_canvas.SelectedShapes.Count}");
+        Debug.WriteLine($"Mode: {Mode}, BB Index: {bbIndex}, Selected Shapes: {_canvas.SelectedShapes.Count}");
     }
 
     public void MouseMoveEvent(Vector2 currentPoint) {
         if (_canvas.SelectedShapes.Count == 0) return;
 
-        switch (_mode) {
-            case ChangeToolMode.Move:
-                var delta = currentPoint - _startPoint;
-                foreach (var shape in _canvas.SelectedShapes)
-                    shape.Move(delta);
-                _startPoint = currentPoint;
-                break;
 
-            case ChangeToolMode.Resize:
-                foreach (var shape in _canvas.SelectedShapes)
-                    shape.Resize(_bbIndex, currentPoint);
-                break;
+        if (Mouse.LeftButton == MouseButtonState.Pressed) {
+            switch (Mode) {
+                case ChangeToolMode.Move:
+                    var delta = currentPoint - _startPoint;
+                    foreach (var shape in _canvas.SelectedShapes)
+                        shape.Move(delta);
+                    _startPoint = currentPoint;
+                    break;
 
-            case ChangeToolMode.Rotate:
-                //foreach (var shape in _canvas.SelectedShapes)
-                //shape.RotateShape(_startPoint, currentPoint);
-                _startPoint = currentPoint;
-                break;
+                case ChangeToolMode.Resize:
+                    foreach (var shape in _canvas.SelectedShapes)
+                        shape.Resize(bbIndex, currentPoint);
+                    break;
+
+                case ChangeToolMode.Rotate:
+                    foreach (var shape in _canvas.SelectedShapes)
+                        shape.RotateShape(_startPoint, currentPoint);
+                    _startPoint = currentPoint;
+                    break;
+            }
+        } else {
+            SelectMode(currentPoint);
         }
     }
 
     public void MouseUpEvent(Vector2 endPoint) {
         _startPoint = Vector2.Zero;
-        _mode = ChangeToolMode.None;
-        _bbIndex = -1;
+        bbIndex = -1;
+        Mode = ChangeToolMode.None;
     }
 
     private void SelectShape(Vector2 point) {
@@ -108,10 +106,22 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
         return bbNode;
     }
 
+    private void SelectMode(Vector2 point) {
+        bbIndex = TryGetBBNode(point);
+        if (bbIndex >= 0 && bbIndex < 4)
+            Mode = ChangeToolMode.Resize; // Изменение размера для узлов 0-3
+        else if (bbIndex == 4)
+            Mode = ChangeToolMode.Rotate; // Поворот для клика снаружи рядом с углом
+        else if (IsPointInsideSelectedShape(point))
+            Mode = ChangeToolMode.Move;
+        else
+            Mode = ChangeToolMode.None;
+    }
+
     public void OnChanged() {
         _startPoint = Vector2.Zero;
         _canvas.SelectedShapes.Clear();
-        _mode = ChangeToolMode.None;
+        Mode = ChangeToolMode.None;
     }
 }
 

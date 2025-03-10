@@ -52,7 +52,8 @@
         </StatusBar>
 
         <Grid x:Name="MainGrid">
-            <glWpfControl:GLWpfControl x:Name="OpenTkControl">
+            <glWpfControl:GLWpfControl x:Name="OpenTkControl"
+                                       Cursor="{Binding ToolController.CurrentCursor}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">
                         <i:InvokeCommandAction Command="{Binding MouseDownCommand}"
@@ -115,38 +116,43 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="110" Margin="5">
+                            <Grid Width="110"
+                                    Margin="5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="25"/>
                                 </Grid.ColumnDefinitions>
                                 <Image Source="{Binding IconPath}"
-                                    Width="20"
-                                    Height="20"
-                                    VerticalAlignment="Center"
-                                    Margin="5"
-                                    Grid.Column="0"/>
+                                       Width="20"
+                                       Height="20"
+                                       VerticalAlignment="Center"
+                                       Margin="5"
+                                       Grid.Column="0"/>
                                 <TextBlock Text="{Binding ShapeType}"
-                                        VerticalAlignment="Center"
-                                        Grid.Column="1"/>
+                                           VerticalAlignment="Center"
+                                           Grid.Column="1"/>
                                 <ToggleButton IsChecked="{Binding Style.Visible, Mode=TwoWay}"
-                                            Grid.Column="2"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Center">
+                                              Grid.Column="2"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Center">
                                     <ToggleButton.Template>
                                         <ControlTemplate TargetType="ToggleButton">
                                             <Image x:Name="VisibilityIcon"
-                                                Width="16"
-                                                Height="16"
-                                                Source="pack://siteoforigin:,,,/assets/icons/view.png"/>
+                                                   Width="16"
+                                                   Height="16"
+                                                   Source="pack://siteoforigin:,,,/assets/icons/view.png"/>
                                             <ControlTemplate.Triggers>
-                                                <Trigger Property="IsChecked" Value="False">
-                                                    <Setter TargetName="VisibilityIcon" Property="Source"
+                                                <Trigger Property="IsChecked"
+                                                        Value="False">
+                                                    <Setter TargetName="VisibilityIcon"
+                                                            Property="Source"
                                                             Value="pack://siteoforigin:,,,/assets/icons/hide.png"/>
                                                 </Trigger>
-                                                <Trigger Property="IsChecked" Value="True">
-                                                    <Setter TargetName="VisibilityIcon" Property="Source"
+                                                <Trigger Property="IsChecked"
+                                                        Value="True">
+                                                    <Setter TargetName="VisibilityIcon"
+                                                            Property="Source"
                                                             Value="pack://siteoforigin:,,,/assets/icons/view.png"/>
                                                 </Trigger>
                                             </ControlTemplate.Triggers>

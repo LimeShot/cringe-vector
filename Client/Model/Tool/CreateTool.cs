@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 using OpenTK.Mathematics;
 
 using CringeCraft.Client.Model.Canvas;
@@ -20,7 +21,8 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     }
 
     public void MouseMoveEvent(Vector2 currentPoint) {
-        _canvas.Shapes[_canvas.Shapes.Count - 1].Resize(1, currentPoint);
+        if (Mouse.LeftButton == MouseButtonState.Pressed)
+            _canvas.Shapes[_canvas.Shapes.Count - 1].Resize(1, currentPoint);
         //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
     public void MouseUpEvent(Vector2 endPoint) {

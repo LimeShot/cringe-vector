@@ -4,14 +4,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 using System.Windows;
-using System.Windows.Controls;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Render;
 using CringeCraft.Client.Model.Tool;
 using System.Collections.Specialized;
 using CringeCraft.Client.View;
-using CringeCraft.GeometryDash;
 using System.Diagnostics;
 using OpenTK.Wpf;
 
@@ -19,13 +17,13 @@ public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
     private MyCanvas _canvas;
 
-    private readonly ToolController _toolController;
+    [ObservableProperty]
+    private ToolController _toolController;
     private readonly RenderingService _renderingService;
     private readonly MainWindow _window;
-    private bool isDrawing = false;
 
-    public Point StartPoint { get; set; }
-    public Point CurrentPoint { get; set; }
+    public Point StartPoint { get; private set; }
+    public Point CurrentPoint { get; private set; }
 
     public MainViewModel(MainWindow window) {
         _window = window;
@@ -62,6 +60,7 @@ public partial class MainViewModel : ObservableObject {
 
     public void Resize(object sender, SizeChangedEventArgs args) {
         _renderingService.OnResize((int)args.NewSize.Width, (int)args.NewSize.Height);
+        _toolController.UpdateSize();
     }
 
     public void Closing(object? sender, System.ComponentModel.CancelEventArgs e) {
@@ -71,7 +70,6 @@ public partial class MainViewModel : ObservableObject {
     [RelayCommand]
     private void OnMouseDown(MouseEventArgs e) {
         if (e != null && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) { //добавить клик на холст
-            isDrawing = true;
             StartPoint = e.GetPosition((IInputElement)e.Source);
             _toolController.OnMouseDown(StartPoint);
         }
@@ -79,7 +77,7 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void OnMouseMove(MouseEventArgs e) {
-        if (e != null && isDrawing == true && e.Source is GLWpfControl) {
+        if (e != null && e.Source is GLWpfControl) {
             CurrentPoint = e.GetPosition((IInputElement)e.Source);
             _toolController.OnMouseMove(CurrentPoint);
         }
@@ -89,7 +87,6 @@ public partial class MainViewModel : ObservableObject {
     private void OnMouseUp(MouseEventArgs e) {
         if (e != null) {
             _toolController.OnMouseUp(e.GetPosition((IInputElement)e.Source));
-            isDrawing = false;
         }
     }
 
