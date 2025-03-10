@@ -133,4 +133,12 @@ public partial class Ellipse : IShape {
     }
     public string ShapeType => GetType().Name;
     public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
+
+    public void RotateShape(Vector2 p1, Vector2 p2) {
+        // TODO: Реализовать метод
+    }
+
+    public void Reflect() {
+        // TODO: Реализовать метод
+    }
 }

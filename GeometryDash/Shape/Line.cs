@@ -95,7 +95,7 @@ public partial class Line : IShape {
 
         bool withinLength = projection >= -radiusPoint && projection <= lineLength + radiusPoint;
 
-        Vector2 closestPointOnLine = localP1 + lineDir * Math.Clamp(projection, 0, lineLength);
+        Vector2 closestPointOnLine = localP1 + lineDir * Math.Clamp(projection, -radiusPoint, lineLength + radiusPoint);
 
         float distanceToLine = (localPoint - closestPointOnLine).Length;
 
@@ -103,6 +103,7 @@ public partial class Line : IShape {
 
         return withinLength && withinWidth;
     }
+
     public int IsBBNode(Vector2 point) {
         // TODO: Реализовать метод
         return 0;
@@ -130,4 +131,12 @@ public partial class Line : IShape {
 
     public string ShapeType => GetType().Name;
     public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
+
+    public void RotateShape(Vector2 p1, Vector2 p2) {
+        // TODO: Реализовать метод
+    }
+
+    public void Reflect() {
+        // TODO: Реализовать метод
+    }
 }
