@@ -36,4 +36,7 @@ public interface IShape {
 
     // Метод изменения фигуры при изменении координат только одного узла BoundingBox
     public void Resize(int index, Vector2 newNode);
+
+    public string ShapeType => GetType().Name;
+    public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
 }

@@ -131,4 +131,6 @@ public partial class Ellipse : IShape {
         }
         CalcBB();
     }
+    public string ShapeType => GetType().Name;
+    public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
 }

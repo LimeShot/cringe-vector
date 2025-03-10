@@ -10,8 +10,7 @@ using System.IO.Compression;
 /// Представляет холст для хранения фигур
 /// </summary>
 public partial class MyCanvas : ObservableObject, ICanvas {
-    [ObservableProperty]
-    private ObservableCollection<IShape> _shapes = new();
+    public ObservableCollection<IShape> Shapes { get; set; }
 
     private const float _stepZ = 0.0000001f;
 
@@ -22,6 +21,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     public float ScreenPerWorld = 1.0f;
 
     public MyCanvas() {
+        Shapes = new();
         Width = 2000;
         Height = 1000;
     }

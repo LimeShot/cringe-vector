@@ -74,7 +74,7 @@ public partial class Line : IShape {
     }
 
     public bool IsBelongsShape(Vector2 point, float radiusPoint) {
-        Vector2 localPoint = point;
+        Vector2 localPoint = point - Translate;
 
         float angle = -MathHelper.DegreesToRadians(Rotate);
         float xRot = localPoint.X * MathF.Cos(angle) - localPoint.Y * MathF.Sin(angle);
@@ -99,7 +99,7 @@ public partial class Line : IShape {
 
         float distanceToLine = (localPoint - closestPointOnLine).Length;
 
-        bool withinWidth = distanceToLine <= radiusPoint;
+        bool withinWidth = distanceToLine <= radiusPoint + 3.0f;
 
         return withinLength && withinWidth;
     }
@@ -123,8 +123,11 @@ public partial class Line : IShape {
         Vector2 deltaDev2 = (newNode - BoundingBox[index]) / 2;
         Translate += deltaDev2;
         deltaDev2 = result * deltaDev2;
-        Nodes[index] += deltaDev2;
+        Nodes[index % 2] += deltaDev2;
         Nodes[(index + 1) % 2] -= deltaDev2;
         CalcBB();
     }
+
+    public string ShapeType => GetType().Name;
+    public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
 }
