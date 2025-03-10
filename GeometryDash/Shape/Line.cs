@@ -133,7 +133,18 @@ public partial class Line : IShape {
     public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
 
     public void RotateShape(Vector2 p1, Vector2 p2) {
-        // TODO: Реализовать метод
+        p1 -= Translate;
+        p2 -= Translate;
+        double denominator = p1.Length * p2.Length;
+        if (Math.Abs(denominator) < 1E-10)
+            denominator = 1E-7;
+        float angle = (float)MathHelper.RadiansToDegrees(Math.Acos((p1.X * p2.X + p1.Y * p2.Y) / denominator));
+        int sign = 1;
+        if (new Matrix2(p1, p2).Determinant < 0)
+            sign = -1;
+        Rotate += sign * angle;
+        Rotate %= 360;
+        CalcBB();
     }
 
     public void Reflect() {
