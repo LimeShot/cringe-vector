@@ -145,4 +145,12 @@ public partial class Rectangle : IShape {
         }
         CalcBB();
     }
+
+    public void RotateShape(Vector2 p1, Vector2 p2) {
+        // TODO: Реализовать метод
+    }
+
+    public void Reflect() {
+        // TODO: Реализовать метод
+    }
 }

@@ -31,9 +31,15 @@ public interface IShape {
     // Метод для перемещения фигуры на основе разницы между двумя точками
     public void Move(Vector2 delta);
 
-    // Метод чисто для Безье(но это не точно)
+    // Метод чисто для Безье и многоугольника(но это не точно)
     public void MoveNode(int index, Vector2 newNode);
 
     // Метод изменения фигуры при изменении координат только одного узла BoundingBox
     public void Resize(int index, Vector2 newNode);
+
+    // Метод изменения угла поворота фигуры
+    public void RotateShape(Vector2 p1, Vector2 p2);
+
+    // Метод отражения фигуры, путем измненеия угла
+    public void Reflect();
 }

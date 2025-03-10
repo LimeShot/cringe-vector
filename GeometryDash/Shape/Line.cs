@@ -128,4 +128,12 @@ public partial class Line : IShape {
         Nodes[(index + 1) % 2] -= deltaDev2;
         CalcBB();
     }
+
+    public void RotateShape(Vector2 p1, Vector2 p2) {
+        // TODO: Реализовать метод
+    }
+
+    public void Reflect() {
+        // TODO: Реализовать метод
+    }
 }
