@@ -45,7 +45,7 @@ public interface IShape {
     public void RotateShape(Vector2 p1, Vector2 p2);
 
     // Метод возвращает нормальную нумерацию точек в фигуре(проблема возникает после использования метода Resize)
-    public void NormalizedIndexNodes();
+    public void NormalizeIndexNodes();
 
     // Метод отражения фигуры, путем измненеия угла
     public void Reflect();

@@ -154,7 +154,7 @@ public partial class Ellipse : IShape {
         CalcBB();
     }
 
-    public void NormalizedIndexNodes() {
+    public void NormalizeIndexNodes() {
         bool change = false;
         if (Nodes[0].X - Nodes[1].X > 0.0f && MathF.Abs(Nodes[0].X - Nodes[1].X) > 1E-6) {
             (Nodes[0], Nodes[1]) = (Nodes[1], Nodes[0]);

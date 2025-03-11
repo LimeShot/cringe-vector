@@ -157,7 +157,7 @@ public partial class Line : IShape {
         CalcBB();
     }
 
-    public void NormalizedIndexNodes() {
+    public void NormalizeIndexNodes() {
         if (Nodes[0].X > 0.0f) {
             (Nodes[0], Nodes[1]) = (Nodes[1], Nodes[0]);
             CalcBB();
