@@ -103,9 +103,17 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     public void OpenFile() {
-        string? content = FileService.OpenFile();
+        string? content = FileService.OpenFile(Canvas);
         if (content != null) {
             Debug.WriteLine($"Файл открыт:\n{content}");
+        }
+    }
+
+    [RelayCommand]
+    private void SaveFile() {
+        string? filePath = FileService.SaveFile(Canvas);
+        if (filePath != null) {
+            Debug.WriteLine($"Файл сохранён: {filePath}");
         }
     }
 

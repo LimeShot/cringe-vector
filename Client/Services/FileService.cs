@@ -4,13 +4,34 @@ using CringeCraft.IO;
 using CringeCraft.GeometryDash;
 
 public static class FileService {
-    public static string? OpenFile() {
+    public static string? OpenFile(ICanvas canvas) {
         OpenFileDialog openFileDialog = new OpenFileDialog {
             Title = "Открыть файл",
-            Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*"
+            Filter = "CRNG файлы (*.crng)|*.crng|SVG файлы (*.svg)|*.svg|Все файлы (*.*)|*.*",
+            DefaultExt = ".crng",
+            FileName = "document.crng"
         };
 
-        return openFileDialog.ShowDialog() == true ? File.ReadAllText(openFileDialog.FileName) : null;
+        if (openFileDialog.ShowDialog() == true) {
+            string filePath = openFileDialog.FileName;
+            IImporter importer;
+
+            if (filePath.EndsWith(".crng", StringComparison.OrdinalIgnoreCase)) {
+                importer = new ImportFromCRNG();
+            } else {
+                importer = new ImportFromCRNG();
+            }
+
+            //Я кринжанул(Тимофей)
+            var input = importer.Import(filePath);
+            canvas.Shapes = input.Item1;
+            canvas.Width = input.Item2;
+            canvas.Height = input.Item3;
+
+            return filePath;
+        }
+
+        return null;
     }
 
     public static string? SaveFile(ICanvas canvas) {
@@ -34,7 +55,7 @@ public static class FileService {
             }
 
             //Я кринжанул(Тимофей)
-            //exporter.Export(filePath, canvas);
+            exporter.Export(filePath, canvas);
             return filePath;
         }
 
