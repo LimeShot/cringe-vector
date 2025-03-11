@@ -8,7 +8,7 @@ public class PasteCommand : ICommandMenu {
     private readonly MyCanvas _canvas;
     public RelayCommand Command { get; }
     public string Name { get; private set; }
-    public Vector2 Point { get; private set; }
+    public Vector2 Point { get; set; }
     public PasteCommand(MyCanvas canvas, Vector2 point) {
         Name = "Вставить";
         Point = point;

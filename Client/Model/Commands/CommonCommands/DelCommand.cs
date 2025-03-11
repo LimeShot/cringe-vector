@@ -9,7 +9,7 @@ public class DelCommand : ICommandMenu {
     private const float SelectionRadius = 0.5f;   // Радиус для выбора фигуры
     public RelayCommand Command { get; }
     public string Name { get; private set; }
-    public Vector2 Point { get; private set; }
+    public Vector2 Point { get; set; }
     public DelCommand(MyCanvas canvas, Vector2 point) {
         Name = "Удалить";
         Point = point;

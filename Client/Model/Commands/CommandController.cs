@@ -26,6 +26,7 @@ public class CommandController {
                 Header = command.Name,
                 Command = command.Command
             });
+            command.Point = Point;
         }
         contextMenu.HorizontalOffset = 0;
         contextMenu.VerticalOffset = 0;
