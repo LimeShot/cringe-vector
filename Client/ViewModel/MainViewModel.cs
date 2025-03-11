@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using CringeCraft.Client.View;
 using System.Diagnostics;
 using OpenTK.Wpf;
+using CringeCraft.Client.Model.Commands;
 
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
@@ -20,15 +21,18 @@ public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
     private ToolController _toolController;
     private readonly RenderingService _renderingService;
+    private readonly CommandController _commandController;
     private readonly MainWindow _window;
 
     public Point StartPoint { get; private set; }
     public Point CurrentPoint { get; private set; }
+    public Point CMPosition { get; private set; }
 
     public MainViewModel(MainWindow window) {
         _window = window;
         _canvas = new();
         _toolController = new(window, _canvas);
+        _commandController = new(_canvas);
         _renderingService = new(_canvas);
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
@@ -72,6 +76,12 @@ public partial class MainViewModel : ObservableObject {
         if (e != null && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) { //добавить клик на холст
             StartPoint = e.GetPosition((IInputElement)e.Source);
             _toolController.OnMouseDown(StartPoint);
+        }
+
+        if (e != null && e.RightButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
+            CMPosition = e.GetPosition((IInputElement)e.Source);
+            //CMPosition = _window.PointToScreen(CMPosition);
+            _commandController.CreateMenu(CMPosition);
         }
     }
 
