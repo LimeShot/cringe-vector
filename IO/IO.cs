@@ -2,39 +2,48 @@
 using Newtonsoft.Json;
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
-using System.Reflection.Metadata;
-using System.ComponentModel.DataAnnotations;
 namespace CringeCraft.IO;
 public interface IExporter {
-    public void Export(string path, ICanvas field); // функция, берущая класс с фигурами
+    public void Export(string path, CringeCanvas field); // функция, берущая класс с фигурами
 }
 
 public interface IImporter {
-    public void Import(); // функция, возвращающая класс с фигурами
+    public CringeCanvas Import(string path); // функция, возвращающая класс с фигурами
 }
 
 public class ExportToCRNG : IExporter {
-    public void Export(string path, ICanvas Field) {
-        using (FileStream fstream = new FileStream(path, FileMode.OpenOrCreate)) {
-            // Настройки сериализации
-            var settings = new JsonSerializerSettings {
-                ContractResolver = new PrivateSetterContractResolver(),
-                Converters = new List<JsonConverter> { new Vector2Converter(), new Vector3Converter() },
-                Formatting = Formatting.Indented,
-                TypeNameHandling = TypeNameHandling.Auto
-            };
-
-            // Сериализация в JSON
-            string json = JsonConvert.SerializeObject(Field, settings);
-
-            if (!File.Exists(path)) {
-                File.Create(path);
-            }
-            // преобразуем строку в байты
-            byte[] buffer = Encoding.Default.GetBytes(json);
-            // запись массива байтов в файл
-            fstream.WriteAsync(buffer, 0, buffer.Length);
+    public void Export(string path, CringeCanvas Field) {
+        // Настройки сериализации
+        var settings = new JsonSerializerSettings {
+            ContractResolver = new PrivateSetterContractResolver(),
+            Converters = new List<JsonConverter> { new Vector2Converter(), new Vector3Converter() },
+            Formatting = Formatting.Indented,
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+        if (!File.Exists(path)) {
+            File.Create(path);
         }
+
+        // Сериализация в JSON
+        string json = JsonConvert.SerializeObject(Field, settings);
+        File.WriteAllText(path, json);
+        
+    }
+}
+
+public class ImportFromCRNG : IImporter {
+    public CringeCanvas Import(string path) {
+        // Настройки сериализации
+        var settings = new JsonSerializerSettings {
+            ContractResolver = new PrivateSetterContractResolver(),
+            Converters = new List<JsonConverter> { new Vector2Converter(), new Vector3Converter() },
+            Formatting = Formatting.Indented,
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+
+        string json = File.ReadAllText(path);
+        return JsonConvert.DeserializeObject<CringeCanvas>(json, settings);
+        
     }
 }
 
@@ -59,7 +68,7 @@ public class ExportToSVG : IExporter {
         }
         return line;
     }
-    public void Export(string path, ICanvas Field) {
+    public void Export(string path, CringeCanvas Field) {
         var fileInfo = new FileInfo(path);
         var fileMode = fileInfo.Exists ? FileMode.Truncate : FileMode.CreateNew; //FileStream fs = File.Open(path, fileMode
         using (FileStream fstream = File.Open(path, fileMode)) {

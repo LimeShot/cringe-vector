@@ -101,11 +101,4 @@ public partial class MainViewModel : ObservableObject {
         }
     }
 
-    [RelayCommand]
-    private void SaveFile() {
-        string? filePath = FileService.SaveFile(Canvas);
-        if (filePath != null) {
-            Debug.WriteLine($"Файл сохранён: {filePath}");
-        }
-    }
 }

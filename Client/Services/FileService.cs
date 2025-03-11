@@ -33,7 +33,8 @@ public static class FileService {
                 exporter = new ExportToCRNG();
             }
 
-            exporter.Export(filePath, canvas);
+            //Я кринжанул(Тимофей)
+            //exporter.Export(filePath, canvas);
             return filePath;
         }
 

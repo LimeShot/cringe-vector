@@ -1,6 +1,7 @@
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using CringeCraft.GeometryDash;
 using Newtonsoft.Json.Serialization;
 using OpenTK.Mathematics;
 namespace CringeCraft.IO;
@@ -69,7 +70,7 @@ public class PrivateSetterContractResolver : DefaultContractResolver
         }
 
         // Исключаем свойство BoundingBox
-        if (prop.PropertyName == "BoundingBox" || prop.PropertyName == "SelectedShapes")
+        if (prop.PropertyName == "BoundingBox" || prop.PropertyName == "SelectedShapes" || prop.PropertyName == "ScreenPerWorld")
         {
             prop.ShouldSerialize = _ => false;
         }
