@@ -1,47 +1,54 @@
+namespace CringeCraft.Client.Model;
+
+using CringeCraft.Client.Render;
+
 using OpenTK.Mathematics;
 
-namespace CringeCraft.Client.Model.Camera;
+
 public class Camera {
-   public Vector2 Position { get; set; } = Vector2.Zero; // Позиция камеры (центр)
-   public float Zoom { get; private set; } = 1.0f;       // Масштаб (1.0f = исходный размер)
-   public float MinZoom { get; set; } = 0.1f;            // Минимальный масштаб
-   public float MaxZoom { get; set; } = 10.0f;           // Максимальный масштаб
+   public Vector2 Position { get; set; } = Vector2.Zero;
+   public float Zoom { get; private set; } = 1.0f;
+   public float MinZoom { get; set; } = 0.1f;
+   public float MaxZoom { get; set; } = 10.0f;
 
-   private readonly Vector2 _viewportSize;               // Размер области просмотра (в пикселях)
+   private Vector2 _viewportSize;
 
-   public Camera(Vector2 viewportSize) {
-      _viewportSize = viewportSize;
+   public event Action<Matrix4, Matrix4> MatrixProjecitonPortChanged;
+
+   public Camera(RenderingService rendering) {
+      _viewportSize = Vector2.Zero;
+      MatrixProjecitonPortChanged += rendering.OnProjectionChanged;
    }
 
-   // Установка масштаба с ограничением
+   public void UpdateViewport(double ActualWidth, double ActualHeight) {
+      _viewportSize = ((float)ActualWidth, -(float)ActualHeight);
+      UpdateViewMatrix();
+   }
+
    public void SetZoom(float zoom) {
       Zoom = Math.Clamp(zoom, MinZoom, MaxZoom);
    }
 
-   // Изменение масштаба (например, через колесо мыши)
    public void AdjustZoom(float delta, Vector2 zoomCenter) {
       float oldZoom = Zoom;
-      float newZoom = Zoom * (1.0f + delta * 0.1f); // delta — направление и скорость изменения
+      float newZoom = Zoom * (1.0f + delta * 0.1f);
       SetZoom(newZoom);
 
-      // Корректировка позиции камеры для масштабирования относительно точки (zoomCenter)
       Position += (zoomCenter - Position) * (1.0f - Zoom / oldZoom);
    }
 
-   // Преобразование экранных координат (мыши) в мировые координаты холста
    public Vector2 ScreenToWorld(Vector2 screenPoint) {
+      screenPoint.Y = -screenPoint.Y;
       return (screenPoint - _viewportSize * 0.5f) / Zoom + Position;
    }
-
-   // Преобразование мировых координат в экранные для рендеринга
    public Vector2 WorldToScreen(Vector2 worldPoint) {
-      return (worldPoint - Position) * Zoom + _viewportSize * 0.5f;
+      var screenPoint = (worldPoint - Position) * Zoom + _viewportSize * 0.5f;
+      return (screenPoint.X, -screenPoint.Y);
    }
 
-   // Получение матрицы преобразования для OpenGL
-   public Matrix4 GetViewMatrix() {
-      return Matrix4.CreateScale(Zoom) *
-             Matrix4.CreateTranslation(-Position.X * Zoom, -Position.Y * Zoom, 0) *
-             Matrix4.CreateTranslation(_viewportSize.X * 0.5f, _viewportSize.Y * 0.5f, 0);
+   private void UpdateViewMatrix() {
+      var projection = Matrix4.CreateOrthographicOffCenter(-_viewportSize.X / 2.0f, _viewportSize.X / 2.0f, _viewportSize.Y / 2.0f, -_viewportSize.Y / 2.0f, -1, 1);
+      var view = Matrix4.CreateTranslation(Position.X, Position.Y, 0);
+      MatrixProjecitonPortChanged?.Invoke(projection, view);
    }
 }

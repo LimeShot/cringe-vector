@@ -4,12 +4,13 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
 using OpenTK.Mathematics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.Client.View;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CringeCraft.Client.Model.Tool;
 
@@ -19,21 +20,17 @@ public partial class ToolController : ObservableObject {
     private ToggleButton? _selectedButton;
     private ITool _currentTool;
     private readonly MyCanvas _canvas;
-
-    private double _actualWidth;
-    private double _actualHeight;
+    private readonly Camera _camera;
 
     [ObservableProperty]
     private Cursor _currentCursor = Cursors.Arrow;
 
     public event EventHandler<List<IShape>>? OnShapeChanged; // Событие на изменение фигуры
 
-    public ToolController(MainWindow window, MyCanvas canvas) {
+    public ToolController(Camera camera, MainWindow window, MyCanvas canvas) {
         _window = window;
         _canvas = canvas;
-
-        _actualWidth = window.ActualWidth;
-        _actualHeight = window.ActualHeight;
+        _camera = camera;
 
         Tools.Add("Change", new ChangeTool("change", canvas)); //Иконку то пофиксить надо
 
@@ -45,26 +42,21 @@ public partial class ToolController : ObservableObject {
         CreateButtons();
     }
 
-    public void UpdateSize() {
-        _actualWidth = _window.OpenTkControl.ActualWidth;
-        _actualHeight = _window.OpenTkControl.ActualHeight;
-    }
-
     public void OnMouseDown(Point startPoint) {
-        startPoint = new Point(startPoint.X - _actualWidth / 2, -startPoint.Y + _actualHeight / 2);
-        _currentTool.MouseDownEvent(new Vector2((float)startPoint.X, (float)startPoint.Y));
+        var screenPoint = _camera.ScreenToWorld(new Vector2((float)startPoint.X, (float)startPoint.Y));
+        _currentTool.MouseDownEvent(screenPoint);
     }
 
     public void OnMouseMove(Point currentPoint) {
-        currentPoint = new Point(currentPoint.X - _actualWidth / 2, -currentPoint.Y + _actualHeight / 2);
-        _currentTool.MouseMoveEvent(new Vector2((float)currentPoint.X, (float)currentPoint.Y));
+        var screenPoint = _camera.ScreenToWorld(new Vector2((float)currentPoint.X, (float)currentPoint.Y));
+        _currentTool.MouseMoveEvent(screenPoint);
         UpdateCursor();
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
     public void OnMouseUp(Point endPoint) {
-        endPoint = new Point(endPoint.X - _actualWidth / 2, -endPoint.Y + _actualHeight / 2);
-        _currentTool.MouseUpEvent(new Vector2((float)endPoint.X, (float)endPoint.Y));
+        var screenPoint = _camera.ScreenToWorld(new Vector2((float)endPoint.X, (float)endPoint.Y));
+        _currentTool.MouseUpEvent(screenPoint);
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
@@ -72,6 +64,16 @@ public partial class ToolController : ObservableObject {
         if (Tools.TryGetValue(toolName, out var tool)) {
             _currentTool.OnChanged();
             _currentTool = tool;
+        }
+    }
+
+    [RelayCommand]
+    private void SelectShapeInList(IShape shape) {
+        if (!_canvas.SelectedShapes.Contains(shape)) {
+            //Надо бы зажать кнопку Change
+            SetTool("Change");
+            _canvas.SelectedShapes.Clear();
+            _canvas.SelectedShapes.Add(shape);
         }
     }
 

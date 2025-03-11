@@ -117,7 +117,13 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Width="110"
-                                    Margin="5">
+                                  Margin="5">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.ToolController.SelectShapeInListCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                               CommandParameter="{Binding}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="30"/>
                                     <ColumnDefinition Width="*"/>
@@ -144,13 +150,13 @@
                                                    Source="pack://siteoforigin:,,,/assets/icons/view.png"/>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsChecked"
-                                                        Value="False">
+                                                         Value="False">
                                                     <Setter TargetName="VisibilityIcon"
                                                             Property="Source"
                                                             Value="pack://siteoforigin:,,,/assets/icons/hide.png"/>
                                                 </Trigger>
                                                 <Trigger Property="IsChecked"
-                                                        Value="True">
+                                                         Value="True">
                                                     <Setter TargetName="VisibilityIcon"
                                                             Property="Source"
                                                             Value="pack://siteoforigin:,,,/assets/icons/view.png"/>

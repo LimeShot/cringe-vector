@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 using System.Windows;
+using CringeCraft.Client.Model;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Render;
@@ -23,6 +24,7 @@ public partial class MainViewModel : ObservableObject {
     private readonly RenderingService _renderingService;
     private readonly CommandController _commandController;
     private readonly MainWindow _window;
+    private readonly Camera _camera;
 
     public Point StartPoint { get; private set; }
     public Point CurrentPoint { get; private set; }
@@ -31,9 +33,10 @@ public partial class MainViewModel : ObservableObject {
     public MainViewModel(MainWindow window) {
         _window = window;
         _canvas = new();
-        _toolController = new(window, _canvas);
         _commandController = new(_canvas);
         _renderingService = new(_canvas);
+        _camera = new(_renderingService);
+        _toolController = new(_camera, window, _canvas);
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
         _toolController.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
@@ -63,8 +66,7 @@ public partial class MainViewModel : ObservableObject {
     }
 
     public void Resize(object sender, SizeChangedEventArgs args) {
-        _renderingService.OnResize((int)args.NewSize.Width, (int)args.NewSize.Height);
-        _toolController.UpdateSize();
+        _camera.UpdateViewport((float)args.NewSize.Width, (float)args.NewSize.Height);
     }
 
     public void Closing(object? sender, System.ComponentModel.CancelEventArgs e) {

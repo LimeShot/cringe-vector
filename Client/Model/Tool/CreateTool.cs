@@ -1,4 +1,5 @@
-using System.Windows;
+namespace CringeCraft.Client.Model.Tool;
+
 using System.Windows.Input;
 using OpenTK.Mathematics;
 
@@ -6,7 +7,6 @@ using CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 
-namespace CringeCraft.Client.Model.Tool;
 public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>? e) : ITool {
     private readonly MyCanvas _canvas = canvas;
     private Vector2 _startPoint;

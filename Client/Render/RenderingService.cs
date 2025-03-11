@@ -289,10 +289,9 @@ public class RenderingService {
         rebuildVBOs();
     }
 
-    public void OnResize(int width, int height) {
-        (float newWidth, float newHeight) = (width * _canvas.ScreenPerWorld, height * _canvas.ScreenPerWorld);
-        _projection = Matrix4.CreateOrthographicOffCenter(-newWidth / 2.0f, newWidth / 2.0f, -newHeight / 2.0f, newHeight / 2.0f, -1, 1);
-        _view = Matrix4.Identity;
+    public void OnProjectionChanged(Matrix4 projection, Matrix4 view) {
+        _projection = projection;
+        _view = view;
     }
 
     public void OnCanvasResize(float width, float height) {
