@@ -18,10 +18,8 @@ public partial class Line : IShape {
 
     private void CalcBB() {
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
-        BoundingBox[0] = result * new Vector2(Nodes[0].X, Nodes[1].Y) + Translate;
+        BoundingBox[0] = result * Nodes[0] + Translate;
         BoundingBox[1] = result * Nodes[1] + Translate;
-        BoundingBox[2] = result * new Vector2(Nodes[1].X, Nodes[0].Y) + Translate;
-        BoundingBox[3] = result * Nodes[0] + Translate;
     }
 
     public Line() {
@@ -29,7 +27,7 @@ public partial class Line : IShape {
         Z = 0.0f;
         Rotate = 0.0f;
         Style = new();
-        BoundingBox = new Vector2[4];
+        BoundingBox = new Vector2[2];
         Nodes = new Vector2[2];
         Nodes[0] = Vector2.Zero;
         Nodes[1] = Vector2.Zero;
@@ -47,7 +45,7 @@ public partial class Line : IShape {
         Translate = p1;
         Z = z;
         Style = shapeStyle ?? new();
-        BoundingBox = new Vector2[4];
+        BoundingBox = new Vector2[2];
         Nodes = new Vector2[2];
         float lengthDev2 = length / 2;
         Nodes[0] = new(-lengthDev2, 0.0f);
@@ -120,12 +118,19 @@ public partial class Line : IShape {
     }
 
     public void Resize(int index, Vector2 newNode) {
-        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 result);
         Vector2 deltaDev2 = (newNode - BoundingBox[index]) / 2;
+        Vector2 RotateNodes = BoundingBox[index] - Translate + deltaDev2;
         Translate += deltaDev2;
-        deltaDev2 = result * deltaDev2;
-        Nodes[index % 2] += deltaDev2;
-        Nodes[(index + 1) % 2] -= deltaDev2;
+        double denominator = RotateNodes.Length;
+        if (Math.Abs(denominator) < 1E-10)
+            denominator = 1E-7;
+        float angle = (float)MathHelper.RadiansToDegrees(Math.Acos(RotateNodes.X / denominator));
+        int sign = 1;
+        if (-RotateNodes.Y < 0)
+            sign = -1;
+        Rotate = sign * angle;
+        Nodes[0].X = -(float)denominator;
+        Nodes[1].X = (float)denominator;
         CalcBB();
     }
 

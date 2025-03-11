@@ -89,13 +89,12 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
         if (_canvas.SelectedShapes.Count != 1) return -1; // Пока поддерживаем только одну фигуру
         var shape = _canvas.SelectedShapes[0];
         var nodes = shape.BoundingBox;
-        if (nodes == null || nodes.Length < 4) return -1;
 
         bool isInside = shape.IsBelongsShape(point, SelectionRadius); // Точная проверка внутри фигуры
 
         int bbNode = -1;
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < nodes.Count(); i++) {
             float distance = Vector2.Distance(point, nodes[i]);
             if (distance <= NodeSelectionRadius) {
                 bbNode = i;
