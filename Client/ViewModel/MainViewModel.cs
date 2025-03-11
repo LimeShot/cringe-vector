@@ -91,7 +91,7 @@ public partial class MainViewModel : ObservableObject {
     private void OnMouseMove(MouseEventArgs e) {
         if (e != null && e.Source is GLWpfControl) {
             CurrentPoint = e.GetPosition((IInputElement)e.Source);
-            _toolController.OnMouseMove(CurrentPoint);
+            _toolController.OnMouseMove(CurrentPoint, e.LeftButton == MouseButtonState.Pressed);
         }
     }
 

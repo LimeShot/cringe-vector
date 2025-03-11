@@ -47,9 +47,9 @@ public partial class ToolController : ObservableObject {
         _currentTool.MouseDownEvent(screenPoint);
     }
 
-    public void OnMouseMove(Point currentPoint) {
+    public void OnMouseMove(Point currentPoint, bool IsMousePressed) {
         var screenPoint = _camera.ScreenToWorld(new Vector2((float)currentPoint.X, (float)currentPoint.Y));
-        _currentTool.MouseMoveEvent(screenPoint);
+        _currentTool.MouseMoveEvent(screenPoint, IsMousePressed);
         UpdateCursor();
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }

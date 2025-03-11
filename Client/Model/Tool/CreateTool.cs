@@ -20,8 +20,8 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
         AddShape(_canvas, startPoint);
     }
 
-    public void MouseMoveEvent(Vector2 currentPoint) {
-        if (Mouse.LeftButton == MouseButtonState.Pressed)
+    public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
+        if (isMousePressed)
             _canvas.Shapes[_canvas.Shapes.Count - 1].Resize(1, currentPoint);
         //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }

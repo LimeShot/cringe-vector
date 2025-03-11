@@ -36,11 +36,11 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
         Debug.WriteLine($"Mode: {Mode}, BB Index: {bbIndex}, Selected Shapes: {_canvas.SelectedShapes.Count}");
     }
 
-    public void MouseMoveEvent(Vector2 currentPoint) {
+    public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
         if (_canvas.SelectedShapes.Count == 0) return;
 
 
-        if (Mouse.LeftButton == MouseButtonState.Pressed) {
+        if (isMousePressed) {
             switch (Mode) {
                 case ChangeToolMode.Move:
                     var delta = currentPoint - _startPoint;
