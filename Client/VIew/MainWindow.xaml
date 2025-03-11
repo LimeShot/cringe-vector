@@ -73,7 +73,7 @@
             <Border
                 BorderThickness="1"
                 CornerRadius="2"
-                Background="#ccefefef"
+                Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}"
                 Width="75"
                 Margin="5"
                 Padding="5"
@@ -94,7 +94,7 @@
             <Border
                 BorderThickness="1"
                 CornerRadius="2"
-                Background="#ccefefef"
+                Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}"
                 Width="150"
                 Margin="5"
                 Padding="5"
