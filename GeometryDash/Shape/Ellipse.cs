@@ -14,12 +14,14 @@ public partial class Ellipse : IShape {
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
+    public Vector2[] LocalBoundingBox { private set; get; }
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
         for (int i = 0; i < 4; i++) {
-            BoundingBox[i] = result * Nodes[i] + Translate;
+            LocalBoundingBox[i] = result * Nodes[i];
+            BoundingBox[i] = LocalBoundingBox[i] + Translate;
         }
         return;
     }
@@ -30,6 +32,7 @@ public partial class Ellipse : IShape {
         Rotate = 0.0f;
         Style = new();
         BoundingBox = new Vector2[4];
+        LocalBoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         CalcBB();
     }
@@ -40,6 +43,7 @@ public partial class Ellipse : IShape {
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
+        LocalBoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         for (int i = 0; i < 4; i++) {
             Nodes[i] = Vector2.Zero;
@@ -53,6 +57,7 @@ public partial class Ellipse : IShape {
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
+        LocalBoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         float diagonalDev2 = diagonal / 2;
         Nodes[0] = new(-diagonalDev2, diagonalDev2);
@@ -147,6 +152,22 @@ public partial class Ellipse : IShape {
         Rotate += sign * angle;
         Rotate %= 360;
         CalcBB();
+    }
+
+    public void NormalizedIndexNodes() {
+        bool change = false;
+        if (Nodes[0].X - Nodes[1].X > 0.0f && MathF.Abs(Nodes[0].X - Nodes[1].X) > 1E-6) {
+            (Nodes[0], Nodes[1]) = (Nodes[1], Nodes[0]);
+            (Nodes[3], Nodes[2]) = (Nodes[2], Nodes[3]);
+            change = true;
+        }
+        if (Nodes[0].Y - Nodes[3].Y < 0.0f && MathF.Abs(Nodes[0].Y - Nodes[3].Y) > 1E-6) {
+            (Nodes[1], Nodes[2]) = (Nodes[2], Nodes[1]);
+            (Nodes[0], Nodes[3]) = (Nodes[3], Nodes[0]);
+            change = true;
+        }
+        if (change)
+            CalcBB();
     }
 
     public void Reflect() {

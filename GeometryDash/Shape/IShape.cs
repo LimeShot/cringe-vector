@@ -8,6 +8,7 @@ public interface IShape {
     public float Rotate { get; } // Угол в градусах
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { get; }
+    public Vector2[] LocalBoundingBox { get; } // BoundingBox без учета Translate
     public Vector2[] Nodes { set; get; }
 
     //Метод возвращает линии фигуры(без заполнения(Fill=false)) необходимые для отрисовки
@@ -42,6 +43,9 @@ public interface IShape {
 
     // Метод изменения угла поворота фигуры
     public void RotateShape(Vector2 p1, Vector2 p2);
+
+    // Метод возвращает нормальную нумерацию точек в фигуре(проблема возникает после использования метода Resize)
+    public void NormalizedIndexNodes();
 
     // Метод отражения фигуры, путем измненеия угла
     public void Reflect();

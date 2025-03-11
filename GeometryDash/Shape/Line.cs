@@ -14,12 +14,15 @@ public partial class Line : IShape {
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
+    public Vector2[] LocalBoundingBox { private set; get; }
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
-        BoundingBox[0] = result * Nodes[0] + Translate;
-        BoundingBox[1] = result * Nodes[1] + Translate;
+        for (int i = 0; i < 2; i++) {
+            LocalBoundingBox[i] = result * Nodes[i];
+            BoundingBox[i] = LocalBoundingBox[i] + Translate;
+        }
     }
 
     public Line() {
@@ -28,6 +31,7 @@ public partial class Line : IShape {
         Rotate = 0.0f;
         Style = new();
         BoundingBox = new Vector2[2];
+        LocalBoundingBox = new Vector2[2];
         Nodes = new Vector2[2];
         Nodes[0] = Vector2.Zero;
         Nodes[1] = Vector2.Zero;
@@ -46,6 +50,7 @@ public partial class Line : IShape {
         Z = z;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[2];
+        LocalBoundingBox = new Vector2[2];
         Nodes = new Vector2[2];
         float lengthDev2 = length / 2;
         Nodes[0] = new(-lengthDev2, 0.0f);
@@ -150,6 +155,13 @@ public partial class Line : IShape {
         Rotate += sign * angle;
         Rotate %= 360;
         CalcBB();
+    }
+
+    public void NormalizedIndexNodes() {
+        if (Nodes[0].X > 0.0f) {
+            (Nodes[0], Nodes[1]) = (Nodes[1], Nodes[0]);
+            CalcBB();
+        }
     }
 
     public void Reflect() {
