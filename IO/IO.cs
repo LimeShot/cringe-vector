@@ -1,19 +1,23 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
+using Microsoft.VisualBasic;
+using System.Collections.ObjectModel;
 namespace CringeCraft.IO;
 public interface IExporter {
-    public void Export(string path, CringeCanvas field); // функция, берущая класс с фигурами
+    public void Export(string path, ICanvas Field); // функция, берущая класс с фигурами
 }
 
 public interface IImporter {
-    public CringeCanvas Import(string path); // функция, возвращающая класс с фигурами
+    public Tuple<ObservableCollection<IShape>, float, float> Import(string path); // функция, возвращающая класс с фигурами
 }
 
 public class ExportToCRNG : IExporter {
-    public void Export(string path, CringeCanvas Field) {
+    public void Export(string path, ICanvas Field) {
         // Настройки сериализации
+        //var data = new{Shapes, Height, Width};
         var settings = new JsonSerializerSettings {
             ContractResolver = new PrivateSetterContractResolver(),
             Converters = new List<JsonConverter> { new Vector2Converter(), new Vector3Converter() },
@@ -23,16 +27,14 @@ public class ExportToCRNG : IExporter {
         if (!File.Exists(path)) {
             File.Create(path);
         }
-
         // Сериализация в JSON
         string json = JsonConvert.SerializeObject(Field, settings);
-        File.WriteAllText(path, json);
-        
+        File.WriteAllText(path, json);        
     }
 }
 
 public class ImportFromCRNG : IImporter {
-    public CringeCanvas Import(string path) {
+    public Tuple<ObservableCollection<IShape>, float, float> Import(string path) {
         // Настройки сериализации
         var settings = new JsonSerializerSettings {
             ContractResolver = new PrivateSetterContractResolver(),
@@ -40,12 +42,19 @@ public class ImportFromCRNG : IImporter {
             Formatting = Formatting.Indented,
             TypeNameHandling = TypeNameHandling.Auto
         };
-
         string json = File.ReadAllText(path);
-        return JsonConvert.DeserializeObject<CringeCanvas>(json, settings);
+        var jObject = JObject.Parse(json);
+        var shapes = jObject["Shapes"].ToObject<ObservableCollection<IShape>>(JsonSerializer.Create(settings));
+        float width = jObject["Width"].Value<float>();
+        float height = jObject["Height"].Value<float>();
+        var data = Tuple.Create(shapes, width, height);
+        Console.WriteLine(width);
+        Console.WriteLine(shapes.Count);
+        return data;
         
     }
 }
+
 
 public class ExportToSVG : IExporter {
 
@@ -68,7 +77,7 @@ public class ExportToSVG : IExporter {
         }
         return line;
     }
-    public void Export(string path, CringeCanvas Field) {
+    public void Export(string path, ICanvas Field) {
         var fileInfo = new FileInfo(path);
         var fileMode = fileInfo.Exists ? FileMode.Truncate : FileMode.CreateNew; //FileStream fs = File.Open(path, fileMode
         using (FileStream fstream = File.Open(path, fileMode)) {
