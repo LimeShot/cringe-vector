@@ -8,7 +8,7 @@ namespace CringeCraft.Client.Model.Commands;
 
 public class CommandController {
     private readonly MyCanvas _canvas;
-    public Dictionary<string, ICommand> Commands = new();
+    public Dictionary<string, ICommandMenu> Commands = new();
     public CommandController(MyCanvas canvas) {
         _canvas = canvas;
         // foreach (string item in Enum.GetNames<CommandNames>()) {

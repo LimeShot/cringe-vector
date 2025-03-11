@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.Client.Model.Commands;
-public class CopyCommand : ICommand {
+public class CopyCommand : ICommandMenu {
     private readonly RelayCommand _relayCommand;
     private readonly MyCanvas _canvas;
     public string Name { get; private set; }
@@ -17,12 +17,4 @@ public class CopyCommand : ICommand {
     }
 
     public bool CanExecute() => true;
-
-    public void Undo() {
-        throw new NotImplementedException();
-    }
-
-    public void Redo() {
-        throw new NotImplementedException();
-    }
 }
