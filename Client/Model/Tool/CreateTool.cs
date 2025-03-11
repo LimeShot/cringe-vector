@@ -10,8 +10,9 @@ using CringeCraft.GeometryDash.Shape;
 public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>? e) : ITool {
     private readonly MyCanvas _canvas = canvas;
     private Vector2 _startPoint;
-    public event EventHandler<List<IShape>>? OnShapeChanged = e;
+    private bool _isResized = false;
 
+    public event EventHandler<List<IShape>>? OnShapeChanged = e;
     public string Name { get; set; } = name;
 
     public void MouseDownEvent(Vector2 startPoint) {
@@ -21,15 +22,19 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     }
 
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
-        if (isMousePressed)
-            _canvas.Shapes[_canvas.Shapes.Count - 1].Resize(1, currentPoint);
+        if (isMousePressed) {
+            _canvas.Shapes.Last().Resize(1, currentPoint);
+            _isResized = true;
+        }
         //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
     public void MouseUpEvent(Vector2 endPoint) {
         if (endPoint == _startPoint) {
-            _canvas.Shapes.Remove(_canvas.Shapes[_canvas.Shapes.Count - 1]);
+            _canvas.Shapes.Remove(_canvas.Shapes.Last());
             AddShape(_canvas, endPoint, 100);
             //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
+        } else if (_isResized) {
+            _canvas.Shapes.Last().NormalizeIndexNodes();
         }
     }
 

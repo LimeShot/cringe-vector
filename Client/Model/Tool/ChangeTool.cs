@@ -17,6 +17,7 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
     private Vector2 _startPoint;
     public int bbIndex { get; private set; } = -1;
     public ChangeToolMode Mode { get; private set; } = ChangeToolMode.None;
+    private bool _isResized = false;
 
     public string Name { get; } = name;
 
@@ -29,8 +30,9 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
                 Mode = ChangeToolMode.Move;
         } else {
             SelectMode(startPoint);
-            if (Mode == ChangeToolMode.None)
+            if (Mode == ChangeToolMode.None) {
                 _canvas.SelectedShapes.Clear();
+            }
         }
 
         Debug.WriteLine($"Mode: {Mode}, BB Index: {bbIndex}, Selected Shapes: {_canvas.SelectedShapes.Count}");
@@ -52,6 +54,7 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
                 case ChangeToolMode.Resize:
                     foreach (var shape in _canvas.SelectedShapes)
                         shape.Resize(bbIndex, currentPoint);
+                    _isResized = true;
                     break;
 
                 case ChangeToolMode.Rotate:
@@ -69,6 +72,12 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
         _startPoint = Vector2.Zero;
         bbIndex = -1;
         Mode = ChangeToolMode.None;
+
+        if (_isResized) {
+            foreach (var shape in _canvas.SelectedShapes)
+                shape.NormalizeIndexNodes();
+            _isResized = false;
+        }
     }
 
     private void SelectShape(Vector2 point) {
