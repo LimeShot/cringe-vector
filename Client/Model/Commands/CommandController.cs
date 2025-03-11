@@ -1,37 +1,34 @@
 using CringeCraft.Client.Model.Canvas;
-using CringeCraft.Client.View;
 
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using OpenTK.Mathematics;
 namespace CringeCraft.Client.Model.Commands;
 
 public class CommandController {
     private readonly MyCanvas _canvas;
-    public Dictionary<string, ICommandMenu> Commands = new();
-    public CommandController(MyCanvas canvas) {
+    private readonly Camera _camera;
+    public List<ICommandMenu> CommandsL = new();
+    public Vector2 Point { get; private set; }
+    public CommandController(MyCanvas canvas, Camera camera) {
         _canvas = canvas;
-        // foreach (string item in Enum.GetNames<CommandNames>()) {
-        //     Commands.Add(item, new CopyCommand(_canvas));
-        // }
-        Commands.Add("Копировать", new CopyCommand(_canvas));
-        Commands.Add("Вставить", new PasteCommand(_canvas));
-        Commands.Add("Удалить", new DelCommand(_canvas));
+        _camera = camera;
+        CommandsL.Add(new CopyCommand(_canvas, Point));
+        CommandsL.Add(new PasteCommand(_canvas, Point));
+        CommandsL.Add(new DelCommand(_canvas, Point));
     }
 
     public void CreateMenu(Point position) {
-        ContextMenu contextMenu = new() {
-            Items = {
-                new MenuItem {Header = "Копировать"},
-                new MenuItem {Header = "Вставить"},
-                new MenuItem {Header = "Удалить"}
-            }
-        };
-        contextMenu.HorizontalOffset = position.X;
-        contextMenu.VerticalOffset = position.Y;
+        ContextMenu contextMenu = new();
+        Point = _camera.ScreenToWorld(new Vector2((float)position.X, (float)position.Y));
+        foreach (var command in CommandsL) {
+            contextMenu.Items.Add(new MenuItem {
+                Header = command.Name,
+                Command = command.Command
+            });
+        }
+        contextMenu.HorizontalOffset = 0;
+        contextMenu.VerticalOffset = 0;
         contextMenu.IsOpen = true;
     }
-
-    // private enum CommandNames { Copy, Paste, Delete };
-    // private ObservableCollection<string> _items;
 }

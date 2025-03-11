@@ -1,19 +1,23 @@
+using System.Diagnostics;
+using OpenTK.Mathematics;
 using CommunityToolkit.Mvvm.Input;
 
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.Client.Model.Commands;
 public class CopyCommand : ICommandMenu {
-    private readonly RelayCommand _relayCommand;
     private readonly MyCanvas _canvas;
+    public RelayCommand Command { get; }
+    public Vector2 Point { get; private set; }
     public string Name { get; private set; }
-    public CopyCommand(MyCanvas canvas) {
-        Name = "Copy";
+    public CopyCommand(MyCanvas canvas, Vector2 point) {
+        Name = "Копировать";
+        Point = point;
         _canvas = canvas;
-        _relayCommand = new(Execute, CanExecute);
+        Command = new(Execute, CanExecute);
     }
 
     public void Execute() {
-        //_canvas.Shapes
+        // Debug.WriteLine("Копируем..йоууу");
     }
 
     public bool CanExecute() => true;

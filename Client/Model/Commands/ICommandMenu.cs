@@ -1,7 +1,9 @@
+using CommunityToolkit.Mvvm.Input;
 namespace CringeCraft.Client.Model.Commands;
 
 public interface ICommandMenu {
     public string Name { get; }
+    public RelayCommand Command { get; }
     public void Execute();
     public bool CanExecute();
 }

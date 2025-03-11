@@ -33,9 +33,9 @@ public partial class MainViewModel : ObservableObject {
     public MainViewModel(MainWindow window) {
         _window = window;
         _canvas = new();
-        _commandController = new(_canvas);
         _renderingService = new(_canvas);
         _camera = new(_renderingService);
+        _commandController = new(_canvas, _camera);
         _toolController = new(_camera, window, _canvas);
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
@@ -82,7 +82,6 @@ public partial class MainViewModel : ObservableObject {
 
         if (e != null && e.RightButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
             CMPosition = e.GetPosition((IInputElement)e.Source);
-            //CMPosition = _window.PointToScreen(CMPosition);
             _commandController.CreateMenu(CMPosition);
         }
     }

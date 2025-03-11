@@ -1,20 +1,30 @@
-using CommunityToolkit.Mvvm.Input;
+using System.Diagnostics;
 
+using CommunityToolkit.Mvvm.Input;
+using OpenTK.Mathematics;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.Client.Model.Commands;
 public class DelCommand : ICommandMenu {
-    private readonly RelayCommand _relayCommand;
     private readonly MyCanvas _canvas;
+    private const float SelectionRadius = 0.5f;   // Радиус для выбора фигуры
+    public RelayCommand Command { get; }
     public string Name { get; private set; }
-    public DelCommand(MyCanvas canvas) {
-        Name = "Delete";
+    public Vector2 Point { get; private set; }
+    public DelCommand(MyCanvas canvas, Vector2 point) {
+        Name = "Удалить";
+        Point = point;
         _canvas = canvas;
-        _relayCommand = new(Execute, CanExecute);
+        Command = new(Execute, CanExecute);
     }
 
     public void Execute() {
-        //_canvas.Shapes
+        foreach (var shape in _canvas.Shapes.Reverse()) {
+            if (shape.IsBelongsShape(Point, SelectionRadius)) {
+                _canvas.Shapes.Remove(shape);
+                break;
+            }
+        }
     }
 
-    public bool CanExecute() => true;
+    public bool CanExecute() => _canvas.Shapes.Count != 0;
 }
