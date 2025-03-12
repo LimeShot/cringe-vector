@@ -81,7 +81,7 @@ public partial class Rectangle : IShape {
 
     public float[] GetTriangleVertices() {
         if (!Style.Fill) return [];
-        float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
+        float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z];
         return [Nodes[0].X , Nodes[0].Y , ..args,
                 Nodes[1].X , Nodes[1].Y , ..args,
                 Nodes[2].X , Nodes[2].Y , ..args,
