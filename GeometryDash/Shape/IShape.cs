@@ -8,7 +8,6 @@ public interface IShape {
     public float Rotate { get; } // Угол в градусах
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { get; }
-    public Vector2[] LocalBoundingBox { get; } // BoundingBox без учета Translate
     public Vector2[] Nodes { set; get; }
 
     //Метод возвращает линии фигуры(без заполнения(Fill=false)) необходимые для отрисовки

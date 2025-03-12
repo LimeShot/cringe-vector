@@ -14,14 +14,12 @@ public partial class Rectangle : IShape {
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
-    public Vector2[] LocalBoundingBox { private set; get; }
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
         for (int i = 0; i < 4; i++) {
-            LocalBoundingBox[i] = result * Nodes[i];
-            BoundingBox[i] = LocalBoundingBox[i] + Translate;
+            BoundingBox[i] = result * Nodes[i] + Translate;
         }
     }
 
@@ -31,7 +29,6 @@ public partial class Rectangle : IShape {
         Rotate = 0.0f;
         Style = new();
         BoundingBox = new Vector2[4];
-        LocalBoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         for (int i = 0; i < 4; i++) {
             Nodes[i] = Vector2.Zero;
@@ -45,7 +42,6 @@ public partial class Rectangle : IShape {
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
-        LocalBoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         for (int i = 0; i < 4; i++) {
             Nodes[i] = Vector2.Zero;
@@ -59,7 +55,6 @@ public partial class Rectangle : IShape {
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
-        LocalBoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         float sideDev2 = side / 2;
         Nodes[0] = new(-sideDev2, sideDev2);
@@ -86,7 +81,7 @@ public partial class Rectangle : IShape {
 
     public float[] GetTriangleVertices() {
         if (!Style.Fill) return [];
-        float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
+        float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z];
         return [Nodes[0].X , Nodes[0].Y , ..args,
                 Nodes[1].X , Nodes[1].Y , ..args,
                 Nodes[2].X , Nodes[2].Y , ..args,
@@ -161,11 +156,13 @@ public partial class Rectangle : IShape {
         if (Math.Abs(denominator) < 1E-10)
             denominator = 1E-7;
         float angle = (float)MathHelper.RadiansToDegrees(Math.Acos((p1.X * p2.X + p1.Y * p2.Y) / denominator));
+        if (float.IsNaN(angle))
+            return;
         int sign = 1;
-        if (new Matrix2(p1, p2).Determinant < 0)
+        if (new Matrix2(p1, p2).Determinant > 0)
             sign = -1;
         Rotate += sign * angle;
-        Rotate %= 360;
+        Rotate %= 180;
         CalcBB();
     }
 

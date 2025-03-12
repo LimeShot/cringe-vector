@@ -14,14 +14,12 @@ public partial class Line : IShape {
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
-    public Vector2[] LocalBoundingBox { private set; get; }
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
         for (int i = 0; i < 2; i++) {
-            LocalBoundingBox[i] = result * Nodes[i];
-            BoundingBox[i] = LocalBoundingBox[i] + Translate;
+            BoundingBox[i] = result * Nodes[i] + Translate;
         }
     }
 
@@ -31,7 +29,6 @@ public partial class Line : IShape {
         Rotate = 0.0f;
         Style = new();
         BoundingBox = new Vector2[2];
-        LocalBoundingBox = new Vector2[2];
         Nodes = new Vector2[2];
         Nodes[0] = Vector2.Zero;
         Nodes[1] = Vector2.Zero;
@@ -50,7 +47,6 @@ public partial class Line : IShape {
         Z = z;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[2];
-        LocalBoundingBox = new Vector2[2];
         Nodes = new Vector2[2];
         float lengthDev2 = length / 2;
         Nodes[0] = new(-lengthDev2, 0.0f);
@@ -123,15 +119,20 @@ public partial class Line : IShape {
     }
 
     public void Resize(int index, Vector2 newNode) {
+        double sideToRotate = 1;
+        if (index == 0)
+            sideToRotate = -1;
         Vector2 deltaDev2 = (newNode - BoundingBox[index]) / 2;
-        Vector2 RotateNodes = BoundingBox[index] - Translate + deltaDev2;
+        Vector2 rotateNodes = BoundingBox[index] - Translate + deltaDev2;
         Translate += deltaDev2;
-        double denominator = RotateNodes.Length;
+        double denominator = rotateNodes.Length;
         if (Math.Abs(denominator) < 1E-10)
             denominator = 1E-7;
-        float angle = (float)MathHelper.RadiansToDegrees(Math.Acos(RotateNodes.X / denominator));
+        float angle = (float)MathHelper.RadiansToDegrees(Math.Acos(sideToRotate * rotateNodes.X / denominator));
+        if (float.IsNaN(angle))
+            return;
         int sign = 1;
-        if (-RotateNodes.Y < 0)
+        if (sideToRotate * rotateNodes.Y > 0)
             sign = -1;
         Rotate = sign * angle;
         Nodes[0].X = -(float)denominator;
@@ -149,11 +150,13 @@ public partial class Line : IShape {
         if (Math.Abs(denominator) < 1E-10)
             denominator = 1E-7;
         float angle = (float)MathHelper.RadiansToDegrees(Math.Acos((p1.X * p2.X + p1.Y * p2.Y) / denominator));
+        if (float.IsNaN(angle))
+            return;
         int sign = 1;
-        if (new Matrix2(p1, p2).Determinant < 0)
+        if (new Matrix2(p1, p2).Determinant > 0)
             sign = -1;
         Rotate += sign * angle;
-        Rotate %= 360;
+        Rotate %= 180;
         CalcBB();
     }
 

@@ -14,14 +14,12 @@ public partial class Ellipse : IShape {
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
-    public Vector2[] LocalBoundingBox { private set; get; }
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
         for (int i = 0; i < 4; i++) {
-            LocalBoundingBox[i] = result * Nodes[i];
-            BoundingBox[i] = LocalBoundingBox[i] + Translate;
+            BoundingBox[i] = result * Nodes[i] + Translate;
         }
         return;
     }
@@ -32,7 +30,6 @@ public partial class Ellipse : IShape {
         Rotate = 0.0f;
         Style = new();
         BoundingBox = new Vector2[4];
-        LocalBoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         CalcBB();
     }
@@ -43,7 +40,6 @@ public partial class Ellipse : IShape {
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
-        LocalBoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         for (int i = 0; i < 4; i++) {
             Nodes[i] = Vector2.Zero;
@@ -57,7 +53,6 @@ public partial class Ellipse : IShape {
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
-        LocalBoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         float diagonalDev2 = diagonal / 2;
         Nodes[0] = new(-diagonalDev2, diagonalDev2);
@@ -146,11 +141,13 @@ public partial class Ellipse : IShape {
         if (Math.Abs(denominator) < 1E-10)
             denominator = 1E-7;
         float angle = (float)MathHelper.RadiansToDegrees(Math.Acos((p1.X * p2.X + p1.Y * p2.Y) / denominator));
+        if (float.IsNaN(angle))
+            return;
         int sign = 1;
-        if (new Matrix2(p1, p2).Determinant < 0)
+        if (new Matrix2(p1, p2).Determinant > 0)
             sign = -1;
         Rotate += sign * angle;
-        Rotate %= 360;
+        Rotate %= 180;
         CalcBB();
     }
 
