@@ -4,7 +4,7 @@ using System.Diagnostics;
 using OpenTK.Mathematics;
 
 using CringeCraft.Client.Model.Canvas;
-using System.Windows.Input;
+using System.Windows.Shapes;
 
 //Может стоит сделать отдельный контроллер для определения режима работы этого тула?
 
@@ -90,16 +90,34 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
         }
     }
 
-    private bool IsPointInsideSelectedShape(Vector2 point) {
-        return _canvas.SelectedShapes.Any(shape => shape.IsBelongsShape(point, SelectionRadius));
+    private bool IsPointInsideSelectedBB(Vector2 point) {
+        foreach (var shape in _canvas.SelectedShapes) {
+            var min = shape.Nodes.First();
+            var max = shape.Nodes.First();
+            for (int i = 1; i < shape.Nodes.Length; i++) {
+                var node = shape.Nodes[i];
+                min = Vector2.ComponentMin(node, min);
+                max = Vector2.ComponentMax(node, max);
+            }
+            Matrix2.CreateRotation(MathHelper.DegreesToRadians(-shape.Rotate), out Matrix2 result);
+            var localPoint = result * (point - shape.Translate);
+            if (localPoint.X >= min.X && localPoint.X <= max.X &&
+                localPoint.Y >= min.Y && localPoint.Y <= max.Y) {
+                return true;
+            }
+        }
+        return false;
     }
+
+
 
     private int TryGetBBNode(Vector2 point) {
         if (_canvas.SelectedShapes.Count != 1) return -1; // Пока поддерживаем только одну фигуру
         var shape = _canvas.SelectedShapes[0];
         var nodes = shape.BoundingBox;
 
-        bool isInside = shape.IsBelongsShape(point, SelectionRadius); // Точная проверка внутри фигуры
+        //Работает только при условии 1-ой фигуры
+        bool isInside = IsPointInsideSelectedBB(point); // Точная проверка внутри коробки
 
         int bbNode = -1;
 
@@ -120,7 +138,7 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
             Mode = ChangeToolMode.Resize; // Изменение размера для узлов 0-3
         else if (bbIndex == 4)
             Mode = ChangeToolMode.Rotate; // Поворот для клика снаружи рядом с углом
-        else if (IsPointInsideSelectedShape(point))
+        else if (IsPointInsideSelectedBB(point))
             Mode = ChangeToolMode.Move;
         else
             Mode = ChangeToolMode.None;
