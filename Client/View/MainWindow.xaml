@@ -40,7 +40,8 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Изменить">
-                <MenuItem Header="_Размер холста">
+                <MenuItem Header="_Размер холста"
+                          Command="{Binding ChangeCanvasSizeCommand}">
                     <MenuItem.Icon>
                         <Image Source="pack://siteoforigin:,,,/assets/icons/canvas_size.png"
                                Width="16"
