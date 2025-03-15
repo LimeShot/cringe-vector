@@ -39,6 +39,15 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="_Изменить">
+                <MenuItem Header="_Размер холста">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/canvas_size.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
         </Menu>
 
         <StatusBar DockPanel.Dock="Bottom">
