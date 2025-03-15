@@ -122,6 +122,43 @@ public partial class Polygon : IShape {
             returns[i * 18 + 17] = Style.ColorOutline.Z;
         }
         return returns;
+
+
+        //
+        // Пока нету шейдера на отрисовку поворота, можно юзать, но надо закоментить то, что сверху 
+
+
+        // Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
+        // Vector2[] rotateNode = new Vector2[Nodes.Length];
+        // for (int i = 0; i < Nodes.Length; i++) {
+        //     rotateNode[i] = result * Nodes[i];
+        // }
+
+        // int len = Nodes.Length;
+        // float[] returns = new float[len * 2 * 9];
+        // for (int i = 0; i < len; i++) {
+        //     returns[i * 18] = rotateNode[i].X;
+        //     returns[i * 18 + 1] = rotateNode[i].Y;
+        //     returns[i * 18 + 2] = Z;
+        //     returns[i * 18 + 3] = Translate.X;
+        //     returns[i * 18 + 4] = Translate.Y;
+        //     returns[i * 18 + 5] = Rotate;
+        //     returns[i * 18 + 6] = Style.ColorOutline.X;
+        //     returns[i * 18 + 7] = Style.ColorOutline.Y;
+        //     returns[i * 18 + 8] = Style.ColorOutline.Z;
+
+        //     returns[i * 18 + 9] = rotateNode[(i + 1) % len].X;
+        //     returns[i * 18 + 10] = rotateNode[(i + 1) % len].Y;
+        //     returns[i * 18 + 11] = Z;
+        //     returns[i * 18 + 12] = Translate.X;
+        //     returns[i * 18 + 13] = Translate.Y;
+        //     returns[i * 18 + 14] = Rotate;
+        //     returns[i * 18 + 15] = Style.ColorOutline.X;
+        //     returns[i * 18 + 16] = Style.ColorOutline.Y;
+        //     returns[i * 18 + 17] = Style.ColorOutline.Z;
+        // }
+        // return returns;
+
     }
 
     public float[] GetTriangleVertices() {
