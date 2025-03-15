@@ -23,7 +23,9 @@ namespace VectorPaint
             {
                 CanvasWidth = newWidth;
                 CanvasHeight = newHeight;
-                DialogResult = true; // Закрываем окно и возвращаем true
+                
+                this.Tag = true; // Флаг успешного ввода
+                this.Close();
             }
             else
             {
@@ -33,7 +35,8 @@ namespace VectorPaint
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false; // Закрываем окно без изменений
+            this.Tag = false; // Флаг отмены
+            this.Close();
         }
     }
 }
