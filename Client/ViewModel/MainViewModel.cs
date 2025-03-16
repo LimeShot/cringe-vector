@@ -78,7 +78,7 @@ public partial class MainViewModel : ObservableObject {
     private void OnMouseDown(MouseEventArgs e) {
         if (e != null && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) { //добавить клик на холст
             StartPoint = e.GetPosition((IInputElement)e.Source);
-            _toolController.OnMouseDown(StartPoint);
+            ToolController.OnMouseDown(StartPoint);
         }
 
         if (e != null && e.RightButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
@@ -91,14 +91,14 @@ public partial class MainViewModel : ObservableObject {
     private void OnMouseMove(MouseEventArgs e) {
         if (e != null && e.Source is GLWpfControl) {
             CurrentPoint = e.GetPosition((IInputElement)e.Source);
-            _toolController.OnMouseMove(CurrentPoint, e.LeftButton == MouseButtonState.Pressed);
+            ToolController.OnMouseMove(CurrentPoint, e.LeftButton == MouseButtonState.Pressed);
         }
     }
 
     [RelayCommand]
     private void OnMouseUp(MouseEventArgs e) {
         if (e != null) {
-            _toolController.OnMouseUp(e.GetPosition((IInputElement)e.Source));
+            ToolController.OnMouseUp(e.GetPosition((IInputElement)e.Source));
         }
     }
 
@@ -124,4 +124,8 @@ public partial class MainViewModel : ObservableObject {
         window.Show();
     }
 
+    [RelayCommand]
+    private void Undo() {
+
+    }
 }

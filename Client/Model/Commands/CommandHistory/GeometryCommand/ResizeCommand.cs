@@ -2,7 +2,7 @@ using OpenTK.Mathematics;
 
 using CringeCraft.GeometryDash.Shape;
 
-namespace CringeCraft.Client.Model.Commands.GeometryCommands;
+namespace CringeCraft.Client.Model.Commands.CommandHistory;
 
 public class ResizeCommand : ICommand {
     private readonly IShape _shape;
@@ -10,15 +10,18 @@ public class ResizeCommand : ICommand {
     private readonly Vector2 _startPoint;
     private readonly Vector2 _endPoint;
 
-    public ResizeCommand(IShape shape) {
+    public ResizeCommand(IShape shape, Vector2 startPoint, Vector2 endPoint, int bbIndex) {
         _shape = shape;
-    }
-
-    public void Redo() {
-        _shape.Resize(_bbIndex, _startPoint);
+        _startPoint = startPoint;
+        _endPoint = endPoint;
+        _bbIndex = bbIndex;
     }
 
     public void Undo() {
+        _shape.Resize(_bbIndex, _startPoint);
+    }
+
+    public void Redo() {
         _shape.Resize(_bbIndex, _endPoint);
     }
 }

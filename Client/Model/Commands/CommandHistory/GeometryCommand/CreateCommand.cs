@@ -1,7 +1,7 @@
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 
-namespace CringeCraft.Client.Model.Commands.GeometryCommands;
+namespace CringeCraft.Client.Model.Commands.CommandHistory;
 
 public class CreateCommand : ICommand {
     private readonly IShape _shape;
@@ -12,11 +12,11 @@ public class CreateCommand : ICommand {
         _canvas = canvas;
     }
 
-    public void Redo() {
+    public void Undo() {
         _canvas.RemoveShape(_shape);
     }
 
-    public void Undo() {
+    public void Redo() {
         _canvas.AddShape(_shape);
     }
 }

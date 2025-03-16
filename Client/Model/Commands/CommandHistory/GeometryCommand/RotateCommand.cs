@@ -2,7 +2,7 @@ using OpenTK.Mathematics;
 
 using CringeCraft.GeometryDash.Shape;
 
-namespace CringeCraft.Client.Model.Commands.GeometryCommands;
+namespace CringeCraft.Client.Model.Commands.CommandHistory;
 
 public class RotateCommand : ICommand {
     private readonly IShape _shape;
@@ -15,11 +15,11 @@ public class RotateCommand : ICommand {
         _endPoint = endPoint;
     }
 
-    public void Redo() {
+    public void Undo() {
         _shape.RotateShape(_endPoint, _startPoint);
     }
 
-    public void Undo() {
+    public void Redo() {
         _shape.RotateShape(_startPoint, _endPoint);
     }
 }
