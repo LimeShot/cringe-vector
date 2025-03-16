@@ -25,6 +25,16 @@ public class Camera {
       UpdateViewMatrix();
    }
 
+   public void SetPosition(Vector2 point) {
+      Position += point;
+      UpdateViewMatrix();
+   }
+
+   public void UndoPosition() {
+      Position = (0.0f, 0.0f);
+      UpdateViewMatrix();
+   }
+
    public void SetZoom(float zoom) {
       Zoom = Math.Clamp(zoom, MinZoom, MaxZoom);
    }
@@ -41,14 +51,23 @@ public class Camera {
       screenPoint.Y = -screenPoint.Y;
       return (screenPoint - _viewportSize * 0.5f) / Zoom + Position;
    }
+
    public Vector2 WorldToScreen(Vector2 worldPoint) {
       var screenPoint = (worldPoint - Position) * Zoom + _viewportSize * 0.5f;
-      return (screenPoint.X, -screenPoint.Y);
+      screenPoint = -screenPoint;
+      return screenPoint;
    }
 
+
    private void UpdateViewMatrix() {
-      var projection = Matrix4.CreateOrthographicOffCenter(-_viewportSize.X / 2.0f, _viewportSize.X / 2.0f, _viewportSize.Y / 2.0f, -_viewportSize.Y / 2.0f, -1, 1);
-      var view = Matrix4.CreateTranslation(Position.X, Position.Y, 0);
+      var projection = Matrix4.CreateOrthographicOffCenter(
+         -_viewportSize.X / 2.0f, _viewportSize.X / 2.0f,
+         _viewportSize.Y / 2.0f, -_viewportSize.Y / 2.0f,
+         -1, 1);
+
+      var view = Matrix4.CreateTranslation(-Position.X, -Position.Y, 0); // Инвертированное смещение
+
       MatrixProjecitonPortChanged?.Invoke(projection, view);
    }
+
 }

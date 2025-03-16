@@ -33,6 +33,7 @@ public partial class ToolController : ObservableObject {
         _camera = camera;
 
         Tools.Add("Change", new ChangeTool("change", canvas)); //Иконку то пофиксить надо
+        Tools.Add("Camera", new CameraTool("change", camera));
 
         foreach (var item in ShapeFactory.AvailableShapes)
             Tools.Add(item, new CreateTool(item, canvas, OnShapeChanged));
