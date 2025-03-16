@@ -112,99 +112,81 @@ public class RenderingService {
         _shaderCircle = new(@"
             #version 330 core
 
-            layout (location = 0) in vec3 aPos;      // Center of ellipse (x, y, z)
-            layout (location = 1) in vec2 aSize;     // (width, height) of ellipse
-            layout (location = 2) in float aRotate;  // Rotation *in degrees*
-            layout (location = 3) in vec3 aColor;    // RGB color
+            layout (location = 0) in vec3 aPos;
+            layout (location = 1) in vec2 aSize;
+            layout (location = 2) in float aRotate;
+            layout (location = 3) in vec3 aColor;
 
-            out VS_OUT {
-                vec3  center;
-                vec2  size;
-                float rotateDeg; 
-                vec3  color;
-            } vs_out;
+            out vec3 VertCenter;
+            out vec2 VertSize;
+            out float VertRotate;
+            out vec3 VertColor;
 
             void main() {
-                vs_out.center    = aPos;
-                vs_out.size      = aSize;
-                vs_out.rotateDeg = aRotate;
-                vs_out.color     = aColor;
+                VertCenter = aPos;
+                VertSize = aSize;
+                VertRotate = aRotate;
+                VertColor = aColor;
             }
-        ", @"
+            ", @"
             #version 330 core
 
             layout (points) in;
             layout (triangle_strip, max_vertices = 4) out;
 
+            in vec3 VertCenter[];
+            in vec2 VertSize[];
+            in float VertRotate[];
+            in vec3 VertColor[];
+
+            out vec2 GeomLocalPos;
+            out vec2 GeomHalfSize;
+            out vec3 GeomColor;
+
             uniform mat4 uProjection;
             uniform mat4 uView;
 
-            in VS_OUT {
-                vec3  center;      // (x, y, z)
-                vec2  size;        // (width, height)
-                float rotateDeg;   // rotation in degrees
-                vec3  color;       // RGB
-            } gs_in[];
+            const float PI = 3.1415926535897932384626433832795;
 
-            out GS_OUT {
-                vec2 localPos;  // local ellipse coords in [-a..+a] x [-b..+b]
-                vec2 halfSize;  // (a, b) for ellipse test
-                vec3 color;
-            } gs_out;
+            float deg2rad(float deg) {
+                return deg * (PI / 180.0);
+            }
 
             void main() {
-                vec3  center   = gs_in[0].center;      
-                vec2  sizeXY   = gs_in[0].size;
-                float rotateD  = gs_in[0].rotateDeg;
-                vec3  color    = gs_in[0].color;
+                float a = VertSize[0].x * 0.5;
+                float b = VertSize[0].y * 0.5;
+                vec2 corners[4] = vec2[](vec2(-a, -b), vec2(a, -b), vec2(-a,  b), vec2(a,  b));
 
-                float radians = -rotateD * 3.1415926535 / 180.0;
+                float radians = -deg2rad(VertRotate[0]);
                 float c = cos(radians);
                 float s = sin(radians);
 
-                float a = sizeXY.x * 0.5;  // semi-width
-                float b = sizeXY.y * 0.5;  // semi-height
-
-                vec2 corners[4] = vec2[](
-                    vec2(-a, -b),  // bottom-left
-                    vec2( a, -b),  // bottom-right
-                    vec2(-a,  b),  // top-left
-                    vec2( a,  b)   // top-right
-                );
-
                 for (int i = 0; i < 4; i++) {
-                    gs_out.localPos = corners[i];
-                    gs_out.halfSize = vec2(a, b);
-                    gs_out.color    = color;
-                    float rx = corners[i].x * c - corners[i].y * s; // x*cos - y*sin
-                    float ry = corners[i].x * s + corners[i].y * c; // x*sin + y*cos
-                    vec3 worldPos = center + vec3(rx, ry, 0.0);
-                    gl_Position = uProjection * uView * vec4(worldPos, 1.0);
+                    GeomLocalPos = corners[i];
+                    GeomHalfSize = vec2(a, b);
+                    GeomColor = VertColor[0];
+                    vec3 pos = VertCenter[0] + vec3(corners[i].x * c - corners[i].y * s, corners[i].x * s + corners[i].y * c, 0.0);
+                    gl_Position = uProjection * uView * vec4(pos, 1.0);
                     EmitVertex();
                 }
-
                 EndPrimitive();
             }
-        ", @"
+            ", @"
             #version 330 core
 
-            in GS_OUT {
-                vec2 localPos;   // local coords in [-a..+a], [-b..+b]
-                vec2 halfSize;   // (a, b)
-                vec3 color;
-            } fs_in;
+            in vec2 GeomLocalPos;
+            in vec2 GeomHalfSize;
+            in vec3 GeomColor;
 
             out vec4 FragColor;
 
             void main() {
-                float x = fs_in.localPos.x / fs_in.halfSize.x; // normalized to [-1..+1]
-                float y = fs_in.localPos.y / fs_in.halfSize.y; // normalized to [-1..+1]
-                float ellipseEq = x*x + y*y;
-
-                if (ellipseEq > 1.0)
+                float x = GeomLocalPos.x / GeomHalfSize.x;
+                float y = GeomLocalPos.y / GeomHalfSize.y;
+                float ellipse = x*x + y*y;
+                if (ellipse > 1.0)
                     discard;
-
-                FragColor = vec4(fs_in.color, 1.0);
+                FragColor = vec4(GeomColor, 1.0);
             }");
         _vaoCircle = new([3, 2, 1, 3]);
 
@@ -213,68 +195,82 @@ public class RenderingService {
 
             layout (location = 0) in vec3 aPos;
             layout (location = 1) in vec2 aSize;
-            layout (location = 2) in vec3 aColor;
+            layout (location = 2) in float aRotate;
+            layout (location = 3) in vec3 aColor;
 
-            out vec3 VertPos;
+            out vec3 VertCenter;
             out vec2 VertSize;
+            out float VertRotate;
             out vec3 VertColor;
 
             void main() {
-                VertPos = aPos;
+                VertCenter = aPos;
                 VertSize = aSize;
+                VertRotate = aRotate;
                 VertColor = aColor;
-                gl_Position = vec4(VertPos, 1.0);
             }
             ", @"
             #version 330 core
 
-            layout(points) in;
-            layout(line_strip, max_vertices = 120) out;
+            layout (points) in;
+            layout (triangle_strip, max_vertices = 4) out;
 
-            in vec3 VertPos[];
+            in vec3 VertCenter[];
             in vec2 VertSize[];
+            in float VertRotate[];
             in vec3 VertColor[];
 
+            out vec2 GeomLocalPos;
+            out vec2 GeomHalfSize;
             out vec3 GeomColor;
 
-            uniform mat4 uProjection, uView;
+            uniform mat4 uProjection;
+            uniform mat4 uView;
+
+            const float PI = 3.1415926535897932384626433832795;
+
+            float deg2rad(float deg) {
+                return deg * (PI / 180.0);
+            }
 
             void main() {
-                vec3 center = VertPos[0].xyz;
-                float width = VertSize[0].x;
-                float height = VertSize[0].y;
-                float halfW = width * 0.5;
-                float halfH = height * 0.5;
+                float a = VertSize[0].x * 0.5;
+                float b = VertSize[0].y * 0.5;
+                vec2 corners[4] = vec2[](vec2(-a, -b), vec2(a, -b), vec2(-a,  b), vec2(a,  b));
 
-                GeomColor = VertColor[0];
+                float radians = -deg2rad(VertRotate[0]);
+                float c = cos(radians);
+                float s = sin(radians);
 
-                for (int i = 1; i <= 40; i++) {
-                    float angle = (3.1415926 * 2.0) * ((i - 1) / float(40));
-                    float x = cos(angle);
-                    float y = sin(angle);
-                    gl_Position = uProjection * uView * vec4(center.x + x * halfW, center.y + y * halfH, center.z, 1.0);
-                    EmitVertex();
-
-                    angle = (3.1415926 * 2.0) * (i / float(40));
-                    x = cos(angle);
-                    y = sin(angle);
-                    gl_Position = uProjection * uView * vec4(center.x + x * halfW, center.y + y * halfH, center.z, 1.0);
+                for (int i = 0; i < 4; i++) {
+                    GeomLocalPos = corners[i];
+                    GeomHalfSize = vec2(a, b);
+                    GeomColor = VertColor[0];
+                    vec3 pos = VertCenter[0] + vec3(corners[i].x * c - corners[i].y * s, corners[i].x * s + corners[i].y * c, 0.0);
+                    gl_Position = uProjection * uView * vec4(pos, 1.0);
                     EmitVertex();
                 }
-
                 EndPrimitive();
             }
             ", @"
             #version 330 core
 
+            in vec2 GeomLocalPos;
+            in vec2 GeomHalfSize;
             in vec3 GeomColor;
 
             out vec4 FragColor;
 
             void main() {
+                float x = GeomLocalPos.x / GeomHalfSize.x; 
+                float y = GeomLocalPos.y / GeomHalfSize.y; 
+                float ellipse = x*x + y*y;
+                float w = fwidth(ellipse);
+                if (ellipse > 1.0 || ellipse < 1.0 - w)
+                    discard;
                 FragColor = vec4(GeomColor, 1.0);
             }");
-        _vaoCircumference = new([3, 2, 3]);
+        _vaoCircumference = new([3, 2, 1, 3]);
 
         _vaoBackground = new([3, 2, 1, 3]);
 
@@ -331,14 +327,12 @@ public class RenderingService {
         _shaderCircle.SetUniform("uView", _view);
         GL.BindVertexArray(_vaoCircle.Id);
         GL.DrawArrays(PrimitiveType.Points, 0, _vaoCircle.Length / _vaoCircle.Stride);
-        // GL.BindVertexArray(_vaoCircumference.Id);
-        // GL.DrawArrays(PrimitiveType.Points, 0, _vaoCircumference.Length / _vaoCircumference.Stride);
 
-        // GL.UseProgram(_shaderCircumference.Id);
-        // _shaderCircumference.SetUniform("uProjection", _projection);
-        // _shaderCircumference.SetUniform("uView", _view);
-        // GL.BindVertexArray(_vaoCircumference.Id);
-        // GL.DrawArrays(PrimitiveType.Points, 0, _vaoCircumference.Length / _vaoCircumference.Stride);
+        GL.UseProgram(_shaderCircumference.Id);
+        _shaderCircumference.SetUniform("uProjection", _projection);
+        _shaderCircumference.SetUniform("uView", _view);
+        GL.BindVertexArray(_vaoCircumference.Id);
+        GL.DrawArrays(PrimitiveType.Points, 0, _vaoCircumference.Length / _vaoCircumference.Stride);
     }
 
     public void OnShapeAdded(params IShape[] shapes) {
