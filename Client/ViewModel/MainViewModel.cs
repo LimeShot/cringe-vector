@@ -14,6 +14,7 @@ using CringeCraft.Client.View;
 using System.Diagnostics;
 using OpenTK.Wpf;
 using CringeCraft.Client.Model.Commands;
+using VectorPaint;
 
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
@@ -115,6 +116,12 @@ public partial class MainViewModel : ObservableObject {
         if (filePath != null) {
             Debug.WriteLine($"Файл сохранён: {filePath}");
         }
+    }
+
+    [RelayCommand]
+    private void ChangeCanvasSize() {
+        var window = new ResizeCanvasDialog((int)Canvas.Width, (int)Canvas.Height);
+        window.Show();
     }
 
 }

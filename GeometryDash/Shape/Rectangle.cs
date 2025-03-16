@@ -77,6 +77,29 @@ public partial class Rectangle : IShape {
 
                 Nodes[3].X , Nodes[3].Y , ..args,
                 Nodes[0].X , Nodes[0].Y , ..args];
+
+
+        //
+        // Пока нету шейдера на отрисовку поворота, можно юзать, но надо закоментить то, что сверху 
+
+        // Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
+        // Vector2[] rotateNode = new Vector2[Nodes.Length];
+        // for (int i = 0; i < Nodes.Length; i++) {
+        //     rotateNode[i] = result * Nodes[i];
+        // }
+
+        // float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
+        // return [rotateNode[0].X , rotateNode[0].Y , ..args,
+        //         rotateNode[1].X , rotateNode[1].Y , ..args,
+
+        //         rotateNode[1].X , rotateNode[1].Y , ..args,
+        //         rotateNode[2].X , rotateNode[2].Y , ..args,
+
+        //         rotateNode[2].X , rotateNode[2].Y , ..args,
+        //         rotateNode[3].X , rotateNode[3].Y , ..args,
+
+        //         rotateNode[3].X , rotateNode[3].Y , ..args,
+        //         rotateNode[0].X , rotateNode[0].Y , ..args];
     }
 
     public float[] GetTriangleVertices() {
