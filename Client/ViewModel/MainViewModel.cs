@@ -131,9 +131,21 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void Undo() {
-        var type = _commandHistory.GetLastCommandType();
-        _commandHistory.Undo();
-        if (type != CommandType.None)
-            OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+        if (_commandHistory.UndoCmdCount > 0) {
+            var type = _commandHistory.GetLastUndoCommandType();
+            _commandHistory.Undo();
+            if (type != CommandType.None)
+                OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+        }
+    }
+
+    [RelayCommand]
+    private void Redo() {
+        if (_commandHistory.RedoCmdCount > 0) {
+            var type = _commandHistory.GetLastRedoCommandType();
+            _commandHistory.Redo();
+            if (type != CommandType.None)
+                OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+        }
     }
 }

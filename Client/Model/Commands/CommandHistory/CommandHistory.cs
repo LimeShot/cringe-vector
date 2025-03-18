@@ -5,12 +5,17 @@ public class MyCommandHistory {
     private readonly LinkedList<ICommand> _commands = new LinkedList<ICommand>();
     private readonly LinkedList<ICommand> _cancelledCommands = new LinkedList<ICommand>();
 
+    public int UndoCmdCount { get; private set; } = 0;
+    public int RedoCmdCount { get; private set; } = 0;
+
     public void AddCommand(ICommand command) {
         if (_commands.Count >= CommandsCount)
             _commands.RemoveLast();
 
         _commands.AddFirst(command);
         _cancelledCommands.Clear();
+        UndoCmdCount += 1;
+        RedoCmdCount = 0;
     }
 
 
@@ -21,6 +26,8 @@ public class MyCommandHistory {
 
             _commands.RemoveFirst();
             _cancelledCommands.AddFirst(removeCommand);
+            UndoCmdCount -= 1;
+            RedoCmdCount += 1;
         }
     }
 
@@ -30,11 +37,16 @@ public class MyCommandHistory {
             command.Redo();
 
             _cancelledCommands.RemoveFirst();
-            AddCommand(command);
+            _commands.AddFirst(command);
+            UndoCmdCount += 1;
+            RedoCmdCount -= 1;
         }
     }
 
-    public CommandType GetLastCommandType() {
+    public CommandType GetLastUndoCommandType() {
         return _commands.First().Type;
+    }
+    public CommandType GetLastRedoCommandType() {
+        return _cancelledCommands.First().Type;
     }
 }
