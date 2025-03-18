@@ -32,6 +32,7 @@ public partial class MainViewModel : ObservableObject {
     public Point StartPoint { get; private set; }
     public Point CurrentPoint { get; private set; }
     public Point CMPosition { get; private set; }
+    public event EventHandler<List<IShape>>? OnShapeChanged;
 
     public MainViewModel(MainWindow window) {
         _window = window;
@@ -44,6 +45,7 @@ public partial class MainViewModel : ObservableObject {
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
         _toolController.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
+        OnShapeChanged += Shapes_PropertyChanged;
     }
 
     private void Shapes_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
@@ -130,5 +132,6 @@ public partial class MainViewModel : ObservableObject {
     [RelayCommand]
     private void Undo() {
         _commandHistory.Undo();
+        OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
     }
 }
