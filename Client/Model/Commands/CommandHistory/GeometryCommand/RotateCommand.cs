@@ -1,6 +1,7 @@
 using OpenTK.Mathematics;
 
 using CringeCraft.GeometryDash.Shape;
+using System.Diagnostics;
 
 namespace CringeCraft.Client.Model.Commands.CommandHistory;
 
@@ -16,7 +17,9 @@ public class RotateCommand : ICommand {
     }
 
     public void Undo() {
+        Debug.WriteLine("Вызов Shape.Rotate...");
         _shape.RotateShape(_endPoint, _startPoint);
+        Debug.WriteLine("Shape.Rotate отработал");
     }
 
     public void Redo() {

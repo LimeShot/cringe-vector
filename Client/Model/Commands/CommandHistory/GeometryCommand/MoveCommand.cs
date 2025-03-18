@@ -1,6 +1,7 @@
 using OpenTK.Mathematics;
 
 using CringeCraft.GeometryDash.Shape;
+using System.Diagnostics;
 
 namespace CringeCraft.Client.Model.Commands.CommandHistory;
 
@@ -14,7 +15,9 @@ public class MoveCommand : ICommand {
     }
 
     public void Undo() {
+        Debug.WriteLine("Вызов Shape.Move...");
         _shape.Move(-_delta);
+        Debug.WriteLine("Shape.Move отработал");
     }
 
     public void Redo() {

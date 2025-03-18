@@ -1,6 +1,7 @@
 using OpenTK.Mathematics;
 
 using CringeCraft.GeometryDash.Shape;
+using System.Diagnostics;
 
 namespace CringeCraft.Client.Model.Commands.CommandHistory;
 
@@ -18,7 +19,9 @@ public class ResizeCommand : ICommand {
     }
 
     public void Undo() {
+        Debug.WriteLine("Вызов Shape.Resize...");
         _shape.Resize(_bbIndex, _startPoint);
+        Debug.WriteLine("Shape.Resize отработал");
     }
 
     public void Redo() {
