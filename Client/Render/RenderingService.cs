@@ -265,7 +265,7 @@ public class RenderingService {
                 float x = GeomLocalPos.x / GeomHalfSize.x; 
                 float y = GeomLocalPos.y / GeomHalfSize.y; 
                 float ellipse = x*x + y*y;
-                float w = fwidth(ellipse);
+                float w = 2.0 * fwidth(ellipse);
                 if (ellipse > 1.0 || ellipse < 1.0 - w)
                     discard;
                 FragColor = vec4(GeomColor, 1.0);
