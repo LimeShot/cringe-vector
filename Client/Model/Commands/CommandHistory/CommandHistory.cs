@@ -9,8 +9,10 @@ public class MyCommandHistory {
     public int RedoCmdCount { get; private set; } = 0;
 
     public void AddCommand(ICommand command) {
-        if (_commands.Count >= CommandsCount)
+        if (_commands.Count >= CommandsCount) {
             _commands.RemoveLast();
+            UndoCmdCount -= 1;
+        }
 
         _commands.AddFirst(command);
         _cancelledCommands.Clear();
