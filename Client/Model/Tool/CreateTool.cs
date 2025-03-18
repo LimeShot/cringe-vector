@@ -21,38 +21,35 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     public void MouseDownEvent(Vector2 startPoint) {
         _startPoint = startPoint;
         Console.WriteLine(startPoint);
-        AddShape(_canvas, startPoint);
+        _shape = AddShape(startPoint);
     }
 
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
-        if (isMousePressed) {
-            _canvas.Shapes.Last().Resize(1, currentPoint);
+        if (isMousePressed && _shape != null) {
+            _shape.Resize(1, currentPoint);
             _isResized = true;
         }
-        //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
     public void MouseUpEvent(Vector2 endPoint) {
         if (endPoint == _startPoint) {
             _canvas.Shapes.Remove(_canvas.Shapes.Last());
-            AddShape(_canvas, endPoint, 100);
-            //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
-        } else if (_isResized) {
-            _canvas.Shapes.Last().NormalizeIndexNodes();
+            _shape = AddShape(endPoint, 100);
+        } else if (_isResized && _shape != null) {
+            _shape.NormalizeIndexNodes();
             _isResized = false;
-        }
-
-        if (_shape != null)
             _commandHistory.AddCommand(new CreateCommand(_shape, _canvas));
+        }
     }
 
-    private void AddShape(MyCanvas canvas, params object[] parameters) {
-        var z = canvas.GetNewZ();
+    private IShape? AddShape(params object[] parameters) {
+        var z = _canvas.GetNewZ();
         var fullParams = parameters.Concat(new object[] { z, null }).ToArray();
         var newShape = ShapeFactory.CreateShape(Name, fullParams);
         if (newShape != null) {
-            canvas.AddShape(newShape);
-            _shape = newShape;
+            _canvas.AddShape(newShape);
+            return newShape;
         }
+        return null;
     }
 
     public void OnChanged() { return; }
