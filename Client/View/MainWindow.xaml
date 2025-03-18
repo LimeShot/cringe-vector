@@ -61,6 +61,21 @@
             </MenuItem>
         </Menu>
 
+        <!-- Простая советская горизонтальная линия -->
+        <Border Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" Height="2" DockPanel.Dock="Top"/>
+
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
+            <TextBlock Text="Цвет контура:" VerticalAlignment="Center" Margin="5"/>
+            <Button Margin="5" Command="{Binding PickOutlineColorCommand}">
+                <Rectangle Width="40" Height="20" Fill="{Binding SelectedShape.OutlineColor}" Stroke="Black" StrokeThickness="1"/>
+            </Button>
+            <TextBlock Text="Цвет заливки:" VerticalAlignment="Center" Margin="5"/>
+            <Button Margin="5" Command="{Binding PickFillColorCommand}">
+                <Rectangle Width="40" Height="20" Fill="{Binding SelectedShape.FillColor}" Stroke="Black" StrokeThickness="1"/>
+            </Button>
+            <CheckBox Content="Заливка" IsChecked="{Binding SelectedShape.HasFill}" Margin="10,0,0,0"/>
+        </StackPanel>
+
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="Холст: 500x500"/>
