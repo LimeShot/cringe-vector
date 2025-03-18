@@ -4,17 +4,20 @@ using System.Windows;
 using System.Windows.Controls;
 using OpenTK.Mathematics;
 using CringeCraft.Client.Model.Commands.CommandHistory;
+
 namespace CringeCraft.Client.Model.Commands;
 
 public class CommandController {
     private readonly MyCanvas _canvas;
     private readonly Camera _camera;
+    private readonly MyCommandHistory _commandHistory;
 
     public List<ICommandMenu> CommandsL = new();
     public Vector2 Point { get; private set; }
-    public CommandController(MyCanvas canvas, Camera camera) {
+    public CommandController(MyCanvas canvas, Camera camera, MyCommandHistory commandHistory) {
         _canvas = canvas;
         _camera = camera;
+        _commandHistory = commandHistory;
         CommandsL.Add(new CopyCommand(_canvas, Point));
         CommandsL.Add(new PasteCommand(_canvas, Point));
         CommandsL.Add(new DelCommand(_canvas, Point));

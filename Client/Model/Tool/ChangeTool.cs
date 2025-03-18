@@ -5,16 +5,19 @@ using OpenTK.Mathematics;
 
 using CringeCraft.Client.Model.Canvas;
 using System.Windows.Shapes;
+using CringeCraft.Client.Model.Commands.CommandHistory;
 
 //Может стоит сделать отдельный контроллер для определения режима работы этого тула?
 
-public class ChangeTool(string name, MyCanvas canvas) : ITool {
+public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHistory) : ITool {
     private const float SelectionRadius = 0.5f;   // Радиус для выбора фигуры
     private const float NodeSelectionRadius = 4.0f;   // Радиус для активации изменения размера
     private const float RotateActivationRadius = 10.0f; // Радиус для активации поворота
 
     private readonly MyCanvas _canvas = canvas;
+    private readonly MyCommandHistory _commandHistory = commandHistory;
     private Vector2 _startPoint;
+    private Vector2 _firstPoint;
     public int bbIndex { get; private set; } = -1;
     public ChangeToolMode Mode { get; private set; } = ChangeToolMode.None;
     private bool _isResized = false;
@@ -23,6 +26,7 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
 
     public void MouseDownEvent(Vector2 startPoint) {
         _startPoint = startPoint;
+        _firstPoint = startPoint;
 
         if (_canvas.SelectedShapes.Count == 0) {
             SelectShape(startPoint);
@@ -69,6 +73,13 @@ public class ChangeTool(string name, MyCanvas canvas) : ITool {
     }
 
     public void MouseUpEvent(Vector2 endPoint) {
+        if (Mode == ChangeToolMode.Move && _canvas.SelectedShapes.Count > 0)
+            _commandHistory.AddCommand(new MoveCommand(_canvas.SelectedShapes[_canvas.SelectedShapes.Count - 1], endPoint - _firstPoint));
+        else if (Mode == ChangeToolMode.Resize && _canvas.SelectedShapes.Count > 0)
+            _commandHistory.AddCommand(new ResizeCommand(_canvas.SelectedShapes[_canvas.SelectedShapes.Count - 1], _firstPoint, endPoint, bbIndex));
+        else if (Mode == ChangeToolMode.Rotate && _canvas.SelectedShapes.Count > 0)
+            _commandHistory.AddCommand(new RotateCommand(_canvas.SelectedShapes[_canvas.SelectedShapes.Count - 1], _firstPoint, endPoint));
+
         _startPoint = Vector2.Zero;
         bbIndex = -1;
         Mode = ChangeToolMode.None;

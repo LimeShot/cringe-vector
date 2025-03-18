@@ -11,6 +11,7 @@ using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.Client.View;
+using CringeCraft.Client.Model.Commands.CommandHistory;
 
 namespace CringeCraft.Client.Model.Tool;
 
@@ -21,22 +22,24 @@ public partial class ToolController : ObservableObject {
     private ITool _currentTool;
     private readonly MyCanvas _canvas;
     private readonly Camera _camera;
+    private readonly MyCommandHistory _commandHistory;
 
     [ObservableProperty]
     private Cursor _currentCursor = Cursors.Arrow;
 
     public event EventHandler<List<IShape>>? OnShapeChanged; // Событие на изменение фигуры
 
-    public ToolController(Camera camera, MainWindow window, MyCanvas canvas) {
+    public ToolController(Camera camera, MainWindow window, MyCanvas canvas, MyCommandHistory commandHistory) {
         _window = window;
         _canvas = canvas;
         _camera = camera;
+        _commandHistory = commandHistory;
 
-        Tools.Add("Change", new ChangeTool("change", canvas)); //Иконку то пофиксить надо
+        Tools.Add("Change", new ChangeTool("change", canvas, _commandHistory)); //Иконку то пофиксить надо
         Tools.Add("Camera", new CameraTool("change", camera));
 
         foreach (var item in ShapeFactory.AvailableShapes)
-            Tools.Add(item, new CreateTool(item, canvas, OnShapeChanged));
+            Tools.Add(item, new CreateTool(item, canvas, OnShapeChanged, commandHistory));
 
         _currentTool = Tools["Change"];
 

@@ -6,9 +6,12 @@ using OpenTK.Mathematics;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
+using CringeCraft.Client.Model.Commands.CommandHistory;
 
-public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>? e) : ITool {
+public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>? e, MyCommandHistory commandHistory) : ITool {
     private readonly MyCanvas _canvas = canvas;
+    private readonly MyCommandHistory _commandHistory = commandHistory;
+    private IShape? _shape;
     private Vector2 _startPoint;
     private bool _isResized = false;
 
@@ -36,14 +39,19 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
         } else if (_isResized) {
             _canvas.Shapes.Last().NormalizeIndexNodes();
         }
+
+        if (_shape != null)
+            _commandHistory.AddCommand(new CreateCommand(_shape, _canvas));
     }
 
     private void AddShape(MyCanvas canvas, params object[] parameters) {
         var z = canvas.GetNewZ();
         var fullParams = parameters.Concat(new object[] { z, null }).ToArray();
         var newShape = ShapeFactory.CreateShape(Name, fullParams);
-        if (newShape != null)
+        if (newShape != null) {
             canvas.AddShape(newShape);
+            _shape = newShape;
+        }
     }
 
     public void OnChanged() { return; }

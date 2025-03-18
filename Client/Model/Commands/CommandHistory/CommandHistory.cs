@@ -1,6 +1,6 @@
 namespace CringeCraft.Client.Model.Commands.CommandHistory;
 
-public class CmdHistory {
+public class MyCommandHistory {
     private const int CommandsCount = 20;
     private readonly LinkedList<ICommand> _commands = new LinkedList<ICommand>();
     private readonly LinkedList<ICommand> _cancelledCommands = new LinkedList<ICommand>();

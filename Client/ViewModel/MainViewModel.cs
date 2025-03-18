@@ -15,6 +15,7 @@ using System.Diagnostics;
 using OpenTK.Wpf;
 using CringeCraft.Client.Model.Commands;
 using VectorPaint;
+using CringeCraft.Client.Model.Commands.CommandHistory;
 
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
@@ -24,6 +25,7 @@ public partial class MainViewModel : ObservableObject {
     private ToolController _toolController;
     private readonly RenderingService _renderingService;
     private readonly CommandController _commandController;
+    private readonly MyCommandHistory _commandHistory;
     private readonly MainWindow _window;
     private readonly Camera _camera;
 
@@ -36,8 +38,9 @@ public partial class MainViewModel : ObservableObject {
         _canvas = new();
         _renderingService = new(_canvas);
         _camera = new(_renderingService);
-        _commandController = new(_canvas, _camera);
-        _toolController = new(_camera, window, _canvas);
+        _commandHistory = new MyCommandHistory();
+        _commandController = new(_canvas, _camera, _commandHistory);
+        _toolController = new(_camera, window, _canvas, _commandHistory);
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
         _toolController.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
@@ -126,6 +129,6 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void Undo() {
-
+        _commandHistory.Undo();
     }
 }
