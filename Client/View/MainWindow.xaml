@@ -7,6 +7,7 @@
         xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:CringeCraft.Client.View"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Владычество кринжа 1: Наследие позора"
         Height="450"
@@ -62,18 +63,14 @@
         </Menu>
 
         <!-- Простая советская горизонтальная линия -->
-        <Border Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" Height="2" DockPanel.Dock="Top"/>
+        <Border Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" Height="4" Width="1" DockPanel.Dock="Top"/>
 
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
             <TextBlock Text="Цвет контура:" VerticalAlignment="Center" Margin="5"/>
-            <Button Margin="5" Command="{Binding PickOutlineColorCommand}">
-                <Rectangle Width="40" Height="20" Fill="{Binding SelectedShape.OutlineColor}" Stroke="Black" StrokeThickness="1"/>
-            </Button>
+            <xctk:ColorPicker SelectedColor="{Binding SelectedShape.OutlineColor, Mode=TwoWay}" Width="120" Margin="5"/>
             <TextBlock Text="Цвет заливки:" VerticalAlignment="Center" Margin="5"/>
-            <Button Margin="5" Command="{Binding PickFillColorCommand}">
-                <Rectangle Width="40" Height="20" Fill="{Binding SelectedShape.FillColor}" Stroke="Black" StrokeThickness="1"/>
-            </Button>
-            <CheckBox Content="Заливка" IsChecked="{Binding SelectedShape.HasFill}" Margin="10,0,0,0"/>
+            <xctk:ColorPicker SelectedColor="{Binding SelectedShape.FillColor, Mode=TwoWay}" Width="120" Margin="5"/>
+            <CheckBox Content="Заливка" VerticalAlignment="Center" IsChecked="{Binding SelectedShape.HasFill}" Margin="10,0,0,0"/>
         </StackPanel>
 
         <StatusBar DockPanel.Dock="Bottom">
