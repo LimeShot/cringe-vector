@@ -37,8 +37,8 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
         } else if (_isResized && _shape != null) {
             _shape.NormalizeIndexNodes();
             _isResized = false;
-            _commandHistory.AddCommand(new CreateCommand(_shape, _canvas));
         }
+        _commandHistory.AddCommand(new CreateCommand(_shape, _canvas));
     }
 
     private IShape? AddShape(params object[] parameters) {
