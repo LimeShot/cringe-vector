@@ -28,8 +28,8 @@ public class DelCommand : ICommandMenu {
         if (_canvas.IsPointInsideSelectedBB(Point)) {
             foreach (var shape in _canvas.SelectedShapes) {
                 _canvas.Shapes.Remove(shape);
-                _commandHistory.AddCommand(new DeleteCommand(shape, _canvas));
             }
+            _commandHistory.AddCommand(new DeleteCommand(_canvas.SelectedShapes.ToList(), _canvas));
             _canvas.SelectedShapes.Clear();
         }
     }

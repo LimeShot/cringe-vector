@@ -48,8 +48,7 @@ public class ImportFromCRNG : IImporter {
         float width = jObject["Width"].Value<float>();
         float height = jObject["Height"].Value<float>();
         var data = Tuple.Create(shapes, width, height);
-        Console.WriteLine(width);
-        Console.WriteLine(shapes.Count);
+
         return data;
         
     }
@@ -61,7 +60,6 @@ public class ExportToSVG : IExporter {
 
     private string shapeToSVG(IShape shape, float height) {
         string line;
-        Console.WriteLine(shape.GetType().ToString());
         switch (shape.GetType().ToString()) {
             case "CringeCraft.GeometryDash.Shape.Line":
                 line = $"<line class=\"st0\" x1=\"{shape.BoundingBox[1].X}\" y1=\"{shape.BoundingBox[1].Y * (-1)}\" x2=\"{shape.BoundingBox[3].X}\" y2=\"{shape.BoundingBox[3].Y * (-1)}\"/>";
