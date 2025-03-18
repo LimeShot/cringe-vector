@@ -38,6 +38,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
             //OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
         } else if (_isResized) {
             _canvas.Shapes.Last().NormalizeIndexNodes();
+            _isResized = false;
         }
 
         if (_shape != null)
