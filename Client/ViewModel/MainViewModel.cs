@@ -108,6 +108,14 @@ public partial class MainViewModel : ObservableObject {
     }
 
     [RelayCommand]
+    private void MouseWheel(MouseWheelEventArgs e) {
+        if (e != null) {
+            CurrentPoint = e.GetPosition((IInputElement)e.Source);
+            ToolController.OnMouseWheel(e.Delta, CurrentPoint);
+        }
+    }
+
+    [RelayCommand]
     public void OpenFile() {
         string? content = FileService.OpenFile(Canvas);
         if (content != null) {

@@ -64,6 +64,11 @@ public partial class ToolController : ObservableObject {
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
+    public void OnMouseWheel(float delta, Point currentPoint) {
+        var screenPoint = _camera.ScreenToWorld(new Vector2((float)currentPoint.X, (float)currentPoint.Y));
+        _currentTool.MouseWheelEvent(delta, screenPoint);
+    }
+
     public void SetTool(string toolName) {
         if (Tools.TryGetValue(toolName, out var tool)) {
             _currentTool.OnChanged();

@@ -27,5 +27,9 @@ public class CameraTool(string name, Camera camera) : ITool {
     public void MouseUpEvent(Vector2 endPoint) {
     }
 
+    public void MouseWheelEvent(float delta, Vector2 currentPoint) {
+        _camera.AdjustZoom(delta, _camera.ScreenToWorld(currentPoint));
+    }
+
     public void OnChanged() { return; }
 }

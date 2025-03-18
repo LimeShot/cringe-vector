@@ -8,5 +8,6 @@ public interface ITool {
     void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed);
     void MouseDownEvent(Vector2 startPoint);
     void MouseUpEvent(Vector2 endPoint);
+    void MouseWheelEvent(float delta, Vector2 currentPoint);
     void OnChanged();
 }

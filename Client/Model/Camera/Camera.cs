@@ -9,11 +9,10 @@ public class Camera {
    public Vector2 Position { get; set; } = Vector2.Zero;
    public float Zoom { get; private set; } = 1.0f;
    public float MinZoom { get; set; } = 0.1f;
-   public float MaxZoom { get; set; } = 10.0f;
+   public float MaxZoom { get; set; } = 5.0f;
+   public event Action<Matrix4, Matrix4> MatrixProjecitonPortChanged;
 
    private Vector2 _viewportSize;
-
-   public event Action<Matrix4, Matrix4> MatrixProjecitonPortChanged;
 
    public Camera(RenderingService rendering) {
       _viewportSize = Vector2.Zero;
@@ -41,10 +40,15 @@ public class Camera {
 
    public void AdjustZoom(float delta, Vector2 zoomCenter) {
       float oldZoom = Zoom;
-      float newZoom = Zoom * (1.0f + delta * 0.1f);
+      Console.WriteLine(delta);
+      float newZoom = Zoom + delta * 0.001f;
       SetZoom(newZoom);
 
-      Position += (zoomCenter - Position) * (1.0f - Zoom / oldZoom);
+      if (Math.Abs(newZoom - oldZoom) > float.Epsilon) {
+         // Корректируем позицию только при реальном изменении масштаба
+         Position += (zoomCenter - Position) * (1.0f - oldZoom / newZoom);
+      }
+      UpdateViewMatrix();
    }
 
    public Vector2 ScreenToWorld(Vector2 screenPoint) {
@@ -58,16 +62,16 @@ public class Camera {
       return screenPoint;
    }
 
-
    private void UpdateViewMatrix() {
       var projection = Matrix4.CreateOrthographicOffCenter(
          -_viewportSize.X / 2.0f, _viewportSize.X / 2.0f,
          _viewportSize.Y / 2.0f, -_viewportSize.Y / 2.0f,
          -1, 1);
 
-      var view = Matrix4.CreateTranslation(-Position.X, -Position.Y, 0); // Инвертированное смещение
+      var view = Matrix4.CreateScale(Zoom, Zoom, 1) * Matrix4.CreateTranslation(-Position.X, -Position.Y, 0);
 
       MatrixProjecitonPortChanged?.Invoke(projection, view);
    }
+
 
 }

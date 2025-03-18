@@ -160,6 +160,9 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
         _canvas.SelectedShapes.Clear();
         Mode = ChangeToolMode.None;
     }
+
+    public void MouseWheelEvent(float delta, Vector2 currentPoint) {
+    }
 }
 
 public enum ChangeToolMode {

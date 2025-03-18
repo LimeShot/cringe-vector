@@ -55,4 +55,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     }
 
     public void OnChanged() { return; }
+
+    public void MouseWheelEvent(float delta, Vector2 currentPoint) {
+    }
 }
