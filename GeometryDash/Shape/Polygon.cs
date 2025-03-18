@@ -97,6 +97,7 @@ public partial class Polygon : IShape {
     }
 
     public float[] GetLineVertices() {
+        if (!Style.Visible) return [];
         // TODO: Привести к нормальному виду
         int len = Nodes.Length;
         float[] returns = new float[len * 2 * 9];

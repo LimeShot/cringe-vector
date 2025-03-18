@@ -71,13 +71,14 @@ public partial class Ellipse : IShape {
     }
 
     public float[] GetCircumferenceVertices() {
+        if (!Style.Visible) return [];
         float width = Math.Abs(Nodes[0].X - Nodes[2].X);
         float height = Math.Abs(Nodes[0].Y - Nodes[2].Y);
         return [Translate.X, Translate.Y, Z, width, height, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
     }
 
     public float[] GetCircleVertices() {
-        if (!Style.Fill) return [];
+        if (!Style.Visible || !Style.Fill) return [];
         float width = Math.Abs(Nodes[0].X - Nodes[2].X);
         float height = Math.Abs(Nodes[0].Y - Nodes[2].Y);
         return [Translate.X, Translate.Y, Z, width, height, Rotate, Style.ColorFill.X, Style.ColorFill.Y, Style.ColorFill.Z];
