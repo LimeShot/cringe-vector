@@ -34,6 +34,18 @@ public partial class Line : IShape {
         Nodes[1] = Vector2.Zero;
         CalcBB();
     }
+    public Line(Line other) {
+        Translate = other.Translate;
+        Z = other.Z;
+        Rotate = other.Rotate;
+        Style = other.Style;
+        BoundingBox = other.BoundingBox;
+        Nodes = other.Nodes;
+    }
+
+    public IShape Clone() {
+        return new Line(this);
+    }
 
     public Line(Vector2 p1, float z, ShapeStyle? shapeStyle = null) : this() {
         Translate = p1;

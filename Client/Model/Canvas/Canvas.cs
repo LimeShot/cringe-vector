@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CringeCraft.GeometryDash;
 using OpenTK.Mathematics;
 using System.IO.Compression;
+using System.ComponentModel;
 
 /// <summary>
 /// Представляет холст для хранения фигур
@@ -81,5 +82,29 @@ public partial class MyCanvas : ObservableObject, ICanvas {
             }
         }
         return false;
+    }
+
+    public Vector2[] GetGeneralBoundingBox(List<IShape> shapeBuffer) {
+        if (shapeBuffer.Count == 0) {
+            return null;
+        }
+        Vector2 point1 = new Vector2(
+            shapeBuffer.Select(shape => shape.BoundingBox.Min(v => v.X)).Min(),
+            shapeBuffer.Select(shape => shape.BoundingBox.Min(v => v.Y)).Min()
+        );
+        Vector2 point3 = new Vector2(
+            shapeBuffer.Select(shape => shape.BoundingBox.Max(v => v.X)).Max(),
+            shapeBuffer.Select(shape => shape.BoundingBox.Max(v => v.Y)).Max()
+        );
+        Vector2 point2 = new(point1.X, point3.Y);
+        Vector2 point4 = new(point3.X, point1.Y);
+        return [point1, point2, point3, point4];
+    }
+
+    public Vector2 GetCenterOfGBB(List<IShape> shapeBuffer) {
+        Vector2[] bountedBox = GetGeneralBoundingBox(shapeBuffer);
+        float deltaX = Math.Abs(bountedBox[3].X - bountedBox[0].X);
+        float deltaY = Math.Abs(bountedBox[3].Y - bountedBox[0].Y);
+        return new Vector2(bountedBox[0].X + deltaX / 2, bountedBox[0].Y - deltaY / 2);
     }
 }

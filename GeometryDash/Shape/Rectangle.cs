@@ -36,6 +36,19 @@ public partial class Rectangle : IShape {
         CalcBB();
     }
 
+    public Rectangle(Rectangle other) {
+        Translate = other.Translate;
+        Z = other.Z;
+        Rotate = other.Rotate;
+        Style = other.Style;
+        BoundingBox = other.BoundingBox;
+        Nodes = other.Nodes;
+    }
+
+    public IShape Clone() {
+        return new Rectangle(this);
+    }
+
     public Rectangle(Vector2 p1, float z, ShapeStyle? shapeStyle = null) {
         Translate = p1;
         Z = z;

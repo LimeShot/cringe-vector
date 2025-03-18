@@ -48,6 +48,19 @@ public partial class Polygon : IShape {
         CalcBB();
     }
 
+    public Polygon(Polygon other) {
+        Translate = other.Translate;
+        Z = other.Z;
+        Rotate = other.Rotate;
+        Style = other.Style;
+        BoundingBox = other.BoundingBox;
+        Nodes = other.Nodes;
+    }
+
+    public IShape Clone() {
+        return new Polygon(this);
+    }
+
     public Polygon(Vector2 p1, float z, ShapeStyle? shapeStyle = null) {
         float diagonal = 1e-5f;
         Translate = p1;

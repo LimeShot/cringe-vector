@@ -62,6 +62,19 @@ public partial class Ellipse : IShape {
         CalcBB();
     }
 
+    public Ellipse(Ellipse other) {
+        Translate = other.Translate;
+        Z = other.Z;
+        Rotate = other.Rotate;
+        Style = other.Style;
+        BoundingBox = other.BoundingBox;
+        Nodes = other.Nodes;
+    }
+
+    public IShape Clone() {
+        return new Ellipse(this);
+    }
+
     public float[] GetLineVertices() {
         return [];
     }

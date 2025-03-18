@@ -5,13 +5,13 @@ using CringeCraft.GeometryDash.Shape;
 
 namespace CringeCraft.Client.Model.Commands.CommandHistory;
 
-public class PasteCommand : ICommand {
+public class PasteHCommand : ICommand {
     private readonly List<IShape> _pastedShapes;
     private readonly MyCanvas _canvas;
 
     public CommandType Type => CommandType.None;
 
-    public PasteCommand(List<IShape> pastedShapes, MyCanvas canvas) {
+    public PasteHCommand(List<IShape> pastedShapes, MyCanvas canvas) {
         _pastedShapes = pastedShapes;
         _canvas = canvas;
     }

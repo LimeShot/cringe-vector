@@ -48,4 +48,6 @@ public interface IShape {
 
     // Метод отражения фигуры, путем измненеия угла
     public void Reflect();
+
+    IShape Clone(); // Метод для глубокого копирования
 }
