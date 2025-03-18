@@ -29,13 +29,16 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
         _firstPoint = startPoint;
 
         if (_canvas.SelectedShapes.Count == 0) {
-            SelectShape(startPoint);
+            _canvas.SelectShape(startPoint);
             if (_canvas.SelectedShapes.Count > 0)
                 Mode = ChangeToolMode.Move;
         } else {
             SelectMode(startPoint);
             if (Mode == ChangeToolMode.None) {
                 _canvas.SelectedShapes.Clear();
+                _canvas.SelectShape(startPoint);
+                if (_canvas.SelectedShapes.Count > 0)
+                    Mode = ChangeToolMode.Move;
             }
         }
 
@@ -91,34 +94,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
         }
     }
 
-    private void SelectShape(Vector2 point) {
-        if (_canvas.Shapes.Count == 0) return;
-        foreach (var shape in _canvas.Shapes.Reverse()) {
-            if (shape.IsBelongsShape(point, SelectionRadius)) {
-                _canvas.SelectedShapes.Add(shape);
-                break;
-            }
-        }
-    }
 
-    private bool IsPointInsideSelectedBB(Vector2 point) {
-        foreach (var shape in _canvas.SelectedShapes) {
-            var min = shape.Nodes.First();
-            var max = shape.Nodes.First();
-            for (int i = 1; i < shape.Nodes.Length; i++) {
-                var node = shape.Nodes[i];
-                min = Vector2.ComponentMin(node, min);
-                max = Vector2.ComponentMax(node, max);
-            }
-            Matrix2.CreateRotation(MathHelper.DegreesToRadians(-shape.Rotate), out Matrix2 result);
-            var localPoint = result * (point - shape.Translate);
-            if (localPoint.X >= min.X && localPoint.X <= max.X &&
-                localPoint.Y >= min.Y && localPoint.Y <= max.Y) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 
 
@@ -128,7 +104,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
         var nodes = shape.BoundingBox;
 
         //Работает только при условии 1-ой фигуры
-        bool isInside = IsPointInsideSelectedBB(point); // Точная проверка внутри коробки
+        bool isInside = _canvas.IsPointInsideSelectedBB(point); // Точная проверка внутри коробки
 
         int bbNode = -1;
 
@@ -149,7 +125,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
             Mode = ChangeToolMode.Resize; // Изменение размера для узлов 0-3
         else if (bbIndex == 4)
             Mode = ChangeToolMode.Rotate; // Поворот для клика снаружи рядом с углом
-        else if (IsPointInsideSelectedBB(point))
+        else if (_canvas.IsPointInsideSelectedBB(point))
             Mode = ChangeToolMode.Move;
         else
             Mode = ChangeToolMode.None;

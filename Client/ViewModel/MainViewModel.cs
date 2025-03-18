@@ -16,6 +16,8 @@ using OpenTK.Wpf;
 using CringeCraft.Client.Model.Commands;
 using VectorPaint;
 using CringeCraft.Client.Model.Commands.CommandHistory;
+using OpenTK.Graphics.OpenGL;
+using System.ComponentModel;
 
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
@@ -44,6 +46,7 @@ public partial class MainViewModel : ObservableObject {
         _toolController = new(_camera, window, _canvas, _commandHistory);
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
+        _canvas.PropertyChanged += Canvas_SizeChanged;
         _toolController.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
         OnShapeChanged += Shapes_PropertyChanged;
     }
@@ -61,6 +64,12 @@ public partial class MainViewModel : ObservableObject {
 
     private void Shapes_PropertyChanged(object? sender, List<IShape> selectedShapes) {
         _renderingService.OnShapeUpdated([.. selectedShapes]);
+    }
+
+    private void Canvas_SizeChanged(object? sender, PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(Canvas.Width) || e.PropertyName == nameof(Canvas.Height)) {
+            _renderingService.OnCanvasResize(Canvas.Width, Canvas.Height);
+        }
     }
 
     public void InitializeOpenGL() {
@@ -133,8 +142,14 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void ChangeCanvasSize() {
-        var window = new ResizeCanvasDialog((int)Canvas.Width, (int)Canvas.Height);
-        window.Show();
+        var resizeCanvasDialog = new ResizeCanvasDialog((int)Canvas.Width, (int)Canvas.Height);
+        resizeCanvasDialog.ShowDialog();
+        if (resizeCanvasDialog.Tag is bool result && result) {
+            if (result == true) {
+                Canvas.Width = (float)resizeCanvasDialog.CanvasWidth;
+                Canvas.Height = (float)resizeCanvasDialog.CanvasHeight;
+            }
+        }
     }
 
     [RelayCommand]
