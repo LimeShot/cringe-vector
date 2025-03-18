@@ -16,8 +16,10 @@ public partial class MyCanvas : ObservableObject, ICanvas {
 
     public readonly List<IShape> SelectedShapes = new(); // Список выделенных фигур
 
-    public float Width { get; set; }
-    public float Height { get; set; }
+    [ObservableProperty]
+    private float _width;
+    [ObservableProperty]
+    private float _height;
     public float ScreenPerWorld = 1.0f;
 
     public MyCanvas() {
