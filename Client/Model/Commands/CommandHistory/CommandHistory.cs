@@ -33,4 +33,8 @@ public class MyCommandHistory {
             AddCommand(command);
         }
     }
+
+    public CommandType GetLastCommandType() {
+        return _commands.First().Type;
+    }
 }

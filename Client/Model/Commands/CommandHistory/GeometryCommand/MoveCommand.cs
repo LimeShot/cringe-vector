@@ -9,6 +9,7 @@ public class MoveCommand : ICommand {
     private readonly IShape _shape;
     private readonly Vector2 _delta;
 
+    public CommandType Type => CommandType.Move;
     public MoveCommand(IShape shape, Vector2 delta) {
         _shape = shape;
         _delta = delta;

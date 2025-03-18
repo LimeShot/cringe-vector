@@ -7,6 +7,7 @@ public class CreateCommand : ICommand {
     private readonly IShape _shape;
     private readonly ICanvas _canvas;
 
+    public CommandType Type => CommandType.None;
     public CreateCommand(IShape shape, ICanvas canvas) {
         _shape = shape;
         _canvas = canvas;

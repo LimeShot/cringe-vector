@@ -10,6 +10,7 @@ public class RotateCommand : ICommand {
     private readonly Vector2 _startPoint;
     private readonly Vector2 _endPoint;
 
+    public CommandType Type => CommandType.Rotate;
     public RotateCommand(IShape shape, Vector2 startPoint, Vector2 endPoint) {
         _shape = shape;
         _startPoint = startPoint;

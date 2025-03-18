@@ -74,11 +74,11 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
 
     public void MouseUpEvent(Vector2 endPoint) {
         if (Mode == ChangeToolMode.Move && _canvas.SelectedShapes.Count > 0 && _firstPoint != endPoint)
-            _commandHistory.AddCommand(new MoveCommand(_canvas.SelectedShapes[_canvas.SelectedShapes.Count - 1], endPoint - _firstPoint));
+            _commandHistory.AddCommand(new MoveCommand(_canvas.SelectedShapes.Last(), endPoint - _firstPoint));
         else if (Mode == ChangeToolMode.Resize && _canvas.SelectedShapes.Count > 0 && _firstPoint != endPoint)
-            _commandHistory.AddCommand(new ResizeCommand(_canvas.SelectedShapes[_canvas.SelectedShapes.Count - 1], _firstPoint, endPoint, bbIndex));
+            _commandHistory.AddCommand(new ResizeCommand(_canvas.SelectedShapes.Last(), _firstPoint, endPoint, bbIndex));
         else if (Mode == ChangeToolMode.Rotate && _canvas.SelectedShapes.Count > 0 && _firstPoint != endPoint)
-            _commandHistory.AddCommand(new RotateCommand(_canvas.SelectedShapes[_canvas.SelectedShapes.Count - 1], _firstPoint, endPoint));
+            _commandHistory.AddCommand(new RotateCommand(_canvas.SelectedShapes.Last(), _firstPoint, endPoint));
 
         _startPoint = Vector2.Zero;
         bbIndex = -1;

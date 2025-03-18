@@ -11,6 +11,7 @@ public class ResizeCommand : ICommand {
     private readonly Vector2 _startPoint;
     private readonly Vector2 _endPoint;
 
+    public CommandType Type => CommandType.Resize;
     public ResizeCommand(IShape shape, Vector2 startPoint, Vector2 endPoint, int bbIndex) {
         _shape = shape;
         _startPoint = startPoint;
