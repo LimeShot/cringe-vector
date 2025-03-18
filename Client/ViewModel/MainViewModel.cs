@@ -18,6 +18,7 @@ using VectorPaint;
 using CringeCraft.Client.Model.Commands.CommandHistory;
 using OpenTK.Graphics.OpenGL;
 using System.ComponentModel;
+using System.Windows.Controls.Primitives;
 
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
@@ -149,6 +150,15 @@ public partial class MainViewModel : ObservableObject {
                 Canvas.Width = (float)resizeCanvasDialog.CanvasWidth;
                 Canvas.Height = (float)resizeCanvasDialog.CanvasHeight;
             }
+        }
+    }
+
+    [RelayCommand]
+    private void ChangeShapeVisibility(ToggleButton toggleButton) {
+        var shape = toggleButton.DataContext as IShape;
+        if (shape != null) {
+            shape.Style.Visible = !shape.Style.Visible;
+            OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
         }
     }
 
