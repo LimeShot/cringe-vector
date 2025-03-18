@@ -146,8 +146,8 @@ public partial class MainViewModel : ObservableObject {
         resizeCanvasDialog.ShowDialog();
         if (resizeCanvasDialog.Tag is bool result && result) {
             if (result == true) {
-                Canvas.Width = (float)resizeCanvasDialog.Width;
-                Canvas.Height = (float)resizeCanvasDialog.Height;
+                Canvas.Width = (float)resizeCanvasDialog.CanvasWidth;
+                Canvas.Height = (float)resizeCanvasDialog.CanvasHeight;
             }
         }
     }
