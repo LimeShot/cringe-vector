@@ -18,9 +18,9 @@ public class CommandController {
         _canvas = canvas;
         _camera = camera;
         _commandHistory = commandHistory;
-        CommandsL.Add(new CopyCommand(_canvas, Point));
-        CommandsL.Add(new PasteCommand(_canvas, Point));
-        CommandsL.Add(new DelCommand(_canvas, Point));
+        CommandsL.Add(new CopyCommand(_canvas, Point, commandHistory));
+        CommandsL.Add(new PasteCommand(_canvas, Point, commandHistory));
+        CommandsL.Add(new DelCommand(_canvas, Point, commandHistory));
     }
 
     public void CreateMenu(Point position) {
