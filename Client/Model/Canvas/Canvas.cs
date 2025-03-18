@@ -58,7 +58,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     public void SelectShape(Vector2 point) {
         if (Shapes.Count == 0) return;
         foreach (var shape in Shapes.Reverse()) {
-            if (shape.IsBelongsShape(point, SelectionRadius)) {
+            if (shape.Style.Visible && shape.IsBelongsShape(point, SelectionRadius)) {
                 SelectedShapes.Add(shape);
                 break;
             }

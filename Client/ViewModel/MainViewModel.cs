@@ -158,6 +158,7 @@ public partial class MainViewModel : ObservableObject {
         var shape = toggleButton.DataContext as IShape;
         if (shape != null) {
             shape.Style.Visible = !shape.Style.Visible;
+            Canvas.SelectedShapes.Remove(shape);
             OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
         }
     }
