@@ -3,6 +3,7 @@ namespace CringeCraft.GeometryDash.Shape;
 using OpenTK.Mathematics;
 
 using System.Composition;
+using System.Diagnostics;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Polygon")]
@@ -25,12 +26,22 @@ public partial class Polygon : IShape {
             maxPoint.Y = MathF.Max(maxPoint.Y, node.Y);
             minPoint.Y = MathF.Min(minPoint.Y, node.Y);
         }
-        BoundingBox[0] = new(minPoint.X, maxPoint.Y);
-        BoundingBox[1] = maxPoint;
-        BoundingBox[2] = new(maxPoint.X, minPoint.Y);
-        BoundingBox[3] = minPoint;
+        Vector2[] localBB =
+        [
+            result * new Vector2(minPoint.X, maxPoint.Y),
+            result * maxPoint,
+            result * new Vector2(maxPoint.X, minPoint.Y),
+            result * minPoint,
+        ];
+        int curZero = 0;
         for (int i = 0; i < 4; i++) {
-            BoundingBox[i] = result * BoundingBox[i] + Translate;
+            if (localBB[i].X <= 0 && localBB[i].Y >= 0) {
+                curZero = i;
+                break;
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            BoundingBox[i] = localBB[(curZero + i) % 4] + Translate;
         }
     }
 
@@ -136,43 +147,6 @@ public partial class Polygon : IShape {
             returns[i * 18 + 17] = Style.ColorOutline.Z;
         }
         return returns;
-
-
-        //
-        // Пока нету шейдера на отрисовку поворота, можно юзать, но надо закоментить то, что сверху 
-
-
-        // Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
-        // Vector2[] rotateNode = new Vector2[Nodes.Length];
-        // for (int i = 0; i < Nodes.Length; i++) {
-        //     rotateNode[i] = result * Nodes[i];
-        // }
-
-        // int len = Nodes.Length;
-        // float[] returns = new float[len * 2 * 9];
-        // for (int i = 0; i < len; i++) {
-        //     returns[i * 18] = rotateNode[i].X;
-        //     returns[i * 18 + 1] = rotateNode[i].Y;
-        //     returns[i * 18 + 2] = Z;
-        //     returns[i * 18 + 3] = Translate.X;
-        //     returns[i * 18 + 4] = Translate.Y;
-        //     returns[i * 18 + 5] = Rotate;
-        //     returns[i * 18 + 6] = Style.ColorOutline.X;
-        //     returns[i * 18 + 7] = Style.ColorOutline.Y;
-        //     returns[i * 18 + 8] = Style.ColorOutline.Z;
-
-        //     returns[i * 18 + 9] = rotateNode[(i + 1) % len].X;
-        //     returns[i * 18 + 10] = rotateNode[(i + 1) % len].Y;
-        //     returns[i * 18 + 11] = Z;
-        //     returns[i * 18 + 12] = Translate.X;
-        //     returns[i * 18 + 13] = Translate.Y;
-        //     returns[i * 18 + 14] = Rotate;
-        //     returns[i * 18 + 15] = Style.ColorOutline.X;
-        //     returns[i * 18 + 16] = Style.ColorOutline.Y;
-        //     returns[i * 18 + 17] = Style.ColorOutline.Z;
-        // }
-        // return returns;
-
     }
 
     public float[] GetTriangleVertices() {
@@ -240,15 +214,22 @@ public partial class Polygon : IShape {
         for (int i = 0; i < 4; i++) {
             LocalBB[i] = result * (BoundingBox[i] - Translate);
         }
+        float minSize = 1e-6f;
         Vector2 localNewNode = result * (newNode - Translate);
-        float wOld = Math.Max(Math.Abs(LocalBB[index].X - LocalBB[(index + 2) % 4].X), 1e-6f);
-        float hOld = Math.Max(Math.Abs(LocalBB[index].Y - LocalBB[(index + 2) % 4].Y), 1e-6f);
+        if (localNewNode.X == 0)
+            localNewNode.X += minSize;
+        if (localNewNode.Y == 0)
+            localNewNode.Y += minSize;
+        float wOld = Math.Max(Math.Abs(LocalBB[index].X - LocalBB[(index + 2) % 4].X), minSize);
+        float hOld = Math.Max(Math.Abs(LocalBB[index].Y - LocalBB[(index + 2) % 4].Y), minSize);
         float sX = Math.Abs(localNewNode.X - LocalBB[(index + 2) % 4].X) / wOld;
         float sY = Math.Abs(localNewNode.Y - LocalBB[(index + 2) % 4].Y) / hOld;
         for (int i = 0; i < Nodes.Length; i++) {
             Nodes[i].X *= sX;
             Nodes[i].Y *= sY;
         }
+        Vector2 deltaDev2 = (newNode - BoundingBox[index]) / 2;
+        Translate += deltaDev2;
         CalcBB();
     }
 
