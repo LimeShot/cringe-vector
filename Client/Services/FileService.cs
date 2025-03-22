@@ -4,8 +4,8 @@ using CringeCraft.IO;
 using CringeCraft.GeometryDash;
 
 public static class FileService {
-    public static string? OpenFile(ICanvas canvas) {
-        OpenFileDialog openFileDialog = new OpenFileDialog {
+    public static (string? filePath, string? errorMessage) OpenFile(ICanvas canvas) {
+        OpenFileDialog openFileDialog = new() {
             Title = "Открыть файл",
             Filter = "CRNG файлы (*.crng)|*.crng|SVG файлы (*.svg)|*.svg|Все файлы (*.*)|*.*",
             DefaultExt = ".crng",
@@ -14,28 +14,26 @@ public static class FileService {
 
         if (openFileDialog.ShowDialog() == true) {
             string filePath = openFileDialog.FileName;
-            IImporter importer;
+            try {
+                IImporter importer = filePath.EndsWith(".crng", StringComparison.OrdinalIgnoreCase)
+                    ? new ImportFromCRNG()
+                    : new ImportFromCRNG();//Если здесь когда-нибудь будет svg...
 
-            if (filePath.EndsWith(".crng", StringComparison.OrdinalIgnoreCase)) {
-                importer = new ImportFromCRNG();
-            } else {
-                importer = new ImportFromCRNG();
+                var (shapes, width, height) = importer.Import(filePath);
+                canvas.Shapes = shapes;
+                canvas.Width = width;
+                canvas.Height = height;
+
+                return (filePath, null);
+            } catch (Exception) {
+                return (null, $"Ошибка при открытии файла.");
             }
-
-            //Я кринжанул(Тимофей)
-            var input = importer.Import(filePath);
-            canvas.Shapes = input.Item1;
-            canvas.Width = input.Item2;
-            canvas.Height = input.Item3;
-
-            return filePath;
         }
-
-        return null;
+        return (null, null); // Пользователь отменил выбор
     }
 
-    public static string? SaveFile(ICanvas canvas) {
-        SaveFileDialog saveFileDialog = new SaveFileDialog {
+    public static (string? filePath, string? errorMessage) SaveFile(ICanvas canvas) {
+        SaveFileDialog saveFileDialog = new() {
             Title = "Сохранить файл",
             Filter = "CRNG файлы (*.crng)|*.crng|SVG файлы (*.svg)|*.svg|Все файлы (*.*)|*.*",
             DefaultExt = ".crng",
@@ -44,21 +42,19 @@ public static class FileService {
 
         if (saveFileDialog.ShowDialog() == true) {
             string filePath = saveFileDialog.FileName;
-            IExporter exporter;
+            try {
+                IExporter exporter = filePath.EndsWith(".crng", StringComparison.OrdinalIgnoreCase)
+                    ? new ExportToCRNG()
+                    : filePath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase)
+                        ? new ExportToSVG()
+                        : new ExportToCRNG();
 
-            if (filePath.EndsWith(".crng", StringComparison.OrdinalIgnoreCase)) {
-                exporter = new ExportToCRNG();
-            } else if (filePath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase)) {
-                exporter = new ExportToSVG();
-            } else {
-                exporter = new ExportToCRNG();
+                exporter.Export(filePath, canvas);
+                return (filePath, null);
+            } catch (Exception ex) {
+                return (null, $"Ошибка при сохранении файла: {ex.Message}");
             }
-
-            //Я кринжанул(Тимофей)
-            exporter.Export(filePath, canvas);
-            return filePath;
         }
-
-        return null;
+        return (null, null);
     }
 }

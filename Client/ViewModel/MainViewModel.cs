@@ -133,17 +133,21 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     public void OpenFile() {
-        string? content = FileService.OpenFile(Canvas);
-        if (content != null) {
-            Debug.WriteLine($"Файл открыт:\n{content}");
+        var (filePath, errorMessage) = FileService.OpenFile(Canvas);
+        if (filePath != null) {
+            Console.WriteLine($"Открыт файл: {filePath}");
+        } else if (errorMessage != null) {
+            MessageBox.Show(errorMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
     [RelayCommand]
-    private void SaveFile() {
-        string? filePath = FileService.SaveFile(Canvas);
+    public void SaveFile() {
+        var (filePath, errorMessage) = FileService.SaveFile(Canvas);
         if (filePath != null) {
-            Debug.WriteLine($"Файл сохранён: {filePath}");
+            Console.WriteLine($"Сохранён файл: {filePath}");
+        } else if (errorMessage != null) {
+            MessageBox.Show(errorMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
