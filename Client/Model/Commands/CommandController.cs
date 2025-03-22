@@ -31,15 +31,14 @@ public class CommandController {
         CommandsL.Add(new DelCommand(_canvas, Point, commandHistory));
     }
 
-    public void CreateMenu(Point position) {
+    public void CreateMenu(Vector2 position) {
         ContextMenu contextMenu = new();
-        Point = _camera.ScreenToWorld(new Vector2((float)position.X, (float)position.Y));
         foreach (var command in CommandsL) {
             contextMenu.Items.Add(new MenuItem {
                 Header = command.Name,
                 Command = command.Command
             });
-            command.Point = Point;
+            command.Point = position;
         }
         contextMenu.HorizontalOffset = 0;
         contextMenu.VerticalOffset = 0;

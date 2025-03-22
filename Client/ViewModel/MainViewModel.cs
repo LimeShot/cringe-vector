@@ -19,6 +19,7 @@ using CringeCraft.Client.Model.Commands.CommandHistory;
 using OpenTK.Graphics.OpenGL;
 using System.ComponentModel;
 using System.Windows.Controls.Primitives;
+using OpenTK.Mathematics;
 
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
@@ -32,9 +33,9 @@ public partial class MainViewModel : ObservableObject {
     private readonly MainWindow _window;
     private readonly Camera _camera;
 
-    public Point StartPoint { get; private set; }
-    public Point CurrentPoint { get; private set; }
-    public Point CMPosition { get; private set; }
+    public Vector2 StartPoint { get; private set; }
+    public Vector2 CurrentPoint { get; private set; }
+    public Vector2 CMPosition { get; private set; }
     public event EventHandler<List<IShape>>? OnShapeChanged;
 
     public MainViewModel(MainWindow window) {
@@ -85,19 +86,20 @@ public partial class MainViewModel : ObservableObject {
         _camera.UpdateViewport((float)args.NewSize.Width, (float)args.NewSize.Height);
     }
 
-    public void Closing(object? sender, System.ComponentModel.CancelEventArgs e) {
+    public void Closing(object? sender, CancelEventArgs e) {
         _renderingService.Cleanup();
     }
 
     [RelayCommand]
     private void OnMouseDown(MouseEventArgs e) {
         if (e != null && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) { //добавить клик на холст
-            StartPoint = e.GetPosition((IInputElement)e.Source);
+            var screenPoint = e.GetPosition((IInputElement)e.Source);
+            StartPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseDown(StartPoint);
         }
-
         if (e != null && e.RightButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
-            CMPosition = e.GetPosition((IInputElement)e.Source);
+            var screenPoint = e.GetPosition((IInputElement)e.Source);
+            CMPosition = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             _commandController.CreateMenu(CMPosition);
         }
     }
@@ -105,7 +107,8 @@ public partial class MainViewModel : ObservableObject {
     [RelayCommand]
     private void OnMouseMove(MouseEventArgs e) {
         if (e != null && e.Source is GLWpfControl) {
-            CurrentPoint = e.GetPosition((IInputElement)e.Source);
+            var screenPoint = e.GetPosition((IInputElement)e.Source);
+            CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseMove(CurrentPoint, e.LeftButton == MouseButtonState.Pressed);
         }
     }
@@ -113,14 +116,17 @@ public partial class MainViewModel : ObservableObject {
     [RelayCommand]
     private void OnMouseUp(MouseEventArgs e) {
         if (e != null) {
-            ToolController.OnMouseUp(e.GetPosition((IInputElement)e.Source));
+            var screenPoint = e.GetPosition((IInputElement)e.Source);
+            CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
+            ToolController.OnMouseUp(CurrentPoint);
         }
     }
 
     [RelayCommand]
     private void MouseWheel(MouseWheelEventArgs e) {
         if (e != null) {
-            CurrentPoint = e.GetPosition((IInputElement)e.Source);
+            var screenPoint = e.GetPosition((IInputElement)e.Source);
+            CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseWheel(e.Delta, CurrentPoint);
         }
     }

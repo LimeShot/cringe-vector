@@ -46,27 +46,23 @@ public partial class ToolController : ObservableObject {
         CreateButtons();
     }
 
-    public void OnMouseDown(Point startPoint) {
-        var screenPoint = _camera.ScreenToWorld(new Vector2((float)startPoint.X, (float)startPoint.Y));
-        _currentTool.MouseDownEvent(screenPoint);
+    public void OnMouseDown(Vector2 startPoint) {
+        _currentTool.MouseDownEvent(startPoint);
     }
 
-    public void OnMouseMove(Point currentPoint, bool IsMousePressed) {
-        var screenPoint = _camera.ScreenToWorld(new Vector2((float)currentPoint.X, (float)currentPoint.Y));
-        _currentTool.MouseMoveEvent(screenPoint, IsMousePressed);
+    public void OnMouseMove(Vector2 currentPoint, bool IsMousePressed) {
+        _currentTool.MouseMoveEvent(currentPoint, IsMousePressed);
         UpdateCursor();
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
-    public void OnMouseUp(Point endPoint) {
-        var screenPoint = _camera.ScreenToWorld(new Vector2((float)endPoint.X, (float)endPoint.Y));
-        _currentTool.MouseUpEvent(screenPoint);
+    public void OnMouseUp(Vector2 endPoint) {
+        _currentTool.MouseUpEvent(endPoint);
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
-    public void OnMouseWheel(float delta, Point currentPoint) {
-        var screenPoint = _camera.ScreenToWorld(new Vector2((float)currentPoint.X, (float)currentPoint.Y));
-        _currentTool.MouseWheelEvent(delta, screenPoint);
+    public void OnMouseWheel(float delta, Vector2 currentPoint) {
+        _currentTool.MouseWheelEvent(delta, currentPoint);
     }
 
     public void SetTool(string toolName) {
