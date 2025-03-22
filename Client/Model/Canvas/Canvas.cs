@@ -12,9 +12,9 @@ using System.ComponentModel;
 /// Представляет холст для хранения фигур
 /// </summary>
 public partial class MyCanvas : ObservableObject, ICanvas {
-    public ObservableCollection<IShape> Shapes { get; set; }
+    [ObservableProperty]
+    private ObservableCollection<IShape> _shapes;
     private const float SelectionRadius = 0.5f;   // Радиус для выбора фигуры
-
     private const float _stepZ = 0.00002f;
 
     public readonly List<IShape> SelectedShapes = new(); // Список выделенных фигур
