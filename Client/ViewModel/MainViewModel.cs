@@ -20,6 +20,7 @@ using OpenTK.Graphics.OpenGL;
 using System.ComponentModel;
 using System.Windows.Controls.Primitives;
 using OpenTK.Mathematics;
+using System.Windows.Media;
 
 public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
@@ -27,6 +28,12 @@ public partial class MainViewModel : ObservableObject {
 
     [ObservableProperty]
     private ToolController _toolController;
+
+    [ObservableProperty]
+    private Color _selectedOutlineColor;
+
+    [ObservableProperty]
+    private Color _selectedFillColor;
     private readonly RenderingService _renderingService;
     private readonly CommandController _commandController;
     private readonly MyCommandHistory _commandHistory;
@@ -187,7 +194,29 @@ public partial class MainViewModel : ObservableObject {
         if (_commandHistory.RedoCmdCount > 0) {
             var type = _commandHistory.GetLastRedoCommandType();
             _commandHistory.Redo();
-            if (type != CommandType.None)
+            //if (type != CommandType.None)
+            //OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+        }
+    }
+
+    [RelayCommand]
+    private void ChangeOutLineColor(Color? color) {
+        if (color.HasValue) {
+            Color color_val = color.Value;
+            Debug.WriteLine($"Линия: {color_val.R / 255f}, {color_val.G / 255f}, {color_val.B / 255f}");
+            Canvas.ChangeOutLineColor(new Vector3(color_val.R / 255f, color_val.G / 255f, color_val.B / 255f));
+            //if (Canvas.SelectedShapes.Count > 0)
+            //OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+        }
+    }
+
+    [RelayCommand]
+    private void ChangeFillColor(Color? color) {
+        if (color.HasValue) {
+            Color color_val = color.Value;
+            Debug.WriteLine($"Заливка: {color_val.R / 255f}, {color_val.G / 255f}, {color_val.B / 255f}");
+            Canvas.ChangeFillColor(new Vector3(color_val.R / 255f, color_val.G / 255f, color_val.B / 255f));
+            if (Canvas.SelectedShapes.Count > 0)
                 OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
         }
     }

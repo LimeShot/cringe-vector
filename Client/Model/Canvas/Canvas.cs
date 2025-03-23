@@ -17,6 +17,11 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     private const float SelectionRadius = 0.5f;   // Радиус для выбора фигуры
     private const float _stepZ = 0.00002f;
 
+    public Vector3 StartOutLineColor = Vector3.Zero;
+    public Vector3 StartFillColor = Vector3.Zero;
+
+    [ObservableProperty]
+    public bool _hasFill = false;
     public readonly List<IShape> SelectedShapes = new(); // Список выделенных фигур
 
     [ObservableProperty]
@@ -106,5 +111,25 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         float deltaX = Math.Abs(boundingBox[3].X - boundingBox[0].X);
         float deltaY = Math.Abs(boundingBox[3].Y - boundingBox[0].Y);
         return new Vector2(boundingBox[0].X + deltaX / 2, boundingBox[0].Y - deltaY / 2);
+    }
+
+    public void ChangeOutLineColor(Vector3 color) {
+        if (SelectedShapes.Count > 0) {
+            foreach (IShape shape in SelectedShapes)
+                shape.Style.ColorOutline = color;
+        } else {
+            StartOutLineColor = color;
+        }
+    }
+
+    public void ChangeFillColor(Vector3 color) {
+        if (SelectedShapes.Count > 0) {
+            foreach (IShape shape in SelectedShapes) {
+                shape.Style.ColorFill = color;
+                shape.Style.Fill = HasFill;
+            }
+        } else {
+            StartFillColor = color;
+        }
     }
 }

@@ -159,7 +159,7 @@
                     Modifiers="Control"
                     Command="{Binding RedoCommand}"/>
         <KeyBinding Key="Delete"
-                Command="{Binding DeleteCommand}"/>
+                    Command="{Binding DeleteCommand}"/>
         <KeyBinding Key="C"
                     Modifiers="Control"
                     Command="{Binding CopyCommand}"/>
@@ -219,18 +219,34 @@
             <TextBlock Text="Цвет контура:"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <xctk:ColorPicker SelectedColor="{Binding SelectedShape.OutlineColor, Mode=TwoWay}"
-                              Width="120"
-                              Margin="5"/>
+            <xctk:ColorPicker Width="120"
+                              Margin="5"
+                              SelectedColor="{Binding SelectedOutlineColor, UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectedColorChanged">
+                        <i:InvokeCommandAction Command="{Binding ChangeOutLineColorCommand}"
+                                               CommandParameter="{Binding SelectedOutlineColor}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xctk:ColorPicker>
+
             <TextBlock Text="Цвет заливки:"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <xctk:ColorPicker SelectedColor="{Binding SelectedShape.FillColor, Mode=TwoWay}"
-                              Width="120"
-                              Margin="5"/>
+            <xctk:ColorPicker Width="120"
+                              Margin="5"
+                              SelectedColor="{Binding SelectedFillColor, UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectedColorChanged">
+                        <i:InvokeCommandAction Command="{Binding ChangeFillColorCommand}"
+                                               CommandParameter="{Binding SelectedFillColor}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </xctk:ColorPicker>
+
             <CheckBox Content="Заливка"
                       VerticalAlignment="Center"
-                      IsChecked="{Binding SelectedShape.HasFill}"
+                      IsChecked="{Binding Canvas.HasFill}"
                       Margin="10,0,0,0"/>
         </StackPanel>
 

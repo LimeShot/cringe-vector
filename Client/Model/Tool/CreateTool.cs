@@ -43,7 +43,8 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
 
     private IShape? AddShape(params object[] parameters) {
         var z = _canvas.GetNewZ();
-        var fullParams = parameters.Concat(new object[] { z, null }).ToArray();
+        ShapeStyle shapeStyle = new ShapeStyle(_canvas.StartOutLineColor, _canvas.StartFillColor, _canvas.HasFill, true);
+        var fullParams = parameters.Concat(new object[] { z, shapeStyle }).ToArray();
         var newShape = ShapeFactory.CreateShape(Name, fullParams);
         if (newShape != null) {
             _canvas.AddShape(newShape);
