@@ -40,9 +40,11 @@ public partial class Rectangle : IShape {
         Translate = other.Translate;
         Z = other.Z;
         Rotate = other.Rotate;
-        Style = other.Style;
-        BoundingBox = other.BoundingBox;
-        Nodes = other.Nodes;
+        Style = other.Style.Clone();
+        BoundingBox = new Vector2[other.BoundingBox.Length];
+        Array.Copy(other.BoundingBox, this.BoundingBox, other.BoundingBox.Length);
+        Nodes = new Vector2[other.Nodes.Length];
+        Array.Copy(other.Nodes, this.Nodes, other.Nodes.Length);
     }
 
     public IShape Clone() {

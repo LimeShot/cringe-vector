@@ -29,7 +29,7 @@ public class ShapeStyle {
         Visible = other.Visible;
     }
 
-    public object Clone() {
+    public ShapeStyle Clone() {
         return new ShapeStyle(ColorOutline, ColorFill, Fill, Visible);
     }
 
