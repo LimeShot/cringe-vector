@@ -14,6 +14,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     private IShape? _shape;
     private Vector2 _startPoint;
     private bool _isResized = false;
+    private int bbIndex = 1;
 
     //Кринж?
     private const float NodeSelectionRadius = 4.0f;   // Радиус для активации изменения размера
@@ -29,8 +30,8 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
 
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
         if (isMousePressed && _shape != null) {
-            var index = GetBBNode(currentPoint, _shape);
-            _shape.Resize(index, currentPoint);
+            GetBBNode(currentPoint, _shape);
+            _shape.Resize(bbIndex, currentPoint);
             _isResized = true;
         }
     }
@@ -43,6 +44,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
             _shape.NormalizeIndexNodes();
             _isResized = false;
         }
+        bbIndex = 1;
         _commandHistory.AddCommand(new CreateCommand(_shape, _canvas));
     }
 
@@ -58,7 +60,6 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     }
 
     private int GetBBNode(Vector2 point, IShape shape) {
-        int bbIndex = 1;
         var nodes = shape.BoundingBox;
         for (int i = 0; i < nodes.Count(); i++) {
             float distance = Vector2.Distance(point, nodes[i]);
