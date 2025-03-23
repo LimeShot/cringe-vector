@@ -166,6 +166,12 @@
         <KeyBinding Key="V"
                     Modifiers="Control"
                     Command="{Binding PasteCommand}"/>
+        <KeyBinding Key="S"
+                    Modifiers="Control"
+                    Command="{Binding SaveFileCommand}"/>
+        <KeyBinding Key="O"
+                    Modifiers="Control"
+                    Command="{Binding OpenFileCommand}"/>
     </Window.InputBindings>
 
     <DockPanel>

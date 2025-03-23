@@ -7,7 +7,7 @@ public static class FileService {
     public static (string? filePath, string? errorMessage) OpenFile(ICanvas canvas) {
         OpenFileDialog openFileDialog = new() {
             Title = "Открыть файл",
-            Filter = "CRNG файлы (*.crng)|*.crng|SVG файлы (*.svg)|*.svg|Все файлы (*.*)|*.*",
+            Filter = "CRNG файлы (*.crng)|*.crng|Все файлы (*.*)|*.*",
             DefaultExt = ".crng",
             FileName = "document.crng"
         };
