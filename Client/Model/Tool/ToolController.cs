@@ -96,9 +96,6 @@ public partial class ToolController : ObservableObject {
     private void SelectShapeInList(IShape shape) {
         if (!_canvas.SelectedShapes.Contains(shape)) {
             //Надо бы зажать кнопку Change
-            if (_toolButtons.TryGetValue("Change", out ToggleButton? changeButton)) {
-                changeButton.IsChecked = true;
-            }
             SetTool("Change");
             _canvas.SelectedShapes.Clear();
             _canvas.SelectedShapes.Add(shape);
