@@ -6,15 +6,15 @@ using System.Windows;
 using OpenTK.Mathematics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.Client.View;
 using CringeCraft.Client.Model.Commands.CommandHistory;
+using System.Windows.Data;
+using System.Globalization;
 
 namespace CringeCraft.Client.Model.Tool;
-
 public partial class ToolController : ObservableObject {
     public Dictionary<string, ITool> Tools = new();
     private readonly MainWindow _window;
@@ -27,7 +27,16 @@ public partial class ToolController : ObservableObject {
     [ObservableProperty]
     private Cursor _currentCursor = Cursors.Arrow;
 
-    public event EventHandler<List<IShape>>? OnShapeChanged; // Событие на изменение фигуры
+    [ObservableProperty]
+    private bool _isCreateToolActive;
+
+    [ObservableProperty]
+    private bool _isPolygonToolActive; // Указывает, активен ли инструмент для многоугольника
+
+    [ObservableProperty]
+    private CreateTool _currentCreateTool;
+
+    public event EventHandler<List<IShape>>? OnShapeChanged;
 
     public ToolController(Camera camera, MainWindow window, MyCanvas canvas, MyCommandHistory commandHistory) {
         _window = window;
@@ -69,6 +78,17 @@ public partial class ToolController : ObservableObject {
         if (Tools.TryGetValue(toolName, out var tool)) {
             _currentTool.OnChanged();
             _currentTool = tool;
+
+            if (_currentTool is CreateTool createTool) {
+                IsCreateToolActive = true;
+                CurrentCreateTool = createTool;
+                // Проверяем, является ли инструмент инструментом для многоугольника
+                IsPolygonToolActive = createTool.Name.Equals("Polygon", StringComparison.OrdinalIgnoreCase);
+            } else {
+                IsCreateToolActive = false;
+                IsPolygonToolActive = false;
+                CurrentCreateTool = null;
+            }
         }
     }
 
@@ -76,6 +96,9 @@ public partial class ToolController : ObservableObject {
     private void SelectShapeInList(IShape shape) {
         if (!_canvas.SelectedShapes.Contains(shape)) {
             //Надо бы зажать кнопку Change
+            if (_toolButtons.TryGetValue("Change", out ToggleButton? changeButton)) {
+                changeButton.IsChecked = true;
+            }
             SetTool("Change");
             _canvas.SelectedShapes.Clear();
             _canvas.SelectedShapes.Add(shape);
@@ -116,9 +139,8 @@ public partial class ToolController : ObservableObject {
 
             toggleButton.Checked += (s, e) => {
                 if (_selectedButton != null && _selectedButton != toggleButton)
-                    _selectedButton.IsChecked = false; // 🔹 Отжимаем предыдущую кнопку
-                _selectedButton = toggleButton; // 🔹 Запоминаем новую кнопку
-
+                    _selectedButton.IsChecked = false;
+                _selectedButton = toggleButton;
                 SetTool(typeTool);
             };
             toggleButton.Unchecked += (s, e) => {
@@ -128,5 +150,31 @@ public partial class ToolController : ObservableObject {
 
             _window.ToolsPanel.Children.Add(toggleButton);
         }
+    }
+}
+
+public class StringToIntConverter : IValueConverter {
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+        return value?.ToString() ?? "6";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+        if (int.TryParse(value?.ToString(), NumberStyles.Integer, culture, out int result)) {
+            return result;
+        }
+        return 6; // Значение по умолчанию
+    }
+}
+
+public class StringToFloatConverter : IValueConverter {
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+        return value?.ToString() ?? "0";
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+        if (float.TryParse(value?.ToString(), NumberStyles.Float, culture, out float result)) {
+            return result;
+        }
+        return 0f; // Значение по умолчанию, если ввод некорректен
     }
 }

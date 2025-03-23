@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 
 using System.Composition;
 using System.Diagnostics;
+using System.Reflection;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Polygon")]
@@ -74,14 +75,14 @@ public partial class Polygon : IShape {
         return new Polygon(this);
     }
 
-    public Polygon(Vector2 p1, float z, ShapeStyle? shapeStyle = null) {
+    public Polygon(Vector2 p1, float z, int n, ShapeStyle? shapeStyle = null) {
         float diagonal = 1e-5f;
         Translate = p1;
         Z = z;
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
-        int countVertices = 6;
+        int countVertices = n;
         Nodes = new Vector2[countVertices];
         float angle = -360.0f / countVertices;
         for (int i = 0; i < countVertices; i++) {
@@ -91,13 +92,13 @@ public partial class Polygon : IShape {
         CalcBB();
     }
 
-    public Polygon(Vector2 p1, float diagonal, float z, ShapeStyle? shapeStyle = null) {
+    public Polygon(Vector2 p1, float diagonal, float rotate, float z, int n, ShapeStyle? shapeStyle = null) {
         Translate = p1;
         Z = z;
-        Rotate = 0.0f;
+        Rotate = rotate;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
-        int countVertices = 6;
+        int countVertices = n;
         Nodes = new Vector2[countVertices];
         float angle = -360.0f / countVertices;
         for (int i = 0; i < countVertices; i++) {
