@@ -12,7 +12,8 @@ public class PasteCommand : ICommandMenu {
     private readonly MyCanvas _canvas;
     private readonly MyCommandHistory _commandHistory;
     private readonly List<IShape> _shapeBuffer;
-    public RelayCommand Command { get; }
+    public RelayCommand CommandMenu { get; }
+    public RelayCommand CommandButton { get; }
     public string Name { get; private set; }
     public Vector2 Point { get; set; }
     public PasteCommand(MyCanvas canvas, Vector2 point, MyCommandHistory commandHistory, List<IShape> shapeBuffer) {
@@ -21,7 +22,8 @@ public class PasteCommand : ICommandMenu {
         _canvas = canvas;
         _shapeBuffer = shapeBuffer;
         _commandHistory = commandHistory;
-        Command = new(Execute, CanExecute);
+        CommandMenu = new(Execute, CanExecute);
+        CommandButton = new(Execute, CanExecute);
     }
 
     public void Execute() {

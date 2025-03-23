@@ -11,7 +11,8 @@ using CringeCraft.GeometryDash.Shape;
 public class CopyCommand : ICommandMenu {
     private readonly MyCanvas _canvas;
     private readonly List<IShape> _shapeBuffer;
-    public RelayCommand Command { get; }
+    public RelayCommand CommandMenu { get; }
+    public RelayCommand CommandButton { get; }
     public Vector2 Point { get; set; }
     public string Name { get; private set; }
     public CopyCommand(MyCanvas canvas, Vector2 point, MyCommandHistory commandHistory, List<IShape> shapeBuffer) {
@@ -19,10 +20,11 @@ public class CopyCommand : ICommandMenu {
         Point = point;
         _canvas = canvas;
         _shapeBuffer = shapeBuffer;
-        Command = new(Execute, CanExecute);
+        CommandMenu = new(ExecuteMenu, CanExecuteMenu);
+        CommandButton = new(ExecuteButton, CanExecuteButton);
     }
 
-    public void Execute() {
+    private void ExecuteMenu() {
         _shapeBuffer.Clear();
         if (_canvas.SelectedShapes.Count == 0) {
             _canvas.SelectShape(Point);
@@ -33,5 +35,13 @@ public class CopyCommand : ICommandMenu {
             }
     }
 
-    public bool CanExecute() => _canvas.Shapes.Count != 0;
+    private bool CanExecuteMenu() => _canvas.Shapes.Count != 0;
+
+    private void ExecuteButton() {
+        _shapeBuffer.Clear();
+        foreach (var shape in _canvas.SelectedShapes)
+            _shapeBuffer.Add(shape);
+    }
+
+    private bool CanExecuteButton() => _canvas.SelectedShapes.Count != 0;
 }
