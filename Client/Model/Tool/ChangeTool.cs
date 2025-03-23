@@ -59,6 +59,8 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
                     break;
 
                 case ChangeToolMode.Resize:
+                    bbIndex = GetBBNode(currentPoint);
+                    Console.WriteLine(bbIndex);
                     foreach (var shape in _canvas.SelectedShapes)
                         shape.Resize(bbIndex, currentPoint);
                     _isResized = true;
@@ -94,10 +96,6 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
         }
     }
 
-
-
-
-
     private int TryGetBBNode(Vector2 point) {
         if (_canvas.SelectedShapes.Count != 1) return -1; // Пока поддерживаем только одну фигуру
         var shape = _canvas.SelectedShapes[0];
@@ -117,6 +115,18 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
             }
         }
         return bbNode;
+    }
+
+    private int GetBBNode(Vector2 point) {
+        var shape = _canvas.SelectedShapes.Last();
+        var nodes = shape.BoundingBox;
+        for (int i = 0; i < nodes.Count(); i++) {
+            float distance = Vector2.Distance(point, nodes[i]);
+            if (distance <= NodeSelectionRadius) {
+                bbIndex = i;
+            }
+        }
+        return bbIndex;
     }
 
     private void SelectMode(Vector2 point) {

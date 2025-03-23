@@ -203,11 +203,6 @@ public partial class Polygon : IShape {
     }
 
     public void Resize(int index, Vector2 newNode) {
-        // TODO: Исправить на нормальный ресайз
-        if (newNode.X > Translate.X)
-            index = newNode.Y > Translate.Y ? 1 : 2;
-        else
-            index = newNode.Y > Translate.Y ? 0 : 3;
 
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 result);
         Vector2[] LocalBB = new Vector2[4];

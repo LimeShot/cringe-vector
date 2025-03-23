@@ -17,6 +17,7 @@ namespace CringeCraft.Client.Model.Tool;
 
 public partial class ToolController : ObservableObject {
     public Dictionary<string, ITool> Tools = new();
+    private Dictionary<string, ToggleButton> _toolButtons = new();
     private readonly MainWindow _window;
     private ToggleButton? _selectedButton;
     private ITool _currentTool;
@@ -35,7 +36,7 @@ public partial class ToolController : ObservableObject {
         _camera = camera;
         _commandHistory = commandHistory;
 
-        Tools.Add("Change", new ChangeTool("change", canvas, _commandHistory)); //Иконку то пофиксить надо
+        Tools.Add("Change", new ChangeTool("change", canvas, commandHistory));
         Tools.Add("Camera", new CameraTool("change", camera));
 
         foreach (var item in ShapeFactory.AvailableShapes)
@@ -76,6 +77,9 @@ public partial class ToolController : ObservableObject {
     private void SelectShapeInList(IShape shape) {
         if (!_canvas.SelectedShapes.Contains(shape)) {
             //Надо бы зажать кнопку Change
+            if (_toolButtons.TryGetValue("Change", out ToggleButton? changeButton)) {
+                changeButton.IsChecked = true; // Зажимаем кнопку
+            }
             SetTool("Change");
             _canvas.SelectedShapes.Clear();
             _canvas.SelectedShapes.Add(shape);
@@ -126,6 +130,7 @@ public partial class ToolController : ObservableObject {
                     _selectedButton = null;
             };
 
+            _toolButtons[typeTool] = toggleButton;
             _window.ToolsPanel.Children.Add(toggleButton);
         }
     }
