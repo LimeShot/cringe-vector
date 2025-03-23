@@ -57,6 +57,7 @@ public partial class MainViewModel : ObservableObject {
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
         _canvas.PropertyChanged += Canvas_SizeChanged;
+        _canvas.OnShapeChanged += Shapes_PropertyChanged;
         _toolController.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
         OnShapeChanged += Shapes_PropertyChanged;
     }
@@ -210,8 +211,8 @@ public partial class MainViewModel : ObservableObject {
             Color color_val = color.Value;
             Debug.WriteLine($"Линия: {color_val.R / 255f}, {color_val.G / 255f}, {color_val.B / 255f}");
             Canvas.ChangeOutLineColor(new Vector3(color_val.R / 255f, color_val.G / 255f, color_val.B / 255f));
-            //if (Canvas.SelectedShapes.Count > 0)
-            //OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+            if (Canvas.SelectedShapes.Count > 0)
+                OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
         }
     }
 

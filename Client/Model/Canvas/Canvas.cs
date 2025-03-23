@@ -29,11 +29,13 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     [ObservableProperty]
     private float _height;
     public float ScreenPerWorld = 1.0f;
+    public event EventHandler<List<IShape>>? OnShapeChanged;
 
     public MyCanvas() {
         Shapes = new();
         Width = 2000;
         Height = 1000;
+        PropertyChanged += ChangeFill;
     }
 
     private void recalculateZFromRemove(int index) {
@@ -131,5 +133,13 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         } else {
             StartFillColor = color;
         }
+    }
+
+    private void ChangeFill(object? sender, PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(HasFill))
+            foreach (IShape shape in SelectedShapes)
+                shape.Style.Fill = HasFill;
+
+        OnShapeChanged?.Invoke(this, SelectedShapes);
     }
 }
