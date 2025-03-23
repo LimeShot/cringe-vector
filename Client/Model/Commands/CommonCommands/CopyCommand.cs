@@ -12,36 +12,28 @@ public class CopyCommand : ICommandMenu {
     private readonly MyCanvas _canvas;
     private readonly List<IShape> _shapeBuffer;
     public RelayCommand CommandMenu { get; }
-    public RelayCommand CommandButton { get; }
     public Vector2 Point { get; set; }
-    public string Name { get; private set; }
-    public CopyCommand(MyCanvas canvas, Vector2 point, MyCommandHistory commandHistory, List<IShape> shapeBuffer) {
-        Name = "Копировать";
-        Point = point;
+    public CopyCommand(MyCanvas canvas, MyCommandHistory commandHistory, List<IShape> shapeBuffer) {
         _canvas = canvas;
         _shapeBuffer = shapeBuffer;
         CommandMenu = new(ExecuteMenu, CanExecuteMenu);
-        CommandButton = new(ExecuteButton, CanExecuteButton);
     }
 
     private void ExecuteMenu() {
-        _shapeBuffer.Clear();
-        if (_canvas.SelectedShapes.Count == 0) {
-            _canvas.SelectShape(Point);
-        }
         if (_canvas.IsPointInsideSelectedBB(Point))
-            foreach (var shape in _canvas.SelectedShapes) {
-                _shapeBuffer.Add(shape);
-            }
+            Execute();
     }
 
     private bool CanExecuteMenu() => _canvas.Shapes.Count != 0;
 
-    private void ExecuteButton() {
+    public void ExecuteButton() {
+        if (_canvas.SelectedShapes.Count != 0)
+            Execute();
+    }
+
+    private void Execute() {
         _shapeBuffer.Clear();
         foreach (var shape in _canvas.SelectedShapes)
             _shapeBuffer.Add(shape);
     }
-
-    private bool CanExecuteButton() => _canvas.SelectedShapes.Count != 0;
 }

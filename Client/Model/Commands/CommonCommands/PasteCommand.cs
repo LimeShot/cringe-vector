@@ -13,20 +13,26 @@ public class PasteCommand : ICommandMenu {
     private readonly MyCommandHistory _commandHistory;
     private readonly List<IShape> _shapeBuffer;
     public RelayCommand CommandMenu { get; }
-    public RelayCommand CommandButton { get; }
-    public string Name { get; private set; }
     public Vector2 Point { get; set; }
-    public PasteCommand(MyCanvas canvas, Vector2 point, MyCommandHistory commandHistory, List<IShape> shapeBuffer) {
-        Name = "Вставить";
-        Point = point;
+    public PasteCommand(MyCanvas canvas, MyCommandHistory commandHistory, List<IShape> shapeBuffer) {
         _canvas = canvas;
         _shapeBuffer = shapeBuffer;
         _commandHistory = commandHistory;
-        CommandMenu = new(Execute, CanExecute);
-        CommandButton = new(Execute, CanExecute);
+        CommandMenu = new(ExecuteMenu, CanExecuteMenu);
     }
 
-    public void Execute() {
+    private void ExecuteMenu() {
+        Execute();
+    }
+
+    private bool CanExecuteMenu() => _shapeBuffer.Count != 0;
+
+    public void ExecuteButton() {
+        if (_shapeBuffer.Count != 0)
+            Execute();
+    }
+
+    private void Execute() {
         Vector2 delta;
         if (_shapeBuffer.Count == 1) {
             delta = Point - _shapeBuffer[0].Translate;
@@ -44,6 +50,4 @@ public class PasteCommand : ICommandMenu {
         }
         _commandHistory.AddCommand(new PasteHCommand(localShapes.ToList(), _canvas));
     }
-
-    public bool CanExecute() => _shapeBuffer.Count != 0;
 }

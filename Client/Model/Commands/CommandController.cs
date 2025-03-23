@@ -12,7 +12,7 @@ namespace CringeCraft.Client.Model.Commands;
 
 public struct CopyBuffer {
     public List<IShape> ShapeBuffer;
-    public Vector2[] BountedBox;
+    public Vector2[] BoundingBox;
     public Vector2 OriginPoint;
 }
 
@@ -22,15 +22,14 @@ public class CommandController {
     private readonly MyCommandHistory _commandHistory;
     private readonly List<IShape> _shapeBuffer;
     public Dictionary<string, ICommandMenu> CommandsL = new();
-    public Vector2 Point { get; private set; }
     public CommandController(MyCanvas canvas, Camera camera, MyCommandHistory commandHistory) {
         _canvas = canvas;
         _camera = camera;
         _shapeBuffer = new();
         _commandHistory = commandHistory;
-        CommandsL.Add("Копировать", new CopyCommand(_canvas, Point, commandHistory, _shapeBuffer));
-        CommandsL.Add("Вставить", new PasteCommand(_canvas, Point, commandHistory, _shapeBuffer));
-        CommandsL.Add("Удалить", new DelCommand(_canvas, Point, commandHistory));
+        CommandsL.Add("Копировать", new CopyCommand(_canvas, commandHistory, _shapeBuffer));
+        CommandsL.Add("Вставить", new PasteCommand(_canvas, commandHistory, _shapeBuffer));
+        CommandsL.Add("Удалить", new DelCommand(_canvas, commandHistory));
     }
 
     public void CreateMenu(Vector2 position) {
@@ -48,15 +47,5 @@ public class CommandController {
         contextMenu.HorizontalOffset = 0;
         contextMenu.VerticalOffset = 0;
         contextMenu.IsOpen = true;
-    }
-
-    public RelayCommand Del => CommandsL["Удалить"].CommandButton;
-
-    public RelayCommand Copy => CommandsL["Копировать"].CommandButton;
-
-    public RelayCommand Paste(Vector2 point) {
-        var command = CommandsL["Вставить"];
-        command.Point = point;
-        return command.CommandButton;
     }
 }

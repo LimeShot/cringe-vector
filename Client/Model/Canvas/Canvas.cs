@@ -102,9 +102,9 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     }
 
     public Vector2 GetCenterOfGBB(List<IShape> shapeBuffer) {
-        Vector2[] bountedBox = GetGeneralBoundingBox(shapeBuffer);
-        float deltaX = Math.Abs(bountedBox[3].X - bountedBox[0].X);
-        float deltaY = Math.Abs(bountedBox[3].Y - bountedBox[0].Y);
-        return new Vector2(bountedBox[0].X + deltaX / 2, bountedBox[0].Y - deltaY / 2);
+        Vector2[] boundingBox = GetGeneralBoundingBox(shapeBuffer);
+        float deltaX = Math.Abs(boundingBox[3].X - boundingBox[0].X);
+        float deltaY = Math.Abs(boundingBox[3].Y - boundingBox[0].Y);
+        return new Vector2(boundingBox[0].X + deltaX / 2, boundingBox[0].Y - deltaY / 2);
     }
 }

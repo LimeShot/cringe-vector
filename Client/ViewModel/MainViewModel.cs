@@ -32,26 +32,9 @@ public partial class MainViewModel : ObservableObject {
     private readonly MyCommandHistory _commandHistory;
     private readonly MainWindow _window;
     private readonly Camera _camera;
-    private RelayCommand? _deleteCommand;
-    private RelayCommand? _copyCommand;
-    private RelayCommand? _pasteCommand;
-    private Vector2 _currentPoint;
 
-
-    public event Action? CanExecuteChanged;
-    public IRelayCommand DeleteCommand => _deleteCommand ??= _commandController.Del;
-    public IRelayCommand CopyCommand => _copyCommand ??= _commandController.Copy;
-    public IRelayCommand PasteCommand => _pasteCommand ??= _commandController.Paste(CurrentPoint);
     public Vector2 StartPoint { get; private set; }
-    public Vector2 CurrentPoint {
-        get => _currentPoint;
-        set {
-            if (_currentPoint != value) {
-                _currentPoint = value;
-                CanExecuteChanged?.Invoke();
-            }
-        }
-    }
+    public Vector2 CurrentPoint { get; set; }
     public Vector2 CMPosition { get; private set; }
     public event EventHandler<List<IShape>>? OnShapeChanged;
 
@@ -68,11 +51,6 @@ public partial class MainViewModel : ObservableObject {
         _canvas.PropertyChanged += Canvas_SizeChanged;
         _toolController.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
         OnShapeChanged += Shapes_PropertyChanged;
-        CanExecuteChanged += PasteCommand_PropertyChanged;
-    }
-
-    private void PasteCommand_PropertyChanged() {
-        _pasteCommand = _commandController.Paste(CurrentPoint);
     }
     private void Shapes_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         if (e.NewItems != null) {
@@ -212,5 +190,22 @@ public partial class MainViewModel : ObservableObject {
             if (type != CommandType.None)
                 OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
         }
+    }
+
+    [RelayCommand]
+    private void Paste() {
+        var command = _commandController.CommandsL["Вставить"];
+        command.Point = CurrentPoint;
+        command.ExecuteButton();
+    }
+
+    [RelayCommand]
+    private void Copy() {
+        _commandController.CommandsL["Копировать"].ExecuteButton();
+    }
+
+    [RelayCommand]
+    private void Delete() {
+        _commandController.CommandsL["Удалить"].ExecuteButton();
     }
 }
