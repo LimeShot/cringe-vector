@@ -18,8 +18,7 @@ public class DelCommand : ICommandMenu {
     }
 
     private void ExecuteMenu() {
-        if (_canvas.IsPointInsideSelectedBB(Point))
-            Execute();
+        Execute();
     }
 
     private bool CanExecuteMenu() => _canvas.Shapes.Count != 0;

@@ -19,6 +19,9 @@ public partial class ToolController : ObservableObject {
     public Dictionary<string, ITool> Tools = new();
     private readonly MainWindow _window;
     private ToggleButton? _selectedButton;
+    // private ToggleButton? _toggleButton;
+    private Dictionary<string, ToggleButton> _buttons = new();
+
     private ITool _currentTool;
     private readonly MyCanvas _canvas;
     private readonly Camera _camera;
@@ -67,7 +70,18 @@ public partial class ToolController : ObservableObject {
 
     public void SetTool(string toolName) {
         if (Tools.TryGetValue(toolName, out var tool)) {
-            _currentTool.OnChanged();
+            if (_buttons.TryGetValue(toolName, out var targetButton)) {
+                if (_selectedButton != targetButton) {
+                    if (_selectedButton != null) {
+                        _selectedButton.IsChecked = false;
+                    }
+
+                    targetButton.IsChecked = true;
+                    targetButton.RaiseEvent(new RoutedEventArgs(ToggleButton.CheckedEvent));
+                }
+            }
+
+            _currentTool?.OnChanged();
             _currentTool = tool;
         }
     }
@@ -75,7 +89,6 @@ public partial class ToolController : ObservableObject {
     [RelayCommand]
     private void SelectShapeInList(IShape shape) {
         if (!_canvas.SelectedShapes.Contains(shape)) {
-            //Надо бы зажать кнопку Change
             SetTool("Change");
             _canvas.SelectedShapes.Clear();
             _canvas.SelectedShapes.Add(shape);
@@ -100,33 +113,32 @@ public partial class ToolController : ObservableObject {
             CurrentCursor = Cursors.Arrow;
         }
     }
-
     public void CreateButtons() {
         foreach (string typeTool in Tools!.Keys) {
-            ToggleButton toggleButton = new() {
+            var toggleButton = new ToggleButton {
                 Height = 30,
                 Width = 30
             };
 
             string imagePath = $"pack://siteoforigin:,,,/assets/tools/{typeTool}.png";
-            Image toggleImage = new() {
+            var toggleImage = new Image {
                 Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute)),
             };
             toggleButton.Content = toggleImage;
 
             toggleButton.Checked += (s, e) => {
-                if (_selectedButton != null && _selectedButton != toggleButton)
-                    _selectedButton.IsChecked = false; // 🔹 Отжимаем предыдущую кнопку
-                _selectedButton = toggleButton; // 🔹 Запоминаем новую кнопку
-
+                if (_selectedButton != null && _selectedButton != toggleButton) {
+                    _selectedButton.IsChecked = false;
+                }
+                _selectedButton = toggleButton;
                 SetTool(typeTool);
             };
             toggleButton.Unchecked += (s, e) => {
                 if (_selectedButton == toggleButton)
                     _selectedButton = null;
             };
-
             _window.ToolsPanel.Children.Add(toggleButton);
+            _buttons[typeTool] = toggleButton;
         }
     }
 }

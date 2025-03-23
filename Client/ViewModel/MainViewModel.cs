@@ -39,6 +39,7 @@ public partial class MainViewModel : ObservableObject {
     private readonly MyCommandHistory _commandHistory;
     private readonly MainWindow _window;
     private readonly Camera _camera;
+    private bool _flag = false;
 
     public Vector2 StartPoint { get; private set; }
     public Vector2 CurrentPoint { get; set; }
@@ -98,21 +99,25 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void OnMouseDown(MouseEventArgs e) {
-        if (e != null && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) { //добавить клик на холст
+        if (e != null && _flag == false && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) { //добавить клик на холст
             var screenPoint = e.GetPosition((IInputElement)e.Source);
             StartPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseDown(StartPoint);
-        }
-        if (e != null && e.RightButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
+        } else if (e != null && e.RightButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
+            _flag = true;
+            ToolController.SetTool("Change");
             var screenPoint = e.GetPosition((IInputElement)e.Source);
             CMPosition = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             _commandController.CreateMenu(CMPosition);
+        } else if (e != null && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
+            _flag = false;
+            _canvas.SelectedShapes.Clear();
         }
     }
 
     [RelayCommand]
     private void OnMouseMove(MouseEventArgs e) {
-        if (e != null && e.Source is GLWpfControl) {
+        if (e != null && _flag == false && e.Source is GLWpfControl) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
             CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseMove(CurrentPoint, e.LeftButton == MouseButtonState.Pressed);
@@ -121,7 +126,7 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void OnMouseUp(MouseEventArgs e) {
-        if (e != null) {
+        if (e != null && _flag == false) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
             CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseUp(CurrentPoint);

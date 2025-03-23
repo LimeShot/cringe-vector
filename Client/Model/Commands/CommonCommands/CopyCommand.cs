@@ -20,11 +20,10 @@ public class CopyCommand : ICommandMenu {
     }
 
     private void ExecuteMenu() {
-        if (_canvas.IsPointInsideSelectedBB(Point))
-            Execute();
+        Execute();
     }
 
-    private bool CanExecuteMenu() => _canvas.Shapes.Count != 0;
+    private bool CanExecuteMenu() => _canvas.SelectedShapes.Count != 0;
 
     public void ExecuteButton() {
         if (_canvas.SelectedShapes.Count != 0)

@@ -34,7 +34,8 @@ public class CommandController {
 
     public void CreateMenu(Vector2 position) {
         ContextMenu contextMenu = new();
-        if (_canvas.SelectedShapes.Count == 0) {
+        if (!_canvas.IsPointInsideSelectedBB(position)) {
+            _canvas.SelectedShapes.Clear();
             _canvas.SelectShape(position);
         }
         foreach (var command in CommandsL) {

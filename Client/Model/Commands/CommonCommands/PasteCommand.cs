@@ -34,6 +34,7 @@ public class PasteCommand : ICommandMenu {
 
     private void Execute() {
         Vector2 delta;
+        _canvas.SelectedShapes.Clear();
         if (_shapeBuffer.Count == 1) {
             delta = Point - _shapeBuffer[0].Translate;
         } else {
@@ -45,9 +46,11 @@ public class PasteCommand : ICommandMenu {
             var localShape = shape.Clone();
             localShape.Move(delta);
             localShape.Z = _canvas.GetNewZ();
-            localShapes.Add(localShape);
-            _canvas.Shapes.Add(localShape);
+            var ll = localShape.Clone();
+            localShapes.Add(ll);
+            _canvas.Shapes.Add(ll);
         }
+        _canvas.SelectedShapes.Add(localShapes.Last());
         _commandHistory.AddCommand(new PasteHCommand(localShapes.ToList(), _canvas));
     }
 }
