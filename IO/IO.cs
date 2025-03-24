@@ -14,7 +14,7 @@ public interface IExporter {
 }
 
 public interface IImporter {
-    public Tuple<ObservableCollection<IShape>, float, float> Import(string path); // функция, возвращающая класс с фигурами
+    public Tuple<ObservableCollection<IShape>?, float, float> Import(string path); // функция, возвращающая класс с фигурами
 }
 
 public class ExportToCRNG : IExporter {
@@ -37,7 +37,7 @@ public class ExportToCRNG : IExporter {
 }
 
 public class ImportFromCRNG : IImporter {
-    public Tuple<ObservableCollection<IShape>, float, float> Import(string path) {
+    public Tuple<ObservableCollection<IShape>?, float, float> Import(string path) {
         // Настройки сериализации
         var settings = new JsonSerializerSettings {
             ContractResolver = new PrivateSetterContractResolver(),
@@ -47,9 +47,16 @@ public class ImportFromCRNG : IImporter {
         };
         string json = File.ReadAllText(path);
         var jObject = JObject.Parse(json);
-        var shapes = jObject["Shapes"].ToObject<ObservableCollection<IShape>>(JsonSerializer.Create(settings));
-        float width = jObject["Width"].Value<float>();
-        float height = jObject["Height"].Value<float>();
+        ObservableCollection<IShape>? shapes = new();
+
+        if (jObject["Shapes"] is JArray shapesArray) {
+            shapes = shapesArray.ToObject<ObservableCollection<IShape>>(JsonSerializer.Create(settings));
+        }
+        else {
+            Console.WriteLine("Ошибка: ключ 'Shapes' не найден или не является массивом");
+        }
+        float width = jObject["Width"]?.Value<float>()?? 0.0f;
+        float height = jObject["Height"]?.Value<float>()?? 0.0f;
         var data = Tuple.Create(shapes, width, height);
 
         return data;
