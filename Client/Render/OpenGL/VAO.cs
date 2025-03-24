@@ -73,6 +73,12 @@ public class VAO : IDisposable {
         return InsertRange(_content.Count(), data);
     }
 
+    public void SetData(float[] data) {
+        _content.Clear();
+        _content.InsertRange(0, data);
+        Commit();
+    }
+
     public void Clear() {
         _content.Clear();
         Commit();
