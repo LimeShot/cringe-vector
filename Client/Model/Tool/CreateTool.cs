@@ -32,7 +32,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     }
     public void MouseUpEvent(Vector2 endPoint) {
         if (endPoint == _startPoint) {
-            _canvas.Shapes.Remove(_canvas.Shapes.Last());
+            _canvas.Shapes.Remove(_canvas.Shapes[0]);
             _shape = AddShape(endPoint, 100);
         } else if (_isResized && _shape != null) {
             _shape.NormalizeIndexNodes();
