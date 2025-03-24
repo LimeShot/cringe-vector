@@ -48,8 +48,8 @@ public interface IShape {
     public void NormalizeIndexNodes();
 
     // Методы отражения фигуры, путем измненеия угла
-    public void ScalseX();
-    public void ScalseY();
+    public void ReflectX();
+    public void ReflectY();
 
     IShape Clone(); // Метод для глубокого копирования
 }
