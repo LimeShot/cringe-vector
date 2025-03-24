@@ -47,8 +47,9 @@ public interface IShape {
     // Метод возвращает нормальную нумерацию точек в фигуре(проблема возникает после использования метода Resize)
     public void NormalizeIndexNodes();
 
-    // Метод отражения фигуры, путем измненеия угла
-    public void Reflect();
+    // Методы отражения фигуры, путем измненеия угла
+    public void ScalseX();
+    public void ScalseY();
 
     IShape Clone(); // Метод для глубокого копирования
 }
