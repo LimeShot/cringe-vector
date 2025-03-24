@@ -11,6 +11,7 @@ public partial class Ellipse : IShape {
     // TODO: Добавить event OnChange в методы set
     public Vector2 Translate { private set; get; }
     public float Z { set; get; }
+    public float DeltaZ { set; get; } // Для отрисовки контура на слой выше, чем заливки
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
@@ -27,6 +28,7 @@ public partial class Ellipse : IShape {
     public Ellipse() {
         Translate = Vector2.Zero;
         Z = 0.0f;
+        DeltaZ = 0.0f;
         Rotate = 0.0f;
         Style = new();
         BoundingBox = new Vector2[4];
@@ -34,9 +36,10 @@ public partial class Ellipse : IShape {
         CalcBB();
     }
 
-    public Ellipse(Vector2 p1, float z, ShapeStyle? shapeStyle = null) {
+    public Ellipse(Vector2 p1, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
         Translate = p1;
         Z = z;
+        DeltaZ = deltaZ;
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
@@ -47,9 +50,10 @@ public partial class Ellipse : IShape {
         CalcBB();
     }
 
-    public Ellipse(Vector2 p1, float diagonal, float z, ShapeStyle? shapeStyle = null) {
+    public Ellipse(Vector2 p1, float diagonal, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
         Translate = p1;
         Z = z;
+        DeltaZ = deltaZ;
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
@@ -65,6 +69,7 @@ public partial class Ellipse : IShape {
     public Ellipse(Ellipse other) {
         Translate = other.Translate;
         Z = other.Z;
+        DeltaZ = other.DeltaZ;
         Rotate = other.Rotate;
         Style = other.Style.Clone();
         BoundingBox = new Vector2[other.BoundingBox.Length];
@@ -89,7 +94,7 @@ public partial class Ellipse : IShape {
         if (!Style.Visible) return [];
         float width = Math.Abs(Nodes[0].X - Nodes[2].X);
         float height = Math.Abs(Nodes[0].Y - Nodes[2].Y);
-        return [Translate.X, Translate.Y, Z, width, height, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
+        return [Translate.X, Translate.Y, Z + DeltaZ, width, height, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
     }
 
     public float[] GetCircleVertices() {

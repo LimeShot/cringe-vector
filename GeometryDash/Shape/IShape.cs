@@ -5,6 +5,7 @@ using OpenTK.Mathematics;
 public interface IShape {
     public Vector2 Translate { get; }
     public float Z { set; get; }
+    public float DeltaZ { set; get; } // Для отрисовки контура на слой выше, чем заливки
     public float Rotate { get; } // Угол в градусах
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { get; }

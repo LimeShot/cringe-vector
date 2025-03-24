@@ -11,6 +11,7 @@ public partial class Line : IShape {
     // TODO: Добавить event OnChange в методы set
     public Vector2 Translate { private set; get; }
     public float Z { set; get; }
+    public float DeltaZ { set; get; } // Для отрисовки контура на слой выше, чем заливки
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
@@ -26,6 +27,7 @@ public partial class Line : IShape {
     public Line() {
         Translate = Vector2.Zero;
         Z = 0.0f;
+        DeltaZ = 0.0f;
         Rotate = 0.0f;
         Style = new();
         BoundingBox = new Vector2[2];
@@ -37,6 +39,7 @@ public partial class Line : IShape {
     public Line(Line other) {
         Translate = other.Translate;
         Z = other.Z;
+        DeltaZ = other.DeltaZ;
         Rotate = other.Rotate;
         Style = other.Style.Clone();
         BoundingBox = new Vector2[other.BoundingBox.Length];
@@ -49,16 +52,18 @@ public partial class Line : IShape {
         return new Line(this);
     }
 
-    public Line(Vector2 p1, float z, ShapeStyle? shapeStyle = null) : this() {
+    public Line(Vector2 p1, float z, float deltaZ, ShapeStyle? shapeStyle = null) : this() {
         Translate = p1;
         Z = z;
+        DeltaZ = deltaZ;
         Style = shapeStyle ?? new();
         CalcBB();
     }
 
-    public Line(Vector2 p1, float length, float z, ShapeStyle? shapeStyle = null) : this() {
+    public Line(Vector2 p1, float length, float z, float deltaZ, ShapeStyle? shapeStyle = null) : this() {
         Translate = p1;
         Z = z;
+        DeltaZ = deltaZ;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[2];
         Nodes = new Vector2[2];
@@ -70,7 +75,7 @@ public partial class Line : IShape {
 
     public float[] GetLineVertices() {
         if (!Style.Visible) return [];
-        float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
+        float[] args = [Z + DeltaZ, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
         return [Nodes[0].X, Nodes[0].Y, ..args,
                 Nodes[1].X, Nodes[1].Y, ..args];
 

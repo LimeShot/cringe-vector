@@ -12,6 +12,7 @@ public partial class Polygon : IShape {
     // TODO: Добавить event OnChange в методы set
     public Vector2 Translate { private set; get; }
     public float Z { set; get; }
+    public float DeltaZ { set; get; } // Для отрисовки контура на слой выше, чем заливки
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
@@ -48,6 +49,7 @@ public partial class Polygon : IShape {
     public Polygon() {
         Translate = Vector2.Zero;
         Z = 0.0f;
+        DeltaZ = 0.0f;
         Rotate = 0.0f;
         Style = new();
         BoundingBox = new Vector2[4];
@@ -62,6 +64,7 @@ public partial class Polygon : IShape {
     public Polygon(Polygon other) {
         Translate = other.Translate;
         Z = other.Z;
+        DeltaZ = other.DeltaZ;
         Rotate = other.Rotate;
         Style = other.Style.Clone();
         BoundingBox = new Vector2[other.BoundingBox.Length];
@@ -74,10 +77,11 @@ public partial class Polygon : IShape {
         return new Polygon(this);
     }
 
-    public Polygon(Vector2 p1, float z, ShapeStyle? shapeStyle = null) {
+    public Polygon(Vector2 p1, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
         float diagonal = 1e-5f;
         Translate = p1;
         Z = z;
+        DeltaZ = deltaZ;
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
@@ -91,9 +95,10 @@ public partial class Polygon : IShape {
         CalcBB();
     }
 
-    public Polygon(Vector2 p1, float diagonal, float z, ShapeStyle? shapeStyle = null) {
+    public Polygon(Vector2 p1, float diagonal, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
         Translate = p1;
         Z = z;
+        DeltaZ = deltaZ;
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
@@ -107,9 +112,10 @@ public partial class Polygon : IShape {
         CalcBB();
     }
 
-    public Polygon(Vector2 p1, float diagonal, int countVertices, float z, ShapeStyle? shapeStyle = null) {
+    public Polygon(Vector2 p1, float diagonal, int countVertices, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
         Translate = p1;
         Z = z;
+        DeltaZ = deltaZ;
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
@@ -130,7 +136,7 @@ public partial class Polygon : IShape {
         for (int i = 0; i < len; i++) {
             returns[i * 18] = Nodes[i].X;
             returns[i * 18 + 1] = Nodes[i].Y;
-            returns[i * 18 + 2] = Z;
+            returns[i * 18 + 2] = Z + DeltaZ;
             returns[i * 18 + 3] = Translate.X;
             returns[i * 18 + 4] = Translate.Y;
             returns[i * 18 + 5] = Rotate;
@@ -140,7 +146,7 @@ public partial class Polygon : IShape {
 
             returns[i * 18 + 9] = Nodes[(i + 1) % len].X;
             returns[i * 18 + 10] = Nodes[(i + 1) % len].Y;
-            returns[i * 18 + 11] = Z;
+            returns[i * 18 + 11] = Z + DeltaZ;
             returns[i * 18 + 12] = Translate.X;
             returns[i * 18 + 13] = Translate.Y;
             returns[i * 18 + 14] = Rotate;
