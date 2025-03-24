@@ -252,4 +252,10 @@ public partial class MainViewModel : ObservableObject {
     private void Delete() {
         _commandController.CommandsL["Удалить"].ExecuteButton();
     }
+
+    [RelayCommand]
+    private void DeleteAllShapes() {
+        Canvas.DeleteAllShapes();
+        OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+    }
 }

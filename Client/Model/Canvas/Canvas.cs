@@ -205,4 +205,9 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         Shapes[index] = Shapes[index + 1];
         Shapes[index + 1] = shape;
     }
+
+    public void DeleteAllShapes() {
+        SelectedShapes.Clear();
+        Shapes.Clear();
+    }
 }
