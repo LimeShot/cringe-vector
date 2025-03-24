@@ -56,10 +56,10 @@ public partial class Line : IShape {
         CalcBB();
     }
 
-    public Line(Vector2 p1, float length, float z, float rotateAngle, ShapeStyle? shapeStyle = null) {
+    public Line(Vector2 p1, float length, float rotateAngle, float z, ShapeStyle? shapeStyle = null) {
         Translate = p1;
         Z = z;
-        Rotate = rotateAngle;
+        Rotate = -rotateAngle;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[2];
         Nodes = new Vector2[2];
