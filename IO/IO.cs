@@ -4,7 +4,9 @@ using Newtonsoft.Json.Linq;
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using Microsoft.VisualBasic;
-using SkiaSharp;
+using Svg;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Collections.ObjectModel;
 namespace CringeCraft.IO;
 public interface IExporter {
@@ -121,26 +123,54 @@ public class ExportToSVG : IExporter {
 public class ExportToPNG : IExporter {
     public void Export(string path, ICanvas Field) {
 
-        int lastSlashIndex = path.LastIndexOf('/');
+        int lastSlashIndex = path.LastIndexOf('\\');
         string pathWithoutFileName = "";
 
         try {
             if (lastSlashIndex < 0) {
-                throw new InvalidOperationException("Символ '/' не найден в пути.");
+                throw new InvalidOperationException("Символ '\\' не найден в пути.");
             }
             pathWithoutFileName = path.Substring(0, lastSlashIndex);
         } catch (InvalidOperationException ex) {
             Console.WriteLine(ex.Message);
         }
         // Временный файл для .svg
-        string tempFilePath = pathWithoutFileName + Path.GetTempFileName();
+        //string tempFilePath = pathWithoutFileName + Path.GetTempFileName();
+        string tempFilePath = Path.GetTempFileName();
         string svgFilePath = Path.ChangeExtension(tempFilePath, ".svg");
 
         var tmpExp = new ExportToSVG();
         tmpExp.Export(svgFilePath, Field);
 
+        var svgDocument = SvgDocument.Open(svgFilePath);
+
+        // Преобразование в Bitmap
+
+        int width = (int)svgDocument.Width.Value;
+        int height = (int)svgDocument.Height.Value;
+
+        // Создаём Bitmap с белым фоном
+        using (var bitmap = new Bitmap(width, height))
+
+        //var bitmap = svgDocument.Draw();
+
+        // Сохранение в PNG
+        using (var graphics = Graphics.FromImage(bitmap)) {
+            // Заливаем фон белым цветом
+            graphics.Clear(Color.White);
+
+            // Рисуем SVG на Bitmap
+            svgDocument.Draw(graphics);
+
+            // Сохраняем результат в PNG
+            bitmap.Save(path, ImageFormat.Png);
+        }
+
+        /*
+
         // Загрузка SVG файла
-        var svg = new SkiaSharp.Extended.Svg.SKSvg();
+        //var svg = new SkiaSharp.Extended.Svg.SKSvg();
+        var svg = new SKSvg();
         svg.Load(svgFilePath);
 
         // Определение размеров изображения
@@ -168,6 +198,7 @@ public class ExportToPNG : IExporter {
         using (var stream = System.IO.File.OpenWrite(path)) {
             data.SaveTo(stream);
         }
+        */
 
         //Console.WriteLine("SVG успешно конвертирован в PNG.");
         File.Delete(tempFilePath);
