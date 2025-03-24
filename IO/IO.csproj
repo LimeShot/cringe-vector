@@ -12,5 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="SkiaSharp" Version="3.116.1" />
+      <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
     </ItemGroup>
 </Project>
