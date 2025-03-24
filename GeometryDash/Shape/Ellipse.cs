@@ -188,7 +188,10 @@ public partial class Ellipse : IShape {
             CalcBB();
     }
 
-    public void Reflect() {
+    public void ScalseX() {
+        // TODO: Реализовать метод
+    }
+    public void ScalseY() {
         // TODO: Реализовать метод
     }
 }
