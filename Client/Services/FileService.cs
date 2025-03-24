@@ -35,7 +35,7 @@ public static class FileService {
     public static (string? filePath, string? errorMessage) SaveFile(ICanvas canvas) {
         SaveFileDialog saveFileDialog = new() {
             Title = "Сохранить файл",
-            Filter = "CRNG файлы (*.crng)|*.crng|SVG файлы (*.svg)|*.svg|Все файлы (*.*)|*.*",
+            Filter = "CRNG файлы (*.crng)|*.crng|SVG файлы (*.svg)|*.svg|PNG файлы (*.png)|*.png|Все файлы (*.*)|*.*",
             DefaultExt = ".crng",
             FileName = "document.crng"
         };
@@ -47,7 +47,9 @@ public static class FileService {
                     ? new ExportToCRNG()
                     : filePath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase)
                         ? new ExportToSVG()
-                        : new ExportToCRNG();
+                        : filePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+                            ? new ExportToPNG()
+                            : new ExportToCRNG();
 
                 exporter.Export(filePath, canvas);
                 return (filePath, null);
