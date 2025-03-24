@@ -119,9 +119,8 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         if (SelectedShapes.Count > 0) {
             foreach (IShape shape in SelectedShapes)
                 shape.Style.ColorOutline = color;
-        } else {
-            StartOutLineColor = color;
         }
+        StartOutLineColor = color;
     }
 
     public void ChangeFillColor(Vector3 color) {
@@ -130,9 +129,8 @@ public partial class MyCanvas : ObservableObject, ICanvas {
                 shape.Style.ColorFill = color;
                 shape.Style.Fill = HasFill;
             }
-        } else {
-            StartFillColor = color;
         }
+        StartFillColor = color;
     }
 
     private void ChangeFill(object? sender, PropertyChangedEventArgs e) {
