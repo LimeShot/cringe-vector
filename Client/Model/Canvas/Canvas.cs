@@ -22,10 +22,10 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     private bool flag_fillColor = true;
 
     [ObservableProperty]
-    private Color _selectedOutlineColor;
+    private Color _selectedOutlineColor = Colors.Black;
 
     [ObservableProperty]
-    private Color _selectedFillColor;
+    private Color _selectedFillColor = Colors.Black;
 
     public Vector3 StartOutLineColor = Vector3.Zero;
     public Vector3 StartFillColor = Vector3.Zero;

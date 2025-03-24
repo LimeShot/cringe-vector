@@ -211,12 +211,6 @@ public partial class Polygon : IShape {
     }
 
     public void Resize(int index, Vector2 newNode) {
-        // TODO: Исправить на нормальный ресайз
-        if (newNode.X > Translate.X)
-            index = newNode.Y > Translate.Y ? 1 : 2;
-        else
-            index = newNode.Y > Translate.Y ? 0 : 3;
-
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 result);
         Vector2[] LocalBB = new Vector2[4];
         for (int i = 0; i < 4; i++) {
@@ -224,10 +218,39 @@ public partial class Polygon : IShape {
         }
         float minSize = 1e-6f;
         Vector2 localNewNode = result * (newNode - Translate);
-        if (localNewNode.X == 0)
-            localNewNode.X += minSize;
-        if (localNewNode.Y == 0)
-            localNewNode.Y += minSize;
+
+        int curZero = 0;
+        for (int i = 0; i < 4; i++) {
+            if (LocalBB[i].X <= 0 && LocalBB[i].Y >= 0) {
+                curZero = i;
+                break;
+            }
+        }
+
+
+        // Костыль!!!
+        // Для того, чтобы многоугольник не "схлопывался" в линию
+        int znak = 1;
+        if (localNewNode.X == 0) {
+            if (index == 0 || index == 3)
+                znak = -1;
+            localNewNode.X += znak * minSize;
+        }
+        if (localNewNode.Y == 0) {
+            if (index == 0 || index == 1)
+                znak = 1;
+            else if (index == 2 || index == 3)
+                znak = -1;
+            localNewNode.Y += znak * minSize;
+        }
+
+        // Костыль!!!
+        // Заново определяем индекс, т.к. в BoundingBox он храниться в другой последовательности
+        if (localNewNode.X > 0.0f)
+            index = localNewNode.Y > 0.0f ? 1 : 2;
+        else
+            index = localNewNode.Y > 0.0f ? 0 : 3;
+        index = (index + curZero) % 4;
         float wOld = Math.Max(Math.Abs(LocalBB[index].X - LocalBB[(index + 2) % 4].X), minSize);
         float hOld = Math.Max(Math.Abs(LocalBB[index].Y - LocalBB[(index + 2) % 4].Y), minSize);
         float sX = Math.Abs(localNewNode.X - LocalBB[(index + 2) % 4].X) / wOld;
