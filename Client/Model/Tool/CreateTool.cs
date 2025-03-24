@@ -14,6 +14,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     private IShape? _shape;
     private Vector2 _startPoint;
     private bool _isResized = false;
+    private readonly float _delta = 5;
 
     public event EventHandler<List<IShape>>? OnShapeChanged = e;
     public string Name { get; set; } = name;
@@ -31,7 +32,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
         }
     }
     public void MouseUpEvent(Vector2 endPoint) {
-        if (endPoint == _startPoint) {
+        if ((endPoint - _startPoint).Length < _delta) {
             _canvas.Shapes.Remove(_canvas.Shapes[0]);
             _shape = AddShape(endPoint, 100);
         } else if (_isResized && _shape != null) {
