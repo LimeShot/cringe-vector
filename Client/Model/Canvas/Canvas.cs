@@ -59,7 +59,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     }
 
     public void AddShape(IShape shape) {
-        Shapes.Add(shape);
+        Shapes.Insert(0, shape);
     }
 
     public void RemoveShape(IShape shape) {
@@ -74,7 +74,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
 
     public void SelectShape(Vector2 point) {
         if (Shapes.Count == 0) return;
-        foreach (var shape in Shapes.Reverse()) {
+        foreach (var shape in Shapes) {
             if (shape.Style.Visible && shape.IsBelongsShape(point, SelectionRadius)) {
                 SelectedShapes.Add(shape);
 
@@ -182,5 +182,27 @@ public partial class MyCanvas : ObservableObject, ICanvas {
                 shape.Style.Fill = HasFill;
 
         OnShapeChanged?.Invoke(this, SelectedShapes);
+    }
+
+    public void MoveShapeUp(IShape shape) {
+        var index = Shapes.IndexOf(shape);
+
+        var z_new = Shapes[index - 1].Z;
+        Shapes[index - 1].Z = shape.Z;
+        shape.Z = z_new;
+
+        Shapes[index] = Shapes[index - 1];
+        Shapes[index - 1] = shape;
+    }
+
+    public void MoveShapeDown(IShape shape) {
+        var index = Shapes.IndexOf(shape);
+
+        var z_new = Shapes[index + 1].Z;
+        Shapes[index + 1].Z = shape.Z;
+        shape.Z = z_new;
+
+        Shapes[index] = Shapes[index + 1];
+        Shapes[index + 1] = shape;
     }
 }

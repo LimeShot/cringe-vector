@@ -349,6 +349,7 @@
                                     <ColumnDefinition Width="30"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="25"/>
+                                    <ColumnDefinition Width="30"/>
                                 </Grid.ColumnDefinitions>
                                 <Image Source="{Binding IconPath}"
                                        Width="20"
@@ -358,7 +359,9 @@
                                        Grid.Column="0"/>
                                 <TextBlock Text="{Binding ShapeType}"
                                            VerticalAlignment="Center"
-                                           Grid.Column="1"/>
+                                           Grid.Column="1"
+                                           HorizontalAlignment="Stretch"
+                                           TextTrimming="CharacterEllipsis"/>
                                 <ToggleButton x:Name="VisibilityToggle"
                                               IsChecked="True"
                                               Grid.Column="2"
@@ -394,6 +397,26 @@
                                         </ControlTemplate>
                                     </ToggleButton.Template>
                                 </ToggleButton>
+
+                                <StackPanel Grid.Column="3"
+                                            Grid.Row="0"
+                                            Grid.RowSpan="2"
+                                            VerticalAlignment="Center">
+                                    <Button Content="↑"
+                                            Width="20"
+                                            Height="20"
+                                            Margin="2,0,2,2"
+                                            Command="{Binding DataContext.MoveShapeUpCommand, 
+                                    RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                            CommandParameter="{Binding}"/>
+                                    <Button Content="↓"
+                                            Width="20"
+                                            Height="20"
+                                            Margin="2,2,2,0"
+                                            Command="{Binding DataContext.MoveShapeDownCommand, 
+                                    RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                            CommandParameter="{Binding}"/>
+                                </StackPanel>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

@@ -60,10 +60,16 @@ public partial class MainViewModel : ObservableObject {
         if (e.NewItems != null) {
             var newShapes = e.NewItems.Cast<IShape>().ToArray();
             _renderingService.OnShapeAdded(newShapes);
+
+            MoveShapeUpCommand.NotifyCanExecuteChanged();
+            MoveShapeDownCommand.NotifyCanExecuteChanged();
         }
         if (e.OldItems != null) {
             var oldShapes = e.OldItems.Cast<IShape>().ToArray();
             _renderingService.OnShapeRemoved(oldShapes);
+
+            MoveShapeUpCommand.NotifyCanExecuteChanged();
+            MoveShapeDownCommand.NotifyCanExecuteChanged();
         }
     }
 
@@ -213,6 +219,22 @@ public partial class MainViewModel : ObservableObject {
             Canvas.ChangeFillColor(color.Value);
         }
     }
+
+    [RelayCommand(CanExecute = nameof(CanMoveShapeUp))]
+    private void MoveShapeUp(IShape shape) {
+        Canvas.MoveShapeUp(shape);
+    }
+
+    private bool CanMoveShapeUp(IShape shape) =>
+        shape != null && Canvas.Shapes.IndexOf(shape) > 0;
+
+    [RelayCommand(CanExecute = nameof(CanMoveShapeDown))]
+    private void MoveShapeDown(IShape shape) {
+        Canvas.MoveShapeDown(shape);
+    }
+
+    private bool CanMoveShapeDown(IShape shape) =>
+        shape != null && Canvas.Shapes.IndexOf(shape) < Canvas.Shapes.Count - 1;
 
     [RelayCommand]
     private void Paste() {
