@@ -307,10 +307,10 @@ public partial class Polygon : IShape {
         // TODO: Реализовать метод
     }
 
-    public void ScalseX() {
+    public void ReflectX() {
         // TODO: Реализовать метод
     }
-    public void ScalseY() {
+    public void ReflectY() {
         // TODO: Реализовать метод
     }
 }
