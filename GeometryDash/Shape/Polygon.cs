@@ -207,7 +207,26 @@ public partial class Polygon : IShape {
     }
 
     public void MoveNode(int index, Vector2 newNode) {
-        // TODO: Реализовать метод
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 result);
+        Vector2 notRotateNewNode = result * (newNode - Translate) + Translate;
+        int countNodes = Nodes.Length;
+        Vector2[] globalNodes = new Vector2[countNodes];
+        Vector2 maxPoint = new(0, 0), minPoint = new(0, 0);
+        for (int i = 0; i < countNodes; i++) {
+            if (i == index)
+                globalNodes[i] = notRotateNewNode;
+            else
+                globalNodes[i] = Nodes[i] + Translate;
+            maxPoint.X = MathF.Max(maxPoint.X, globalNodes[i].X);
+            minPoint.X = MathF.Min(minPoint.X, globalNodes[i].X);
+            maxPoint.Y = MathF.Max(maxPoint.Y, globalNodes[i].Y);
+            minPoint.Y = MathF.Min(minPoint.Y, globalNodes[i].Y);
+        }
+        Translate = (minPoint + maxPoint) / 2;
+        for (int i = 0; i < countNodes; i++) {
+            Nodes[i] = globalNodes[i] - Translate;
+        }
+        CalcBB();
     }
 
     public void Resize(int index, Vector2 newNode) {
