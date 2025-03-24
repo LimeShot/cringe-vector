@@ -7,6 +7,7 @@ using CringeCraft.GeometryDash;
 using OpenTK.Mathematics;
 using System.IO.Compression;
 using System.ComponentModel;
+using System.Windows.Media;
 
 /// <summary>
 /// Представляет холст для хранения фигур
@@ -17,6 +18,14 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     private const float SelectionRadius = 0.5f;   // Радиус для выбора фигуры
     private const float _stepZ = 0.00002f;
     public readonly float DeltaZ = 0.00001f;
+    private bool flag_outlineColor = true;
+    private bool flag_fillColor = true;
+
+    [ObservableProperty]
+    private Color _selectedOutlineColor;
+
+    [ObservableProperty]
+    private Color _selectedFillColor;
 
     public Vector3 StartOutLineColor = Vector3.Zero;
     public Vector3 StartFillColor = Vector3.Zero;
@@ -68,6 +77,23 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         foreach (var shape in Shapes.Reverse()) {
             if (shape.Style.Visible && shape.IsBelongsShape(point, SelectionRadius)) {
                 SelectedShapes.Add(shape);
+
+                StartOutLineColor = shape.Style.ColorOutline;
+                StartFillColor = shape.Style.ColorFill;
+                HasFill = shape.Style.Fill;
+                flag_outlineColor = false;
+                flag_fillColor = false;
+                SelectedOutlineColor = Color.FromRgb(
+                    (byte)(StartOutLineColor.X * 255f),
+                    (byte)(StartOutLineColor.Y * 255f),
+                    (byte)(StartOutLineColor.Z * 255f)
+                );
+                SelectedFillColor = Color.FromRgb(
+                    (byte)(StartFillColor.X * 255f),
+                    (byte)(StartFillColor.Y * 255f),
+                    (byte)(StartFillColor.Z * 255f)
+                );
+
                 break;
             }
         }
@@ -116,22 +142,38 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         return new Vector2(boundingBox[0].X + deltaX / 2, boundingBox[0].Y - deltaY / 2);
     }
 
-    public void ChangeOutLineColor(Vector3 color) {
-        if (SelectedShapes.Count > 0) {
-            foreach (IShape shape in SelectedShapes)
-                shape.Style.ColorOutline = color;
+    public void ChangeOutLineColor(Color color) {
+        if (!flag_outlineColor) {
+            flag_outlineColor = true;
+            return;
         }
-        StartOutLineColor = color;
-    }
 
-    public void ChangeFillColor(Vector3 color) {
+        var new_color = new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
+
         if (SelectedShapes.Count > 0) {
             foreach (IShape shape in SelectedShapes) {
-                shape.Style.ColorFill = color;
+                shape.Style.ColorOutline = new_color;
+            }
+        }
+        StartOutLineColor = new_color;
+    }
+
+    public void ChangeFillColor(Color color) {
+        if (!flag_fillColor) {
+            flag_fillColor = true;
+            return;
+        }
+
+        var new_color = new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
+
+        if (SelectedShapes.Count > 0) {
+            foreach (IShape shape in SelectedShapes) {
+                shape.Style.ColorFill = new_color;
                 shape.Style.Fill = HasFill;
             }
         }
-        StartFillColor = color;
+        StartFillColor = new_color;
+
     }
 
     private void ChangeFill(object? sender, PropertyChangedEventArgs e) {

@@ -29,11 +29,6 @@ public partial class MainViewModel : ObservableObject {
     [ObservableProperty]
     private ToolController _toolController;
 
-    [ObservableProperty]
-    private Color _selectedOutlineColor;
-
-    [ObservableProperty]
-    private Color _selectedFillColor;
     private readonly RenderingService _renderingService;
     private readonly CommandController _commandController;
     private readonly MyCommandHistory _commandHistory;
@@ -208,22 +203,14 @@ public partial class MainViewModel : ObservableObject {
     [RelayCommand]
     private void ChangeOutLineColor(Color? color) {
         if (color.HasValue) {
-            Color color_val = color.Value;
-            Debug.WriteLine($"Линия: {color_val.R / 255f}, {color_val.G / 255f}, {color_val.B / 255f}");
-            Canvas.ChangeOutLineColor(new Vector3(color_val.R / 255f, color_val.G / 255f, color_val.B / 255f));
-            if (Canvas.SelectedShapes.Count > 0)
-                OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+            Canvas.ChangeOutLineColor(color.Value);
         }
     }
 
     [RelayCommand]
     private void ChangeFillColor(Color? color) {
         if (color.HasValue) {
-            Color color_val = color.Value;
-            Debug.WriteLine($"Заливка: {color_val.R / 255f}, {color_val.G / 255f}, {color_val.B / 255f}");
-            Canvas.ChangeFillColor(new Vector3(color_val.R / 255f, color_val.G / 255f, color_val.B / 255f));
-            if (Canvas.SelectedShapes.Count > 0)
-                OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+            Canvas.ChangeFillColor(color.Value);
         }
     }
 

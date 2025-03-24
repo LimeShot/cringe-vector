@@ -227,11 +227,11 @@
                        Margin="5"/>
             <xctk:ColorPicker Width="120"
                               Margin="5"
-                              SelectedColor="{Binding SelectedOutlineColor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                              SelectedColor="{Binding Canvas.SelectedOutlineColor, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectedColorChanged">
                         <i:InvokeCommandAction Command="{Binding ChangeOutLineColorCommand}"
-                                               CommandParameter="{Binding SelectedOutlineColor}"/>
+                                               CommandParameter="{Binding Canvas.SelectedOutlineColor}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </xctk:ColorPicker>
@@ -241,11 +241,11 @@
                        Margin="5"/>
             <xctk:ColorPicker Width="120"
                               Margin="5"
-                              SelectedColor="{Binding SelectedFillColor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                              SelectedColor="{Binding Canvas.SelectedFillColor, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectedColorChanged">
                         <i:InvokeCommandAction Command="{Binding ChangeFillColorCommand}"
-                                               CommandParameter="{Binding SelectedFillColor}"/>
+                                               CommandParameter="{Binding Canvas.SelectedFillColor}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </xctk:ColorPicker>
