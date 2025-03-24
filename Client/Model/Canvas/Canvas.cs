@@ -16,6 +16,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     private ObservableCollection<IShape> _shapes;
     private const float SelectionRadius = 0.5f;   // Радиус для выбора фигуры
     private const float _stepZ = 0.00002f;
+    public readonly float DeltaZ = 0.00001f;
 
     public Vector3 StartOutLineColor = Vector3.Zero;
     public Vector3 StartFillColor = Vector3.Zero;
