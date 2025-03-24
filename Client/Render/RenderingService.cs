@@ -13,14 +13,14 @@ public class RenderingService {
     private VAO? _vaoLine, _vaoTriangle, _vaoCircle, _vaoCircumference;
     private VAO? _vaoBackground, _vaoBoundingBox;
     private Matrix4 _projection = Matrix4.Identity, _view = Matrix4.Identity;
-    private Box2? _bbox;
+    private Vector2[]? _bbox;
 
     public RenderingService(MyCanvas Cringe) {
         _canvas = Cringe;
     }
 
     public void Initialize() {
-            _shaderLine = new(@"
+        _shaderLine = new(@"
             #version 330 core
 
             layout (location = 0) in vec3 aPos;
@@ -64,6 +64,7 @@ public class RenderingService {
                 FragColor = vec4(VertColor, 1.0);
             }");
         _vaoLine = new([3, 2, 1, 3]);
+        _vaoBoundingBox = new([3, 2, 1, 3]);
 
         _shaderTriangle = new(@"
             #version 330 core
@@ -275,27 +276,23 @@ public class RenderingService {
 
         _vaoBackground = new([3, 2, 1, 3]);
 
-        _vaoBoundingBox = new VAO(new int[] { 3 });
-
         GL.Enable(EnableCap.DepthTest);
         rebuildVBOs();
     }
 
-    public void OnBoundingBoxChanged(Box2? bbox) {
+    public void OnBoundingBoxChanged(Vector2[]? bbox) {
         _bbox = bbox;
         if (bbox == null) {
-            _vaoBoundingBox?.ReplaceRange(0, 0, new float[0]);
+            _vaoBoundingBox?.SetData([]);
         } else {
-            float minX = bbox.Value.Min.X, maxX = bbox.Value.Max.X;
-            float minY = bbox.Value.Min.Y, maxY = bbox.Value.Max.Y;
             float z = 1.0f - 1e-3f;
             float[] boundingBoxVertices = {
-                minX, minY, z, maxX, minY, z,
-                maxX, minY, z, maxX, maxY, z,
-                maxX, maxY, z, minX, maxY, z,
-                minX, maxY, z, minX, minY, z
+                bbox[3].X, bbox[3].Y, z, 0, 0,  0, 0, 0, 0, bbox[2].X, bbox[2].Y, z, 0, 0, 0, 0, 0, 0,
+                bbox[2].X, bbox[2].Y, z, 0, 0,  0, 0, 0, 0, bbox[1].X, bbox[1].Y, z, 0, 0, 0, 0, 0, 0,
+                bbox[1].X, bbox[1].Y, z, 0, 0,  0, 0, 0, 0, bbox[0].X, bbox[0].Y, z, 0, 0, 0, 0, 0, 0,
+                bbox[0].X, bbox[0].Y, z, 0, 0,  0, 0, 0, 0, bbox[3].X, bbox[3].Y, z, 0, 0, 0, 0, 0, 0,
             };
-            _vaoBoundingBox?.ReplaceRange(0, boundingBoxVertices.Length, boundingBoxVertices);
+            _vaoBoundingBox?.SetData(boundingBoxVertices);
         }
     }
 
@@ -325,7 +322,7 @@ public class RenderingService {
     }
 
     public void Render(TimeSpan timeSpan) {
-        if (_shaderLine == null || _vaoLine == null || _shaderTriangle == null || _vaoTriangle == null || _shaderCircle == null || _vaoCircle == null || _shaderCircumference == null || _vaoCircumference == null || _vaoBackground == null)
+        if (_shaderLine == null || _vaoLine == null || _shaderTriangle == null || _vaoTriangle == null || _shaderCircle == null || _vaoCircle == null || _shaderCircumference == null || _vaoCircumference == null || _vaoBackground == null || _vaoBoundingBox == null)
             return;
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -334,10 +331,8 @@ public class RenderingService {
         _shaderLine.SetUniform("uView", _view);
         GL.BindVertexArray(_vaoLine.Id);
         GL.DrawArrays(PrimitiveType.Lines, 0, _vaoLine.Length / _vaoLine.Stride);
-        if (_vaoBoundingBox != null) {
-            GL.BindVertexArray(_vaoBoundingBox.Id);
-            GL.DrawArrays(PrimitiveType.Lines, 0, _vaoBoundingBox.Length / _vaoBoundingBox.Stride);
-        }
+        GL.BindVertexArray(_vaoBoundingBox.Id);
+        GL.DrawArrays(PrimitiveType.Lines, 0, _vaoBoundingBox.Length / _vaoBoundingBox.Stride);
 
         GL.UseProgram(_shaderTriangle.Id);
         _shaderTriangle.SetUniform("uProjection", _projection);
