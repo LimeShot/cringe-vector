@@ -35,7 +35,7 @@ public class ExportToCRNG : IExporter {
             fstream.Flush();
             fstream.WriteAsync(buffer, 0, buffer.Length);
         }
-        
+
     }
 }
 
@@ -54,12 +54,11 @@ public class ImportFromCRNG : IImporter {
 
         if (jObject["Shapes"] is JArray shapesArray) {
             shapes = shapesArray.ToObject<ObservableCollection<IShape>>(JsonSerializer.Create(settings));
-        }
-        else {
+        } else {
             Console.WriteLine("Ошибка: ключ 'Shapes' не найден или не является массивом");
         }
-        float width = jObject["Width"]?.Value<float>()?? 0.0f;
-        float height = jObject["Height"]?.Value<float>()?? 0.0f;
+        float width = jObject["Width"]?.Value<float>() ?? 0.0f;
+        float height = jObject["Height"]?.Value<float>() ?? 0.0f;
         var data = Tuple.Create(shapes, width, height);
 
         return data;
@@ -128,10 +127,62 @@ public class ExportToSVG : IExporter {
         }
 
     }
+
+    public void ExportStream(Stream outputStream, ICanvas Field) {
+        // Устанавливаем культуру для корректного форматирования чисел
+        System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+
+        // Создаем текстовый писатель для записи в поток
+        using (var writer = new StreamWriter(outputStream, Encoding.UTF8, 1024, leaveOpen: true)) {
+            // Записываем заголовок SVG
+            writer.WriteLine($"<svg width=\"{Field.Width}\" height=\"{Field.Height}\" " +
+                $"xmlns=\"http://www.w3.org/2000/svg\" " +
+                $"viewBox=\"{-Field.Width / 2} {-Field.Height / 2} {Field.Width} {Field.Height}\">");
+
+            // Записываем стили
+            writer.WriteLine("<defs>");
+            writer.WriteLine("<style>");
+
+            var style = new List<ShapeStyle>();
+            foreach (var shape in Field.Shapes) {
+                int styleIndex = style.IndexOf(shape.Style);
+                if (styleIndex == -1) {
+                    styleIndex = style.Count;
+                    style.Add(shape.Style);
+
+                    var outlineColor = shape.Style.ColorOutline;
+                    var fillColor = shape.Style.ColorFill;
+
+                    writer.Write($".st{styleIndex} {{");
+                    writer.Write($"stroke: rgb({outlineColor.X * 255}, {outlineColor.Y * 255}, {outlineColor.Z * 255});");
+
+                    if (shape.Style.Fill)
+                        writer.Write($"fill: rgb({fillColor.X * 255}, {fillColor.Y * 255}, {fillColor.Z * 255});");
+                    else
+                        writer.Write("fill: none;");
+
+                    writer.WriteLine("}");
+                }
+            }
+
+            writer.WriteLine("</style>");
+            writer.WriteLine("</defs>");
+
+            // Записываем фигуры
+            for (int i = 0; i < Field.Shapes.Count; i++) {
+                int styleIndex = style.IndexOf(Field.Shapes[i].Style);
+                writer.WriteLine(shapeToSVG(Field.Shapes[i], Field.Height, styleIndex));
+            }
+
+            // Закрываем SVG
+            writer.WriteLine("</svg>");
+        }
+    }
+
 }
 
 public class ExportToPNG : IExporter {
-    public void Export(string path, ICanvas Field) {
+    public void ExportWithFile(string path, ICanvas Field) {
 
         int lastSlashIndex = path.LastIndexOf('\\');
         string pathWithoutFileName = "";
@@ -176,42 +227,32 @@ public class ExportToPNG : IExporter {
             bitmap.Save(path, ImageFormat.Png);
         }
 
-        /*
-
-        // Загрузка SVG файла
-        //var svg = new SkiaSharp.Extended.Svg.SKSvg();
-        var svg = new SKSvg();
-        svg.Load(svgFilePath);
-
-        // Определение размеров изображения
-        int width = (int)Field.Width; // Ширина PNG
-        int height = (int)Field.Height; // Высота PNG
-
-        // Создание растрового изображения
-        var bitmap = new SKBitmap(width, height);
-        var canvas = new SKCanvas(bitmap);
-
-        // Очистка холста (белый фон)
-        canvas.Clear(SKColors.White);
-
-        // Масштабирование SVG до размеров PNG
-        var matrix = SKMatrix.CreateScale((float)width / svg.Picture.CullRect.Width, (float)height / svg.Picture.CullRect.Height);
-        canvas.SetMatrix(matrix);
-
-        // Отрисовка SVG на холсте
-        canvas.DrawPicture(svg.Picture);
-        canvas.Flush();
-
-        // Сохранение растрового изображения в PNG файл
-        using (var image = SKImage.FromBitmap(bitmap))
-        using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
-        using (var stream = System.IO.File.OpenWrite(path)) {
-            data.SaveTo(stream);
-        }
-        */
-
-        //Console.WriteLine("SVG успешно конвертирован в PNG.");
         File.Delete(tempFilePath);
 
+    }
+
+    public void Export(string path, ICanvas Field) {
+        int lastSlashIndex = path.LastIndexOf('\\');
+        string pathWithoutFileName = lastSlashIndex >= 0 ? path.Substring(0, lastSlashIndex) : "";
+
+        using (var memoryStream = new MemoryStream()) {
+            // Экспортируем SVG в поток памяти
+            var tmpExp = new ExportToSVG();
+            tmpExp.ExportStream(memoryStream, Field);
+
+            // Сбрасываем позицию потока для чтения
+            memoryStream.Position = 0;
+
+            // Загружаем SVG из потока
+            var svgDocument = SvgDocument.Open<SvgDocument>(memoryStream);
+
+            // Создаем Bitmap с белым фоном
+            using (var bitmap = new Bitmap((int)svgDocument.Width.Value, (int)svgDocument.Height.Value))
+            using (var graphics = Graphics.FromImage(bitmap)) {
+                graphics.Clear(Color.White);
+                svgDocument.Draw(graphics);
+                bitmap.Save(path, ImageFormat.Png);
+            }
+        }
     }
 }
