@@ -338,7 +338,7 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <TextBlock Text="Жду проценты зума"/>
+                <TextBlock Text="{Binding Camera.PercentZoom}"/>
             </StatusBarItem>
         </StatusBar>
 
