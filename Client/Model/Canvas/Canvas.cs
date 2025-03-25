@@ -35,7 +35,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
 
     [ObservableProperty]
     public bool _hasFill = false;
-    public readonly List<IShape> SelectedShapes = new(); // Список выделенных фигур
+    public List<IShape> SelectedShapes = new(); // Список выделенных фигур
 
     [ObservableProperty]
     private float _width;
