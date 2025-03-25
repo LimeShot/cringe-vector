@@ -18,9 +18,7 @@ public class RotateCommand : ICommand {
     }
 
     public void Undo() {
-        Debug.WriteLine("Вызов Shape.Rotate...");
         _shape.RotateShape(_endPoint, _startPoint);
-        Debug.WriteLine("Shape.Rotate отработал");
     }
 
     public void Redo() {

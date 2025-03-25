@@ -20,9 +20,7 @@ public class ResizeCommand : ICommand {
     }
 
     public void Undo() {
-        Debug.WriteLine("Вызов Shape.Resize...");
         _shape.Resize(_bbIndex, _startPoint);
-        Debug.WriteLine("Shape.Resize отработал");
     }
 
     public void Redo() {

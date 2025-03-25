@@ -38,7 +38,6 @@ public partial class Camera : ObservableObject {
    }
 
    public void AdjustZoom(float delta, Vector2 zoomCenter) {
-      Console.WriteLine(delta);
       float oldZoom = Zoom;
       float newZoom = Zoom + delta * 0.001f;
       Zoom = Math.Clamp(newZoom, MinZoom, MaxZoom);
