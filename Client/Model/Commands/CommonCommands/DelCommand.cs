@@ -11,7 +11,9 @@ public class DelCommand : ICommandMenu {
     private const float SelectionRadius = 0.5f;   // Радиус для выбора фигуры
     public RelayCommand CommandMenu { get; }
     public Vector2 Point { get; set; }
+    public string Prompt { get; private set; }
     public DelCommand(MyCanvas canvas, MyCommandHistory commandHistory) {
+        Prompt = "Delete";
         _canvas = canvas;
         _commandHistory = commandHistory;
         CommandMenu = new(ExecuteMenu, CanExecuteMenu);

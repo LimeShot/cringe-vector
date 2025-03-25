@@ -43,7 +43,8 @@ public class CommandController {
         foreach (var command in CommandsL) {
             contextMenu.Items.Add(new MenuItem {
                 Header = command.Key,
-                Command = command.Value.CommandMenu
+                Command = command.Value.CommandMenu,
+                InputGestureText = command.Value.Prompt
             });
             command.Value.Point = position;
         }

@@ -13,7 +13,9 @@ public class CopyCommand : ICommandMenu {
     private readonly List<IShape> _shapeBuffer;
     public RelayCommand CommandMenu { get; }
     public Vector2 Point { get; set; }
+    public string Prompt { get; private set; }
     public CopyCommand(MyCanvas canvas, MyCommandHistory commandHistory, List<IShape> shapeBuffer) {
+        Prompt = "Ctrl+C";
         _canvas = canvas;
         _shapeBuffer = shapeBuffer;
         CommandMenu = new(ExecuteMenu, CanExecuteMenu);

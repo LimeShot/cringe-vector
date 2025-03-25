@@ -15,8 +15,9 @@ public class BringToBackCommand : ICommandMenu {
 
     public Vector2 Point { get; set; }
     public RelayCommand CommandMenu { get; }
-
+    public string Prompt { get; private set; }
     public BringToBackCommand(MyCanvas canvas, MyCommandHistory commandHistory) {
+        Prompt = "Ctrl+Shift+↓";
         _canvas = canvas;
         _commandHistory = commandHistory;
         CommandMenu = new(ExecuteMenu, CanExecuteMenu);
@@ -35,8 +36,10 @@ public class BringToBackCommand : ICommandMenu {
 
     private void Execute() {
         var shape = _canvas.SelectedShapes.First();
+        var prevIndex = _canvas.Shapes.IndexOf(shape);
         _canvas.RemoveShape(shape);
         _canvas.Shapes.Add(shape);
         _canvas.RecalculateAllZ();
+        _commandHistory.AddCommand(new ToBackGroundCommand(prevIndex, _canvas));
     }
 }

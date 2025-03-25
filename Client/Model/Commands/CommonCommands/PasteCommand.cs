@@ -14,7 +14,9 @@ public class PasteCommand : ICommandMenu {
     private readonly List<IShape> _shapeBuffer;
     public RelayCommand CommandMenu { get; }
     public Vector2 Point { get; set; }
+    public string Prompt { get; private set; }
     public PasteCommand(MyCanvas canvas, MyCommandHistory commandHistory, List<IShape> shapeBuffer) {
+        Prompt = "Ctrl+V";
         _canvas = canvas;
         _shapeBuffer = shapeBuffer;
         _commandHistory = commandHistory;
