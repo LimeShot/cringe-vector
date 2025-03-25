@@ -18,6 +18,7 @@ public partial class Line : IShape {
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
+        Rotate = (float)Math.Round(Rotate, 1);
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
         for (int i = 0; i < 2; i++) {
             BoundingBox[i] = result * Nodes[i] + Translate;

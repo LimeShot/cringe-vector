@@ -20,6 +20,7 @@ public partial class Polygon : IShape {
     public Vector2[] Nodes { set; get; }
 
     private void CalcBB() {
+        Rotate = (float)Math.Round(Rotate, 1);
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
         Vector2 maxPoint = new(0, 0), minPoint = new(0, 0);
         foreach (var node in Nodes) {
