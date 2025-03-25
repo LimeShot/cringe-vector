@@ -221,7 +221,7 @@
             <TextBlock Text="Цвет контура:"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <xctk:ColorPicker Width="120"
+            <xctk:ColorPicker Width="50"
                               Margin="5"
                               SelectedColor="{Binding SelectedOutlineColor, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
@@ -235,7 +235,7 @@
             <TextBlock Text="Цвет заливки:"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <xctk:ColorPicker Width="120"
+            <xctk:ColorPicker Width="50"
                               Margin="5"
                               SelectedColor="{Binding SelectedFillColor, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
@@ -250,6 +250,85 @@
                       VerticalAlignment="Center"
                       IsChecked="{Binding Canvas.HasFill}"
                       Margin="10,0,0,0"/>
+
+            <!-- Простая советская горизонтальная линия -->
+            <Border Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}"
+                    Width="1"/>
+
+            <StackPanel x:Name="ToolOptionsPanel"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <!-- Поле для угла поворота -->
+                <StackPanel x:Name="RotationPanel"
+                            Orientation="Horizontal">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.ToolController.IsCreateToolActive, RelativeSource={RelativeSource AncestorType=Window}}"
+                                             Value="True">
+                                    <Setter Property="Visibility"
+                                            Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding DataContext.ToolController.IsCreateToolActive, RelativeSource={RelativeSource AncestorType=Window}}"
+                                             Value="False">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock Text="(°):"
+                               VerticalAlignment="Center"
+                               Margin="5,0,5,0"/>
+                    <TextBox Width="50"
+                             Margin="5"
+                             Padding="2"
+                             BorderThickness="1"
+                             BorderBrush="Gray"
+                             Text="{Binding DataContext.ToolController.CurrentCreateTool.DefaultRotationAngle, 
+                                       RelativeSource={RelativeSource AncestorType=Window}, 
+                                       Mode=TwoWay, 
+                                       UpdateSourceTrigger=PropertyChanged, 
+                                       Converter={StaticResource StringToFloatConverter}}"/>
+                </StackPanel>
+                <!-- Поле для количества углов -->
+                <StackPanel x:Name="PolygonSidesPanel"
+                            Orientation="Horizontal">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.ToolController.IsPolygonToolActive, RelativeSource={RelativeSource AncestorType=Window}}"
+                                             Value="True">
+                                    <Setter Property="Visibility"
+                                            Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding DataContext.ToolController.IsPolygonToolActive, RelativeSource={RelativeSource AncestorType=Window}}"
+                                             Value="False">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock Text="Стор:"
+                               VerticalAlignment="Center"
+                               Margin="5,0,5,0"/>
+                    <TextBox Width="50"
+                             Margin="5"
+                             Padding="2"
+                             BorderThickness="1"
+                             BorderBrush="Gray"
+                             Text="{Binding DataContext.ToolController.CurrentCreateTool.PolygonSides, 
+                                       RelativeSource={RelativeSource AncestorType=Window}, 
+                                       Mode=TwoWay, 
+                                       UpdateSourceTrigger=PropertyChanged, 
+                                       Converter={StaticResource StringToIntConverter}}"/>
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
 
         <StackPanel x:Name="DynamicControlsPanel"
@@ -307,79 +386,6 @@
                 <StackPanel>
                     <WrapPanel x:Name="ToolsPanel"
                                HorizontalAlignment="Center"/>
-                    <StackPanel x:Name="ToolOptionsPanel"
-                                HorizontalAlignment="Center">
-                        <!-- Поле для угла поворота -->
-                        <StackPanel x:Name="RotationPanel"
-                                    Orientation="Horizontal">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
-                                    <Setter Property="Visibility"
-                                            Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding DataContext.ToolController.IsCreateToolActive, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                     Value="True">
-                                            <Setter Property="Visibility"
-                                                    Value="Visible"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding DataContext.ToolController.IsCreateToolActive, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                     Value="False">
-                                            <Setter Property="Visibility"
-                                                    Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Style>
-                            <TextBlock Text="(°):"
-                                       VerticalAlignment="Center"
-                                       Margin="5,0,5,0"/>
-                            <TextBox Width="50"
-                                     Margin="5"
-                                     Padding="2"
-                                     BorderThickness="1"
-                                     BorderBrush="Gray"
-                                     Text="{Binding DataContext.ToolController.CurrentCreateTool.DefaultRotationAngle, 
-                                       RelativeSource={RelativeSource AncestorType=Window}, 
-                                       Mode=TwoWay, 
-                                       UpdateSourceTrigger=PropertyChanged, 
-                                       Converter={StaticResource StringToFloatConverter}}"/>
-                        </StackPanel>
-                        <!-- Поле для количества углов -->
-                        <StackPanel x:Name="PolygonSidesPanel"
-                                    Orientation="Horizontal">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
-                                    <Setter Property="Visibility"
-                                            Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding DataContext.ToolController.IsPolygonToolActive, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                     Value="True">
-                                            <Setter Property="Visibility"
-                                                    Value="Visible"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding DataContext.ToolController.IsPolygonToolActive, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                     Value="False">
-                                            <Setter Property="Visibility"
-                                                    Value="Collapsed"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Style>
-                            <TextBlock Text="Стор:"
-                                       VerticalAlignment="Center"
-                                       Margin="5,0,5,0"/>
-                            <TextBox Width="50"
-                                     Margin="5"
-                                     Padding="2"
-                                     BorderThickness="1"
-                                     BorderBrush="Gray"
-                                     Text="{Binding DataContext.ToolController.CurrentCreateTool.PolygonSides, 
-                                       RelativeSource={RelativeSource AncestorType=Window}, 
-                                       Mode=TwoWay, 
-                                       UpdateSourceTrigger=PropertyChanged, 
-                                       Converter={StaticResource StringToIntConverter}}"/>
-                        </StackPanel>
-                    </StackPanel>
                 </StackPanel>
             </Border>
 
