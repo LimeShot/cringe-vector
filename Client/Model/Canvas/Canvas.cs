@@ -55,6 +55,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     [ObservableProperty]
     private Vector2[] _getGeneralBB;
     public Vector2 GetTranslate { get; private set; }
+    public float GetRotate { get; private set; }
 
     private readonly MyCommandHistory _myCommandHistory;
 
@@ -133,22 +134,17 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     }
 
     public bool IsPointInsideSelectedBB(Vector2 point) {
-        foreach (var shape in SelectedShapes) {
-            var min = shape.Nodes.First();
-            var max = shape.Nodes.First();
-            for (int i = 1; i < shape.Nodes.Length; i++) {
-                var node = shape.Nodes[i];
-                min = Vector2.ComponentMin(node, min);
-                max = Vector2.ComponentMax(node, max);
-            }
-            Matrix2.CreateRotation(MathHelper.DegreesToRadians(-shape.Rotate), out Matrix2 result);
-            var localPoint = result * (point - shape.Translate);
-            if (localPoint.X >= min.X && localPoint.X <= max.X &&
-                localPoint.Y >= min.Y && localPoint.Y <= max.Y) {
-                return true;
-            }
+        var min = GetGeneralBB.First();
+        var max = GetGeneralBB.First();
+        for (int i = 1; i < GetGeneralBB.Length; i++) {
+            var node = GetGeneralBB[i];
+            min = Vector2.ComponentMin(node, min);
+            max = Vector2.ComponentMax(node, max);
         }
-        return false;
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-GetRotate), out Matrix2 result);
+        var localPoint = result * (point - GetTranslate);
+        return localPoint.X >= min.X && localPoint.X <= max.X &&
+            localPoint.Y >= min.Y && localPoint.Y <= max.Y;
     }
 
     public void CalcGeneralBoundingBox(List<IShape> shapeBuffer) {
@@ -170,9 +166,11 @@ public partial class MyCanvas : ObservableObject, ICanvas {
             var shape = shapeBuffer.First();
             GetGeneralBB = shape.BoundingBox;
             GetTranslate = shape.Translate;
+            GetRotate = shape.Rotate;
             OnPropertyChanged(nameof(GetGeneralBB));
         } else if (shapeBuffer.Count > 1) {
             CalcGeneralBoundingBox(shapeBuffer);
+            GetRotate = 0.0f;
             float deltaX = GetGeneralBB[1].X - GetGeneralBB[3].X;
             float deltaY = GetGeneralBB[1].Y - GetGeneralBB[3].Y;
             GetTranslate = (GetGeneralBB[0].X + deltaX / 2, GetGeneralBB[0].Y - deltaY / 2);
