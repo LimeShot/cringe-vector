@@ -189,9 +189,14 @@ public partial class Ellipse : IShape {
     }
 
     public void ReflectX() {
-        // TODO: Реализовать метод
+        Rotate = -Rotate;
+        Rotate = (Rotate % 360 + 360) % 360;
+        CalcBB();
     }
+
     public void ReflectY() {
-        // TODO: Реализовать метод
+        Rotate = 180 - Rotate;
+        Rotate = (Rotate % 360 + 360) % 360;
+        CalcBB();
     }
 }
