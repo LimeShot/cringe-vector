@@ -342,9 +342,9 @@ public partial class Polygon : IShape, IChangableShape {
             Nodes[i] = new Vector2(Nodes[i].X, -Nodes[i].Y);
         }
 
-        Rotate = -Rotate;
-        Rotate %= 360;
-        if (Rotate < 0) Rotate += 360;
+        // Rotate = -Rotate;
+        // Rotate %= 360;
+        // if (Rotate < 0) Rotate += 360;
 
         CalcBB();
     }
@@ -354,9 +354,9 @@ public partial class Polygon : IShape, IChangableShape {
             Nodes[i] = new Vector2(-Nodes[i].X, Nodes[i].Y);
         }
 
-        Rotate = 180 - Rotate;
-        Rotate %= 360;
-        if (Rotate < 0) Rotate += 360;
+        // Rotate = 180 - Rotate;
+        // Rotate %= 360;
+        // if (Rotate < 0) Rotate += 360;
 
         CalcBB();
     }
