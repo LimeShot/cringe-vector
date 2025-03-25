@@ -5,17 +5,22 @@ using CringeCraft.Client.Model.Commands.CommandHistory;
 using OpenTK.Mathematics;
 
 
-public class MoveNodeTool(string name, MyCanvas canvas) : ITool {
+public class MoveNodeTool(string name, MyCanvas canvas, MyCommandHistory myCommandHistory) : ITool {
     public string Name => name;
 
     private readonly MyCanvas _canvas = canvas;
+    private readonly MyCommandHistory _myCommandHistory = myCommandHistory;
     private bool _isSelect = false;
     private int _nodeIndex = -1;
-    private const float _eps = 3;
+    private Vector2 _startPoint;
+    private Vector2 _endPoint;
+    private IChangableShape _shape;
+    private const float _eps = 5;
 
 
     public void MouseDownEvent(Vector2 startPoint) {
         _canvas.CalcTranslate(_canvas.SelectedShapes);
+        _startPoint = startPoint;
 
         if (_canvas.SelectedShapes.Count == 0) {
             _canvas.SelectShape(startPoint);
@@ -34,13 +39,16 @@ public class MoveNodeTool(string name, MyCanvas canvas) : ITool {
         _canvas.CalcTranslate(_canvas.SelectedShapes);
 
         if (_canvas.SelectedShapes[0] is IChangableShape) {
-            IChangableShape shape = (IChangableShape)_canvas.SelectedShapes[0];
-            shape.MoveNode(_nodeIndex, currentPoint);
+            _shape = (IChangableShape)_canvas.SelectedShapes[0];
+            _shape.MoveNode(_nodeIndex, currentPoint);
+            _endPoint = currentPoint;
         }
     }
 
     public void MouseUpEvent(Vector2 endPoint) {
         _isSelect = false;
+        if (_nodeIndex != -1)
+            _myCommandHistory.AddCommand(new MoveNodeCommand(_shape, _startPoint, _endPoint, _nodeIndex));
     }
 
     private int GetNodeIndex(Vector2 point, IShape shape) {

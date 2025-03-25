@@ -10,5 +10,6 @@ public enum CommandType {
     None,
     Move,
     Resize,
-    Rotate
+    Rotate,
+    MoveNode
 }
