@@ -11,7 +11,6 @@ using CringeCraft.Client.Render;
 using CringeCraft.Client.Model.Tool;
 using System.Collections.Specialized;
 using CringeCraft.Client.View;
-using System.Diagnostics;
 using OpenTK.Wpf;
 using CringeCraft.Client.Model.Commands;
 using VectorPaint;

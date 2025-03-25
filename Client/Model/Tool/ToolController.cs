@@ -19,7 +19,6 @@ public partial class ToolController : ObservableObject {
     public Dictionary<string, ITool> Tools = new();
     private readonly MainWindow _window;
     private ToggleButton? _selectedButton;
-    // private ToggleButton? _toggleButton;
     private readonly Dictionary<string, ToggleButton> _buttons = new();
     private bool _isCtrlPressed;
     private ITool _currentTool;

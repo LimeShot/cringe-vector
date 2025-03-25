@@ -1,5 +1,6 @@
+namespace CringeCraft.Client.Model.Tool;
+
 using CringeCraft.Client.Model.Canvas;
-using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Model.Commands.CommandHistory;
 using OpenTK.Mathematics;

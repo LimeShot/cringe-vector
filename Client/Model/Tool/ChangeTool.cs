@@ -1,16 +1,10 @@
 namespace CringeCraft.Client.Model.Tool;
 
-using System.Diagnostics;
 using OpenTK.Mathematics;
-
 using CringeCraft.Client.Model.Canvas;
-using System.Windows.Shapes;
 using CringeCraft.Client.Model.Commands.CommandHistory;
 
-//Может стоит сделать отдельный контроллер для определения режима работы этого тула?
-
 public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHistory) : ITool {
-    private const float SelectionRadius = 0.5f;   // Радиус для выбора фигуры
     private const float NodeSelectionRadius = 4.0f;   // Радиус для активации изменения размера
     private const float RotateActivationRadius = 10.0f; // Радиус для активации поворота
 

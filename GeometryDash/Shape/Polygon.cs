@@ -1,13 +1,10 @@
 namespace CringeCraft.GeometryDash.Shape;
 
-using OpenTK.Mathematics;
-
-using System.Composition;
-using System.Diagnostics;
-
 using TriangleNet;
 using TriangleNet.Geometry;
 using TriangleNet.Meshing;
+using OpenTK.Mathematics;
+using System.Composition;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Polygon")]

@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 using CommunityToolkit.Mvvm.Input;
 using OpenTK.Mathematics;
 using CringeCraft.Client.Model.Canvas;

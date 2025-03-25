@@ -1,13 +1,8 @@
 namespace CringeCraft.Client.Model;
 
-using System.Windows.Documents;
-
 using CommunityToolkit.Mvvm.ComponentModel;
-
-using CringeCraft.Client.Render;
-
 using OpenTK.Mathematics;
-
+using CringeCraft.Client.Render;
 
 public partial class Camera : ObservableObject {
 
