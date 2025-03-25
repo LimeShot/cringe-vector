@@ -102,9 +102,6 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         recalculateZFromRemove(index);
     }
 
-    public void SaveCanvas() {
-        //
-    }
 
     public void SelectShape(Vector2 point) {
         if (Shapes.Count == 0) return;
@@ -139,8 +136,8 @@ public partial class MyCanvas : ObservableObject, ICanvas {
             min = Vector2.ComponentMin(node, min);
             max = Vector2.ComponentMax(node, max);
         }
-        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-GetRotate), out Matrix2 result);
-        var localPoint = result * (point - GetTranslate);
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(GetRotate), out Matrix2 result);
+        var localPoint = result * point;
         return localPoint.X >= min.X && localPoint.X <= max.X &&
             localPoint.Y >= min.Y && localPoint.Y <= max.Y;
     }
@@ -256,6 +253,8 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         _myCommandHistory.AddCommand(new DeleteAllCommand(Shapes));
         Shapes.Clear();
     }
+
+    public void OnCringeBoundingBoxChanged() => CalcTranslate(SelectedShapes);
 
     public void CringeEvent() => OnShapeChanged?.Invoke(this, SelectedShapes);
 }

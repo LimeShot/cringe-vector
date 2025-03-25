@@ -3,21 +3,30 @@ namespace CringeCraft.Client.Model.Tool;
 using OpenTK.Mathematics;
 using CringeCraft.Client.Model.Canvas;
 using CringeCraft.Client.Model.Commands.CommandHistory;
+using System.Dynamic;
 
-public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHistory) : ITool {
+public class ChangeTool : ITool {
     private const float NodeSelectionRadius = 4.0f;   // Радиус для активации изменения размера
     private const float RotateActivationRadius = 10.0f; // Радиус для активации поворота
 
-    private readonly MyCanvas _canvas = canvas;
-    private readonly MyCommandHistory _commandHistory = commandHistory;
+    private readonly MyCanvas _canvas;
+    private readonly MyCommandHistory _commandHistory;
     private Vector2 _startPoint;
     private Vector2 _firstPoint;
     private bool _isSeveralShapes = false;
     public int bbIndex { get; private set; } = -1;
     public ChangeToolMode Mode { get; private set; } = ChangeToolMode.None;
     private bool _isResized = false;
+    public string Name { get; }
 
-    public string Name { get; } = name;
+    public event Action? OnBoundingBoxChanged;
+
+    public ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHistory) {
+        Name = name;
+        _canvas = canvas;
+        _commandHistory = commandHistory;
+        OnBoundingBoxChanged += canvas.OnCringeBoundingBoxChanged;
+    }
 
     public void MouseDownEvent(Vector2 startPoint, bool isCtrlPressed) {
         _startPoint = startPoint;
@@ -25,7 +34,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
 
         if (_canvas.SelectedShapes.Count == 0) {
             _canvas.SelectShape(startPoint);
-            _canvas.CalcTranslate(_canvas.SelectedShapes);
+            OnBoundingBoxChanged?.Invoke();
 
             if (_canvas.SelectedShapes.Count > 0)
                 Mode = ChangeToolMode.Move;
@@ -38,7 +47,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
                     _canvas.SelectedShapes.Clear();
 
                 _canvas.SelectShape(startPoint);
-                _canvas.CalcTranslate(_canvas.SelectedShapes);
+                OnBoundingBoxChanged?.Invoke();
 
                 if (_canvas.SelectedShapes.Count > 0)
                     Mode = ChangeToolMode.Move;
@@ -55,7 +64,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
         else _isSeveralShapes = false;
 
         if (isMousePressed) {
-            _canvas.CalcTranslate(_canvas.SelectedShapes);
+            OnBoundingBoxChanged?.Invoke();
             switch (Mode) {
                 case ChangeToolMode.Move:
                     var delta = currentPoint - _startPoint;
@@ -101,7 +110,8 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
     }
 
     private int TryGetBBNode(Vector2 point) {
-        bool isInside = _canvas.IsPointInsideSelectedBB(point); // Точная проверка внутри коробки
+        _canvas.CalcTranslate(_canvas.SelectedShapes);
+        bool isInside = _canvas.IsPointInsideSelectedBB(point);
 
         int bbNode = -1;
 

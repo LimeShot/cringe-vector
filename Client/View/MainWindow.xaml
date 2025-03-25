@@ -203,13 +203,6 @@
                         <i:InvokeCommandAction Command="{Binding TopMenuClosedCommand}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-                <MenuItem Header="_Создать">
-                    <MenuItem.Icon>
-                        <Image Source="pack://siteoforigin:,,,/assets/icons/new.png"
-                               Width="16"
-                               Height="16"/>
-                    </MenuItem.Icon>
-                </MenuItem>
                 <MenuItem Header="_Сохранить"
                           Command="{Binding SaveFileCommand}"
                           InputGestureText="Ctrl+S">
