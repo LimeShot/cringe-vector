@@ -70,7 +70,7 @@ public class ImportFromCRNG : IImporter {
 public class ExportToSVG : IExporter {
 
 
-    private string shapeToSVG(IShape shape,  int styleNumber) {
+    private string shapeToSVG(IShape shape, int styleNumber) {
         string line;
         switch (shape.ShapeType) {
             case "Line":
@@ -85,7 +85,7 @@ public class ExportToSVG : IExporter {
             case "Polygon":
                 line = $"<polygon class=\"st{styleNumber}\"  points=\"";
                 for (int i = 0; i < shape.Nodes.Length; i++) {
-                    line += $"{shape.Nodes[i].X},{shape.Nodes[i].Y*(-1)} ";
+                    line += $"{shape.Nodes[i].X},{shape.Nodes[i].Y * (-1)} ";
                 }
                 line += $"\" transform=\"translate({shape.Translate.X}, {shape.Translate.Y * (-1)}) rotate({shape.Rotate})\"/>";
                 break;
@@ -104,7 +104,7 @@ public class ExportToSVG : IExporter {
             string textShape = "";
             List<ShapeStyle> style = new List<ShapeStyle>();
             textStyle += "<defs>\n<style>\n";
-            for (int i = Field.Shapes.Count-1; i >=0; i--) {
+            for (int i = Field.Shapes.Count - 1; i >= 0; i--) {
                 int j = 0;
                 for (; j < style.Count; j++)
                     if (style[j] == Field.Shapes[i].Style)
