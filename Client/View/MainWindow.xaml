@@ -305,11 +305,11 @@
 
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Text="Холст: 500x500"/>
+                <TextBlock Text="{Binding Canvas.CanvasSize}"/>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <TextBlock Text="Нет выделения"/>
+                <TextBlock Text="Жду проценты зума"/>
             </StatusBarItem>
         </StatusBar>
 

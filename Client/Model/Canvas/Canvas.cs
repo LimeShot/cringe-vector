@@ -37,8 +37,13 @@ public partial class MyCanvas : ObservableObject, ICanvas {
 
     [ObservableProperty]
     private float _width;
+
     [ObservableProperty]
     private float _height;
+
+    [ObservableProperty]
+    private string _canvasSize;
+
     public float ScreenPerWorld = 1.0f;
     public event EventHandler<List<IShape>>? OnShapeChanged;
     public Vector2[] GetGeneralBB { get; private set; }
@@ -50,6 +55,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         Shapes = new();
         Width = 2000;
         Height = 1000;
+        CanvasSize = $"Холст: {Width}x{Height}";
         GetGeneralBB = new Vector2[4];
         _myCommandHistory = myCommandHistory;
 
