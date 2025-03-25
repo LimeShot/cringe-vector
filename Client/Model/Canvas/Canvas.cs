@@ -58,6 +58,14 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         return Shapes.Count * _stepZ;
     }
 
+    public void RecalculateAllZ() {
+        float z = 0;
+        foreach (IShape shape in Shapes.Reverse()) {
+            shape.Z = z;
+            z += _stepZ;
+        }
+    }
+
     public void AddShape(IShape shape) {
         Shapes.Insert(0, shape);
     }
