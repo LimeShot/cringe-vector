@@ -150,10 +150,6 @@ public partial class Line : IShape {
         CalcBB();
     }
 
-    public void MoveNode(int index, Vector2 newNode) {
-
-    }
-
     public void Resize(int index, Vector2 newNode) {
         double sideToRotate = 1;
         if (index == 0)

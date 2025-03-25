@@ -131,10 +131,6 @@ public partial class Ellipse : IShape {
         CalcBB();
     }
 
-    public void MoveNode(int index, Vector2 newNode) {
-
-    }
-
     public void Resize(int index, Vector2 newNode) {
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 result);
         Vector2 deltaDev2 = (newNode - BoundingBox[index]) / 2;

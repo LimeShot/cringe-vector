@@ -31,8 +31,10 @@ public class MoveNodeTool(string name, MyCanvas canvas) : ITool {
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
         if (!_isSelect || _nodeIndex == -1) return;
 
-        IShape shape = _canvas.SelectedShapes[0];
-        shape.MoveNode(_nodeIndex, currentPoint);
+        if (_canvas.SelectedShapes[0] is IChangableShape) {
+            IChangableShape shape = (IChangableShape)_canvas.SelectedShapes[0];
+            shape.MoveNode(_nodeIndex, currentPoint);
+        }
     }
 
     public void MouseUpEvent(Vector2 endPoint) {
