@@ -58,7 +58,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
         if (_canvas.SelectedShapes.Count == 0) return;
 
         if (_canvas.SelectedShapes.Count > 1) _isSeveralShapes = true;
-        if (_canvas.SelectedShapes.Count < 2) _isSeveralShapes = false;
+        else _isSeveralShapes = false;
 
         if (isMousePressed) {
             _canvas.CalcTranslate(_canvas.SelectedShapes);
@@ -137,6 +137,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
     public void OnChanged() {
         _startPoint = Vector2.Zero;
         _canvas.SelectedShapes.Clear();
+        _canvas.CalcTranslate(_canvas.SelectedShapes);
         Mode = ChangeToolMode.None;
     }
 
