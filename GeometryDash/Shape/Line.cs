@@ -210,4 +210,33 @@ public partial class Line : IShape {
         Rotate = (Rotate % 360 + 360) % 360;
         CalcBB();
     }
+    public override bool Equals(object? obj) {
+        if (obj is not Line other)
+            return false;
+
+        return Translate == other.Translate
+            && Z == other.Z
+            && DeltaZ == other.DeltaZ
+            && Rotate == other.Rotate
+            && (Style?.Equals(other.Style) ?? other.Style is null)
+            && BoundingBox.SequenceEqual(other.BoundingBox)
+            && Nodes.SequenceEqual(other.Nodes);
+    }
+
+    public override int GetHashCode() {
+        var hash = new HashCode();
+        hash.Add(Translate);
+        hash.Add(Z);
+        hash.Add(DeltaZ);
+        hash.Add(Rotate);
+        hash.Add(Style);
+        foreach (var point in BoundingBox) hash.Add(point);
+        foreach (var node in Nodes) hash.Add(node);
+        return hash.ToHashCode();
+    }
+
+    public static bool operator ==(Line? a, Line? b)
+        => ReferenceEquals(a, b) || (a is not null && b is not null && a.Equals(b));
+
+    public static bool operator !=(Line? a, Line? b) => !(a == b);
 }

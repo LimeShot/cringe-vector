@@ -50,4 +50,18 @@ public class ShapeStyle {
         this.Fill = other.Fill;
         this.Visible = other.Visible;
     }
+    public override bool Equals(object? obj) {
+        if (obj is not ShapeStyle other)
+            return false;
+
+        return ColorOutline.Equals(other.ColorOutline)
+            && ColorFill.Equals(other.ColorFill)
+            && Fill == other.Fill
+            && Visible == other.Visible;
+    }
+
+    public override int GetHashCode() {
+        return HashCode.Combine(ColorOutline, ColorFill, Fill, Visible);
+    }
+
 }
