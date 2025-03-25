@@ -20,7 +20,10 @@ public static class FileService {
                     : new ImportFromCRNG();//Если здесь когда-нибудь будет svg...
 
                 var (shapes, width, height) = importer.Import(filePath);
-                canvas.Shapes = shapes;
+                if (shapes != null)
+                    canvas.Shapes = shapes;
+                else
+                    throw new Exception();
                 canvas.Width = width;
                 canvas.Height = height;
 

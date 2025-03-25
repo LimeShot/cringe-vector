@@ -36,7 +36,6 @@ public partial class MainViewModel : ObservableObject {
 
     [ObservableProperty]
     private Camera _camera;
-    private bool _isMouseDownProcessing = false;
 
     public Vector2 StartPoint { get; private set; }
     public Vector2 CurrentPoint { get; set; }
@@ -49,9 +48,9 @@ public partial class MainViewModel : ObservableObject {
         _commandHistory = new MyCommandHistory();
         _canvas = new(_commandHistory);
         _renderingService = new(_canvas);
-        _camera = new(_renderingService);
-        _commandController = new(_canvas, _camera, _commandHistory);
-        _toolController = new(_camera, window, _canvas, _commandHistory);
+        Camera = new(_renderingService);
+        _commandController = new(_canvas, Camera, _commandHistory);
+        _toolController = new(Camera, window, _canvas, _commandHistory);
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
         _canvas.PropertyChanged += Canvas_SizeChanged;
@@ -104,7 +103,7 @@ public partial class MainViewModel : ObservableObject {
     }
 
     public void Resize(object sender, SizeChangedEventArgs args) {
-        _camera.UpdateViewport((float)args.NewSize.Width, (float)args.NewSize.Height);
+        Camera.UpdateViewport((float)args.NewSize.Width, (float)args.NewSize.Height);
     }
 
     public void Closing(object? sender, CancelEventArgs e) {
@@ -115,20 +114,20 @@ public partial class MainViewModel : ObservableObject {
     private void OnMouseDown(MouseEventArgs e) {
         if (e != null && !_isPopupOpen && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
-            StartPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
+            StartPoint = Camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseDown(StartPoint);
         } else if (e != null && e.RightButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
-            CMPosition = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
+            CMPosition = Camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             _commandController.CreateMenu(CMPosition);
         }
     }
 
     [RelayCommand]
     private void OnMouseMove(MouseEventArgs e) {
-        if (e != null && !_isPopupOpen && e.Source is GLWpfControl && !_isMouseDownProcessing) {
+        if (e != null && !_isPopupOpen && e.Source is GLWpfControl) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
-            CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
+            CurrentPoint = Camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseMove(CurrentPoint, e.LeftButton == MouseButtonState.Pressed);
         }
     }
@@ -137,7 +136,7 @@ public partial class MainViewModel : ObservableObject {
     private void OnMouseUp(MouseEventArgs e) {
         if (e != null) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
-            CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
+            CurrentPoint = Camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseUp(CurrentPoint);
         }
     }
@@ -146,7 +145,7 @@ public partial class MainViewModel : ObservableObject {
     private void MouseWheel(MouseWheelEventArgs e) {
         if (e != null) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
-            CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
+            CurrentPoint = Camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseWheel(e.Delta, CurrentPoint);
         }
     }

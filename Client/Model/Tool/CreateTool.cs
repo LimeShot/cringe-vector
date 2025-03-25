@@ -7,6 +7,7 @@ using CringeCraft.Client.Model.Canvas;
 using CringeCraft.GeometryDash;
 using CringeCraft.GeometryDash.Shape;
 using CringeCraft.Client.Model.Commands.CommandHistory;
+using System.Windows.Shapes;
 
 public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>? e, MyCommandHistory commandHistory) : ITool {
     private readonly MyCanvas _canvas = canvas;
@@ -42,7 +43,8 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
             _isResized = false;
         }
         createdOnLastClick = false;
-        _commandHistory.AddCommand(new CreateCommand(_shape, _canvas));
+        if (_shape != null)
+            _commandHistory.AddCommand(new CreateCommand(_shape, _canvas));
     }
 
     private IShape? AddShape(params object[] parameters) {

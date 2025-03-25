@@ -34,7 +34,6 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
             if (_canvas.SelectedShapes.Count > 0)
                 Mode = ChangeToolMode.Move;
         } else {
-            _canvas.CalcTranslate(_canvas.SelectedShapes);
             SelectMode(startPoint);
             if (Mode == ChangeToolMode.None) {
                 _canvas.SelectedShapes.Clear();
