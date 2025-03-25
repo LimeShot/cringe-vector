@@ -15,13 +15,15 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     private IShape? _shape;
     private Vector2 _startPoint;
     private bool _isResized = false;
+    private bool _isCtrlPressed;
     private readonly float _delta = 5;
     private bool createdOnLastClick = false;
 
     public event EventHandler<List<IShape>>? OnShapeChanged = e;
     public string Name { get; set; } = name;
 
-    public void MouseDownEvent(Vector2 startPoint) {
+    public void MouseDownEvent(Vector2 startPoint, bool isCtrlPressed) {
+        _isCtrlPressed = isCtrlPressed;
         _startPoint = startPoint;
         Console.WriteLine(startPoint);
         _shape = AddShape(startPoint);

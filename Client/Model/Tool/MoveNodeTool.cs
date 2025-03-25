@@ -9,6 +9,7 @@ public class MoveNodeTool(string name, MyCanvas canvas, MyCommandHistory myComma
     public string Name => name;
 
     private readonly MyCanvas _canvas = canvas;
+    private bool _isCtrlPressed;
     private readonly MyCommandHistory _myCommandHistory = myCommandHistory;
     private bool _isSelect = false;
     private int _nodeIndex = -1;
@@ -18,10 +19,10 @@ public class MoveNodeTool(string name, MyCanvas canvas, MyCommandHistory myComma
     private const float _eps = 5;
 
 
-    public void MouseDownEvent(Vector2 startPoint) {
+    public void MouseDownEvent(Vector2 startPoint, bool isCtrlPressed) {
         _canvas.CalcTranslate(_canvas.SelectedShapes);
         _startPoint = startPoint;
-
+        _isCtrlPressed = isCtrlPressed;
         if (_canvas.SelectedShapes.Count == 0) {
             _canvas.SelectShape(startPoint);
             if (_canvas.SelectedShapes.Count == 1) {

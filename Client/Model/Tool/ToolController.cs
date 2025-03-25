@@ -21,7 +21,7 @@ public partial class ToolController : ObservableObject {
     private ToggleButton? _selectedButton;
     // private ToggleButton? _toggleButton;
     private Dictionary<string, ToggleButton> _buttons = new();
-
+    private bool _isCtrlPressed;
     private ITool _currentTool;
     private readonly MyCanvas _canvas;
     private readonly Camera _camera;
@@ -51,7 +51,8 @@ public partial class ToolController : ObservableObject {
     }
 
     public void OnMouseDown(Vector2 startPoint) {
-        _currentTool.MouseDownEvent(startPoint);
+        _isCtrlPressed = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+        _currentTool.MouseDownEvent(startPoint, _isCtrlPressed);
     }
 
     public void OnMouseMove(Vector2 currentPoint, bool IsMousePressed) {

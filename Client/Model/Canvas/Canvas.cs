@@ -109,7 +109,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     public void SelectShape(Vector2 point) {
         if (Shapes.Count == 0) return;
         foreach (var shape in Shapes) {
-            if (shape.Style.Visible && shape.IsBelongsShape(point, SelectionRadius)) {
+            if (!SelectedShapes.Contains(shape) && shape.Style.Visible && shape.IsBelongsShape(point, SelectionRadius)) {
                 SelectedShapes.Add(shape);
 
                 StartOutLineColor = shape.Style.ColorOutline;
@@ -168,9 +168,8 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         } else if (shapeBuffer.Count > 1) {
             CalcGeneralBoundingBox(shapeBuffer);
             GetRotate = 0.0f;
-            float deltaX = GetGeneralBB[1].X - GetGeneralBB[3].X;
-            float deltaY = GetGeneralBB[1].Y - GetGeneralBB[3].Y;
-            GetTranslate = (GetGeneralBB[0].X + deltaX / 2, GetGeneralBB[0].Y - deltaY / 2);
+            GetTranslate = (GetGeneralBB[0] + GetGeneralBB[2]) / 2f;
+            OnPropertyChanged(nameof(GetGeneralBB));
         }
     }
 

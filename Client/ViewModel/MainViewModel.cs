@@ -111,6 +111,16 @@ public partial class MainViewModel : ObservableObject {
     }
 
     [RelayCommand]
+    private void OnCtrlPressed() {
+
+    }
+
+    [RelayCommand]
+    private void OnCtrlReleased() {
+
+    }
+
+    [RelayCommand]
     private void OnMouseDown(MouseEventArgs e) {
         if (e != null && !_isPopupOpen && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);

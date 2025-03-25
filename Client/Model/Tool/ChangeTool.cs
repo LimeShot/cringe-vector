@@ -18,40 +18,48 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
     private readonly MyCommandHistory _commandHistory = commandHistory;
     private Vector2 _startPoint;
     private Vector2 _firstPoint;
+    private bool _isSeveralShapes;
     public int bbIndex { get; private set; } = -1;
     public ChangeToolMode Mode { get; private set; } = ChangeToolMode.None;
     private bool _isResized = false;
 
     public string Name { get; } = name;
 
-    public void MouseDownEvent(Vector2 startPoint) {
+    public void MouseDownEvent(Vector2 startPoint, bool isCtrlPressed) {
         _startPoint = startPoint;
         _firstPoint = startPoint;
+        _isSeveralShapes = isCtrlPressed;
 
         if (_canvas.SelectedShapes.Count == 0) {
             _canvas.SelectShape(startPoint);
             _canvas.CalcTranslate(_canvas.SelectedShapes);
+
             if (_canvas.SelectedShapes.Count > 0)
                 Mode = ChangeToolMode.Move;
+
         } else {
             SelectMode(startPoint);
+
             if (Mode == ChangeToolMode.None) {
-                _canvas.SelectedShapes.Clear();
+                if (!isCtrlPressed)
+                    _canvas.SelectedShapes.Clear();
+
                 _canvas.SelectShape(startPoint);
                 _canvas.CalcTranslate(_canvas.SelectedShapes);
+
                 if (_canvas.SelectedShapes.Count > 0)
                     Mode = ChangeToolMode.Move;
+                else
+                    _canvas.GetGeneralBB = null;
             }
         }
-
-        Debug.WriteLine($"Mode: {Mode}, BB Index: {bbIndex}, Selected Shapes: {_canvas.SelectedShapes.Count}");
     }
 
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
         if (_canvas.SelectedShapes.Count == 0) return;
-        _canvas.CalcTranslate(_canvas.SelectedShapes);
 
         if (isMousePressed) {
+            _canvas.CalcTranslate(_canvas.SelectedShapes);
             switch (Mode) {
                 case ChangeToolMode.Move:
                     var delta = currentPoint - _startPoint;
@@ -96,10 +104,6 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
         }
     }
 
-
-
-
-
     private int TryGetBBNode(Vector2 point) {
         bool isInside = _canvas.IsPointInsideSelectedBB(point); // Точная проверка внутри коробки
 
@@ -118,9 +122,9 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
 
     private void SelectMode(Vector2 point) {
         bbIndex = TryGetBBNode(point);
-        if (bbIndex >= 0 && bbIndex < 4)
+        if (bbIndex >= 0 && bbIndex < 4 && !_isSeveralShapes)
             Mode = ChangeToolMode.Resize; // Изменение размера для узлов 0-3
-        else if (bbIndex == 4)
+        else if (bbIndex == 4 && !_isSeveralShapes)
             Mode = ChangeToolMode.Rotate; // Поворот для клика снаружи рядом с углом
         else if (_canvas.IsPointInsideSelectedBB(point))
             Mode = ChangeToolMode.Move;

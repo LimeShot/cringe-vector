@@ -10,9 +10,11 @@ using CringeCraft.GeometryDash.Shape;
 public class CameraTool(string name, Camera camera) : ITool {
     private readonly Camera _camera = camera;
     private Vector2 _startPoint;
+    private bool _isCtrlPressed;
     public string Name { get; set; } = name;
 
-    public void MouseDownEvent(Vector2 startPoint) {
+    public void MouseDownEvent(Vector2 startPoint, bool isCtrlPressed) {
+        _isCtrlPressed = isCtrlPressed;
         _startPoint = _camera.WorldToScreen(startPoint);
     }
 
