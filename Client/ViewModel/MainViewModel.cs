@@ -55,6 +55,7 @@ public partial class MainViewModel : ObservableObject {
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
         _canvas.PropertyChanged += Canvas_SizeChanged;
+        _canvas.PropertyChanged += BoundingBoxChanged;
         _canvas.OnShapeChanged += Shapes_PropertyChanged;
         _toolController.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
         OnShapeChanged += Shapes_PropertyChanged;
@@ -85,6 +86,12 @@ public partial class MainViewModel : ObservableObject {
     private void Canvas_SizeChanged(object? sender, PropertyChangedEventArgs e) {
         if (e.PropertyName == nameof(Canvas.Width) || e.PropertyName == nameof(Canvas.Height)) {
             _renderingService.OnCanvasResize(Canvas.Width, Canvas.Height);
+        }
+    }
+
+    private void BoundingBoxChanged(object? sender, PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(Canvas.GetGeneralBB)) {
+            _renderingService.OnBoundingBoxChanged(Canvas.GetGeneralBB);
         }
     }
 

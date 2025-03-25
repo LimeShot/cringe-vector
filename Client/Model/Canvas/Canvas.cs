@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Windows.Media;
 using CringeCraft.Client.Model.Commands.CommandHistory;
 using System.Windows;
+using System.Diagnostics;
 
 /// <summary>
 /// Представляет холст для хранения фигур
@@ -50,7 +51,9 @@ public partial class MyCanvas : ObservableObject, ICanvas {
 
     public float ScreenPerWorld = 1.0f;
     public event EventHandler<List<IShape>>? OnShapeChanged;
-    public Vector2[] GetGeneralBB { get; private set; }
+
+    [ObservableProperty]
+    private Vector2[] _getGeneralBB;
     public Vector2 GetTranslate { get; private set; }
 
     private readonly MyCommandHistory _myCommandHistory;
@@ -167,6 +170,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
             var shape = shapeBuffer.First();
             GetGeneralBB = shape.BoundingBox;
             GetTranslate = shape.Translate;
+            OnPropertyChanged(nameof(GetGeneralBB));
         } else if (shapeBuffer.Count > 1) {
             CalcGeneralBoundingBox(shapeBuffer);
             float deltaX = GetGeneralBB[1].X - GetGeneralBB[3].X;
