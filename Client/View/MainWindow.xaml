@@ -172,6 +172,12 @@
         <KeyBinding Key="O"
                     Modifiers="Control"
                     Command="{Binding OpenFileCommand}"/>
+        <KeyBinding Key="Down"
+                    Modifiers="Control+Shift"
+                    Command="{Binding BringToBackCommand}"/>
+        <KeyBinding Key="Up"
+                    Modifiers="Control+Shift"
+                    Command="{Binding BringToFrontCommand}"/>
     </Window.InputBindings>
 
     <DockPanel>
@@ -204,35 +210,54 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Холст">
-            <MenuItem Header="_Изменить размер" Command="{Binding ChangeCanvasSizeCommand}">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/canvas_size.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
+                <MenuItem Header="_Изменить размер"
+                          Command="{Binding ChangeCanvasSizeCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/canvas_size.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Очистить холст"
+                          Command="{Binding DeleteAllShapesCommand}"
+                          CommandParameter="{Binding}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/clear_canvas.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Выделить все"
+                          Command="{Binding SelectAllCommand}"
+                          InputGestureText="Ctrl+A">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/sellect_all.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
-            <MenuItem Header="Очистить холст" Command="{Binding DeleteAllShapesCommand}" CommandParameter="{Binding}">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/clear_canvas.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
+
+            <MenuItem Header="_Действия">
+                <MenuItem Header="Отменить"
+                          Command="{Binding UndoCommand}"
+                          InputGestureText="Ctrl+Z">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/undo.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Повторить"
+                          Command="{Binding RedoCommand}"
+                          InputGestureText="Ctrl+Y">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/redo.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
-            <MenuItem Header="Выделить все" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/sellect_all.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
-            </MenuItem>
-        </MenuItem>
-        
-        <MenuItem Header="_Действия">
-            <MenuItem Header="Отменить" Command="{Binding UndoCommand}" InputGestureText="Ctrl+Z">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/undo.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Повторить" Command="{Binding RedoCommand}" InputGestureText="Ctrl+Y">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/redo.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
-            </MenuItem>
-        </MenuItem>
         </Menu>
 
         <!-- Простая советская горизонтальная линия -->

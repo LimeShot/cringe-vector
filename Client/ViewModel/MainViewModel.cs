@@ -259,4 +259,14 @@ public partial class MainViewModel : ObservableObject {
         Canvas.DeleteAllShapes();
         OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
     }
+
+    [RelayCommand]
+    private void BringToBack() {
+        _commandController.CommandsL["На задний план"].ExecuteButton();
+    }
+
+    [RelayCommand]
+    private void BringToFront() {
+        _commandController.CommandsL["На передний план"].ExecuteButton();
+    }
 }
