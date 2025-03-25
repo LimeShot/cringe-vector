@@ -37,20 +37,15 @@ public class PasteCommand : ICommandMenu {
     private void Execute() {
         Vector2 delta;
         _canvas.SelectedShapes.Clear();
-        if (_shapeBuffer.Count == 1) {
-            delta = Point - _shapeBuffer[0].Translate;
-        } else {
-            Vector2 center = _canvas.CalcTranslate(_shapeBuffer);
-            delta = new(Point.X - center.X, Point.Y - center.Y);
-        }
+        _canvas.CalcTranslate(_shapeBuffer);
+        delta = (Point.X - _canvas.GetTranslate.X, Point.Y - _canvas.GetTranslate.Y);
         List<IShape> localShapes = new();
         foreach (var shape in _shapeBuffer) {
             var localShape = shape.Clone();
             localShape.Move(delta);
             localShape.Z = _canvas.GetNewZ();
-            var ll = localShape.Clone();
-            localShapes.Add(ll);
-            _canvas.Shapes.Add(ll);
+            localShapes.Add(localShape);
+            _canvas.Shapes.Add(localShape);
         }
         _canvas.SelectedShapes.Add(localShapes.Last());
         _commandHistory.AddCommand(new PasteHCommand(localShapes.ToList(), _canvas));
