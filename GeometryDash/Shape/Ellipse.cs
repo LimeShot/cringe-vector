@@ -8,10 +8,9 @@ using System.Composition;
 [ExportMetadata("Name", "Ellipse")]
 [ExportMetadata("Icon", "ellipse.png")]
 public partial class Ellipse : IShape {
-    // TODO: Добавить event OnChange в методы set
     public Vector2 Translate { private set; get; }
     public float Z { set; get; }
-    public float DeltaZ { set; get; } // Для отрисовки контура на слой выше, чем заливки
+    public float DeltaZ { set; get; }
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
@@ -120,12 +119,6 @@ public partial class Ellipse : IShape {
         return (xRot * xRot) / (a * a) + (yRot * yRot) / (b * b) <= 1;
     }
 
-
-    public int IsBBNode(Vector2 point) {
-        // TODO: Реализовать метод
-        return 0;
-    }
-
     public void Move(Vector2 delta) {
         Translate += delta;
         CalcBB();
@@ -149,7 +142,6 @@ public partial class Ellipse : IShape {
         CalcBB();
     }
     public string ShapeType => GetType().Name;
-    public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
 
     public void RotateShape(Vector2 p1, Vector2 p2) {
         p1 -= Translate;

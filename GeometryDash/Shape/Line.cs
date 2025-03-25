@@ -8,10 +8,9 @@ using System.Composition;
 [ExportMetadata("Name", "Line")]
 [ExportMetadata("Icon", "line.png")]
 public partial class Line : IShape {
-    // TODO: Добавить event OnChange в методы set
     public Vector2 Translate { private set; get; }
     public float Z { set; get; }
-    public float DeltaZ { set; get; } // Для отрисовки контура на слой выше, чем заливки
+    public float DeltaZ { set; get; }
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
@@ -79,21 +78,6 @@ public partial class Line : IShape {
         float[] args = [Z + DeltaZ, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
         return [Nodes[0].X, Nodes[0].Y, ..args,
                 Nodes[1].X, Nodes[1].Y, ..args];
-
-
-
-        //
-        // Пока нету шейдера на отрисовку поворота, можно юзать, но надо закоментить то, что сверху 
-
-        // Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
-        // Vector2[] rotateNode = new Vector2[Nodes.Length];
-        // for (int i = 0; i < Nodes.Length; i++) {
-        //     rotateNode[i] = result * Nodes[i];
-        // }
-
-        // float[] args = [Z, Translate.X, Translate.Y, Rotate, Style.ColorOutline.X, Style.ColorOutline.Y, Style.ColorOutline.Z];
-        // return [rotateNode[0].X , rotateNode[0].Y , ..args,
-        //         rotateNode[1].X , rotateNode[1].Y , ..args,];
     }
 
     public float[] GetTriangleVertices() {
@@ -139,13 +123,7 @@ public partial class Line : IShape {
         return withinLength && withinWidth;
     }
 
-    public int IsBBNode(Vector2 point) {
-        // TODO: Реализовать метод
-        return 0;
-    }
-
     public void Move(Vector2 delta) {
-        // TODO: Переделать под новый интерфейс
         Translate += delta;
         CalcBB();
     }
@@ -173,7 +151,6 @@ public partial class Line : IShape {
     }
 
     public string ShapeType => GetType().Name;
-    public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
 
     public void RotateShape(Vector2 p1, Vector2 p2) {
         p1 -= Translate;

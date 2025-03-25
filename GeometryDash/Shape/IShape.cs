@@ -26,9 +26,6 @@ public interface IShape {
     //Метод для проверки принадлежности точки фигуре 
     public bool IsBelongsShape(Vector2 point, float radiusPoint);
 
-    //Метод для проверки принадлежности точки BoundingBox, возвращает индекс вершины
-    public int IsBBNode(Vector2 point);
-
     // Метод для перемещения фигуры на основе разницы между двумя точками
     public void Move(Vector2 delta);
 
@@ -44,7 +41,7 @@ public interface IShape {
     // Метод возвращает нормальную нумерацию точек в фигуре(проблема возникает после использования метода Resize)
     public void NormalizeIndexNodes();
 
-    // Методы отражения фигуры, путем измненеия угла
+    // Методы отражения фигуры
     public void ReflectX();
     public void ReflectY();
 

@@ -10,10 +10,9 @@ using System.Composition;
 [ExportMetadata("Name", "Polygon")]
 [ExportMetadata("Icon", "polygon.png")]
 public partial class Polygon : IShape, IChangableShape {
-    // TODO: Добавить event OnChange в методы set
     public Vector2 Translate { private set; get; }
     public float Z { set; get; }
-    public float DeltaZ { set; get; } // Для отрисовки контура на слой выше, чем заливки
+    public float DeltaZ { set; get; }
     public float Rotate { private set; get; }
     public ShapeStyle Style { set; get; }
     public Vector2[] BoundingBox { private set; get; }
@@ -228,11 +227,6 @@ public partial class Polygon : IShape, IChangableShape {
         return countIntersections % 2 == 1;
     }
 
-    public int IsBBNode(Vector2 point) {
-        // TODO: Реализовать метод
-        return 0;
-    }
-
     public void Move(Vector2 delta) {
         Translate += delta;
         CalcBB();
@@ -314,7 +308,6 @@ public partial class Polygon : IShape, IChangableShape {
     }
 
     public string ShapeType => GetType().Name;
-    public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
 
     public void RotateShape(Vector2 p1, Vector2 p2) {
         p1 -= Translate;
@@ -334,18 +327,13 @@ public partial class Polygon : IShape, IChangableShape {
     }
 
     public void NormalizeIndexNodes() {
-        // TODO: Реализовать метод
+
     }
 
     public void ReflectX() {
         for (int i = 0; i < Nodes.Length; i++) {
             Nodes[i] = new Vector2(Nodes[i].X, -Nodes[i].Y);
         }
-
-        // Rotate = -Rotate;
-        // Rotate %= 360;
-        // if (Rotate < 0) Rotate += 360;
-
         CalcBB();
     }
 
@@ -353,11 +341,6 @@ public partial class Polygon : IShape, IChangableShape {
         for (int i = 0; i < Nodes.Length; i++) {
             Nodes[i] = new Vector2(-Nodes[i].X, Nodes[i].Y);
         }
-
-        // Rotate = 180 - Rotate;
-        // Rotate %= 360;
-        // if (Rotate < 0) Rotate += 360;
-
         CalcBB();
     }
     public override bool Equals(object? obj) {
