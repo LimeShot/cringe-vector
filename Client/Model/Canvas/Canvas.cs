@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.ComponentModel;
 using System.Windows.Media;
 using CringeCraft.Client.Model.Commands.CommandHistory;
+using System.Windows;
 
 /// <summary>
 /// Представляет холст для хранения фигур
@@ -44,6 +45,9 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     [ObservableProperty]
     private string _canvasSize;
 
+    [ObservableProperty]
+    private Visibility _isShapesVisible;
+
     public float ScreenPerWorld = 1.0f;
     public event EventHandler<List<IShape>>? OnShapeChanged;
     public Vector2[] GetGeneralBB { get; private set; }
@@ -56,10 +60,13 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         Width = 2000;
         Height = 1000;
         CanvasSize = $"Холст: {Width}x{Height}";
+        IsShapesVisible = Visibility.Hidden;
         GetGeneralBB = new Vector2[4];
         _myCommandHistory = myCommandHistory;
 
         PropertyChanged += ChangeFill;
+        Shapes.CollectionChanged += (s, e) =>
+            IsShapesVisible = Shapes.Count > 0 ? Visibility.Visible : Visibility.Hidden;
     }
 
     private void recalculateZFromRemove(int index) {

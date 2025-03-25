@@ -365,7 +365,8 @@
                 Margin="5"
                 Padding="5"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Top">
+                VerticalAlignment="Top"
+                Visibility="{Binding Canvas.IsShapesVisible}">
 
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="3"
