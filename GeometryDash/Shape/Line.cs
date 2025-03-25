@@ -152,6 +152,8 @@ public partial class Line : IShape {
 
     public string ShapeType => GetType().Name;
 
+    public string IconPath => $"pack://siteoforigin:,,,/assets/tools/{ShapeType.ToLower()}.png";
+
     public void RotateShape(Vector2 p1, Vector2 p2) {
         p1 -= Translate;
         p2 -= Translate;
