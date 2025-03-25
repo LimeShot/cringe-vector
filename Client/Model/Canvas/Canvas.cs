@@ -210,7 +210,6 @@ public partial class MyCanvas : ObservableObject, ICanvas {
                 );
                 if (shape_color != SelectedFillColor) {
                     shape.Style.ColorFill = new_color;
-                    shape.Style.Fill = HasFill;
                 } else {
                     flag_fillColor = false;
                 }
@@ -225,6 +224,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     }
 
     private void ChangeFill(object? sender, PropertyChangedEventArgs e) {
+        if (SelectedShapes.Count > 1) { return; }
         if (e.PropertyName == nameof(HasFill))
             foreach (IShape shape in SelectedShapes)
                 shape.Style.Fill = HasFill;
