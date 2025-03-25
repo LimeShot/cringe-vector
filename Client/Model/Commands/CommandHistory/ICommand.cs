@@ -8,6 +8,7 @@ public interface ICommand {
 
 public enum CommandType {
     None,
+    Create,
     Move,
     Resize,
     Rotate,

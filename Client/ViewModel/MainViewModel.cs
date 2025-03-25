@@ -209,8 +209,12 @@ public partial class MainViewModel : ObservableObject {
             var type = _commandHistory.GetLastUndoCommandType();
             _commandHistory.Undo();
             if (type != CommandType.None) {
+                if (type == CommandType.Create) {
+                    Canvas.GetGeneralBB = null;
+                    Canvas.SelectedShapes.Clear();
+                } else
+                    Canvas.OnCringeBoundingBoxChanged();
                 OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
-                Canvas.CalcTranslate(Canvas.SelectedShapes);
             }
         }
     }
@@ -221,8 +225,12 @@ public partial class MainViewModel : ObservableObject {
             var type = _commandHistory.GetLastRedoCommandType();
             _commandHistory.Redo();
             if (type != CommandType.None) {
+                if (type == CommandType.Create) {
+                    Canvas.GetGeneralBB = null;
+                    Canvas.SelectedShapes.Clear();
+                } else
+                    Canvas.OnCringeBoundingBoxChanged();
                 OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
-                Canvas.CalcTranslate(Canvas.SelectedShapes);
             }
         }
     }
