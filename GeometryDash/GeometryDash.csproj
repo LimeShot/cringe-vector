@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="EarClipper" Version="1.2.2" />
     <PackageReference Include="OpenTK.Mathematics" Version="4.8.2" />
     <PackageReference Include="System.Composition" Version="9.0.2" />
     <PackageReference Include="System.Composition.hosting" Version="9.0.2" />
@@ -16,7 +15,7 @@
 
   <ItemGroup>
     <Reference Include="Triangle">
-      <HintPath>Triangle.dll</HintPath>
+      <HintPath>..\GeometryDash\Triangle.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

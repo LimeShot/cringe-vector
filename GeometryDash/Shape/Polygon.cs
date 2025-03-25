@@ -1,10 +1,10 @@
 namespace CringeCraft.GeometryDash.Shape;
 
 using OpenTK.Mathematics;
-using EarClipperLib;
 
 using System.Composition;
 using System.Diagnostics;
+
 using TriangleNet;
 using TriangleNet.Geometry;
 using TriangleNet.Meshing;
@@ -364,28 +364,26 @@ public partial class Polygon : IShape, IChangableShape {
     }
 
     public void ReflectX() {
-        for (int i = 0; i < Nodes.Length; i++)
-        {
+        for (int i = 0; i < Nodes.Length; i++) {
             Nodes[i] = new Vector2(Nodes[i].X, -Nodes[i].Y);
         }
 
         Rotate = -Rotate;
         Rotate %= 360;
         if (Rotate < 0) Rotate += 360;
-        
+
         CalcBB();
     }
 
     public void ReflectY() {
-        for (int i = 0; i < Nodes.Length; i++)
-        {
+        for (int i = 0; i < Nodes.Length; i++) {
             Nodes[i] = new Vector2(-Nodes[i].X, Nodes[i].Y);
         }
 
         Rotate = 180 - Rotate;
         Rotate %= 360;
         if (Rotate < 0) Rotate += 360;
-        
+
         CalcBB();
     }
 }
