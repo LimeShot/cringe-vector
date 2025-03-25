@@ -194,29 +194,39 @@ public partial class Polygon : IShape {
     }
 
     public bool IsBelongsShape(Vector2 point, float radiusPoint) {
-        // TODO: Переделать (Метод временно сделан через LocalBoundingBox)
-        Vector2 localPoint = point - Translate;
 
-        float angle = -MathHelper.DegreesToRadians(Rotate);
-        float xRot = localPoint.X * MathF.Cos(angle) - localPoint.Y * MathF.Sin(angle);
-        float yRot = localPoint.X * MathF.Sin(angle) + localPoint.Y * MathF.Cos(angle);
-        localPoint = new Vector2(xRot, yRot);
-        Vector2 maxPoint = new(0, 0), minPoint = new(0, 0);
-        foreach (var node in Nodes) {
-            if (node.X > maxPoint.X)
-                maxPoint.X = node.X;
-            else if (node.X < minPoint.X)
-                minPoint.X = node.X;
-            if (node.Y > maxPoint.Y)
-                maxPoint.Y = node.Y;
-            else if (node.Y < minPoint.Y)
-                minPoint.Y = node.Y;
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 result);
+        Vector2 localPoint = result * (point - Translate);
+
+        // Ray Casting 
+        int countIntersections = 0;
+        int n = Nodes.Length;
+
+        for (int i = 0; i < n; i++) {
+            Vector2 p1 = Nodes[i];
+            Vector2 p2 = Nodes[(i + 1) % n];
+            if ((p1.Y > localPoint.Y) != (p2.Y > localPoint.Y)) {
+                float xIntersect = (localPoint.Y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
+                if (localPoint.X < xIntersect) {
+                    countIntersections++;
+                }
+            }
+            Vector2 segment = p2 - p1;
+            Vector2 pointToP1 = localPoint - p1;
+
+            float lenSquared = segment.LengthSquared;
+            if (lenSquared == 0) { // p1 Рё p2 СЃРѕРІРїР°РґР°СЋС‚
+                if ((localPoint - p1).Length <= radiusPoint) return true;
+                continue;
+            }
+            float t = MathF.Max(0, MathF.Min(1, Vector2.Dot(pointToP1, segment) / lenSquared));
+            Vector2 projection = p1 + t * segment;
+
+            if ((localPoint - projection).Length <= radiusPoint) {
+                return true;
+            }
         }
-        float halfWidth = (maxPoint.X - minPoint.X) / 2.0f + radiusPoint;
-        float halfHeight = (maxPoint.Y - minPoint.Y) / 2.0f + radiusPoint;
-
-        return xRot >= -halfWidth && xRot <= halfWidth &&
-               yRot >= -halfHeight && yRot <= halfHeight;
+        return countIntersections % 2 == 1;
     }
 
     public int IsBBNode(Vector2 point) {
