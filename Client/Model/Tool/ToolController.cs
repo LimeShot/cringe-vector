@@ -20,7 +20,7 @@ public partial class ToolController : ObservableObject {
     private readonly MainWindow _window;
     private ToggleButton? _selectedButton;
     // private ToggleButton? _toggleButton;
-    private Dictionary<string, ToggleButton> _buttons = new();
+    private readonly Dictionary<string, ToggleButton> _buttons = new();
     private bool _isCtrlPressed;
     private ITool _currentTool;
     private readonly MyCanvas _canvas;
@@ -37,7 +37,7 @@ public partial class ToolController : ObservableObject {
     private bool _isPolygonToolActive; // Указывает, активен ли инструмент для многоугольника
 
     [ObservableProperty]
-    private CreateTool _currentCreateTool;
+    private CreateTool? _currentCreateTool;
 
     public event EventHandler<List<IShape>>? OnShapeChanged;
 

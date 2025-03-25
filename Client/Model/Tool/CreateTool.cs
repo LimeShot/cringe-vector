@@ -13,7 +13,6 @@ public partial class CreateTool(string name, MyCanvas canvas, EventHandler<List<
     private IShape? _shape;
     private Vector2 _startPoint;
     private bool _isResized = false;
-    private int bbIndex = 1;
 
     [ObservableProperty]
     private float _defaultRotationAngle = 0;

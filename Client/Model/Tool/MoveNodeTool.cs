@@ -15,7 +15,7 @@ public class MoveNodeTool(string name, MyCanvas canvas, MyCommandHistory myComma
     private int _nodeIndex = -1;
     private Vector2 _startPoint;
     private Vector2 _endPoint;
-    private IChangableShape _shape;
+    private IChangableShape? _shape;
     private const float _eps = 5;
 
 
