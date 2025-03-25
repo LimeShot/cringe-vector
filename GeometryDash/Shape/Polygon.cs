@@ -5,6 +5,9 @@ using EarClipperLib;
 
 using System.Composition;
 using System.Diagnostics;
+using TriangleNet;
+using TriangleNet.Geometry;
+using TriangleNet.Meshing;
 
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Polygon")]
@@ -161,19 +164,39 @@ public partial class Polygon : IShape, IChangableShape {
 
     public float[] GetTriangleVertices() {
         if (!Style.Visible || !Style.Fill) return [];
-        List<Vector3m> points = new List<Vector3m>();
+        List<Vertex> vertices = new List<Vertex>();
         for (int i = 0; i < Nodes.Length; i++) {
-            points.Add(new Vector3m(Nodes[i].X, Nodes[i].Y, 0));
+            vertices.Add(new Vertex(Nodes[i].X, Nodes[i].Y));
         }
-        EarClipping earClipping = new EarClipping();
-        earClipping.SetPoints(points);
-        earClipping.Triangulate();
-        var res = earClipping.Result;
+        TriangleNet.Geometry.Polygon polygon = new TriangleNet.Geometry.Polygon();
+        foreach (var vertex in vertices) {
+            polygon.Add(vertex);
+        }
+        for (int i = 0; i < vertices.Count; i++) {
+            if (i == vertices.Count - 1)
+                polygon.Add(new Segment(vertices[i], vertices[0]));
+            else
+                polygon.Add(new Segment(vertices[i], vertices[i + 1]));
+        }
+
+        IMesh meshInterface = polygon.Triangulate();
+        Mesh mesh = (Mesh)meshInterface;
+
+        List<Vector2> res = new List<Vector2>();
+        foreach (var triangle in mesh.Triangles) {
+            Vertex v1 = triangle.GetVertex(0);
+            Vertex v2 = triangle.GetVertex(1);
+            Vertex v3 = triangle.GetVertex(2);
+
+            res.Add(new Vector2((float)v1.X, (float)v1.Y));
+            res.Add(new Vector2((float)v2.X, (float)v2.Y));
+            res.Add(new Vector2((float)v3.X, (float)v3.Y));
+        }
         int len = res.Count;
         float[] returns = new float[len * 9];
         for (int i = 0; i < len; i++) {
-            returns[i * 9] = (float)res[i].X;
-            returns[i * 9 + 1] = (float)res[i].Y;
+            returns[i * 9] = res[i].X;
+            returns[i * 9 + 1] = res[i].Y;
             returns[i * 9 + 2] = Z;
             returns[i * 9 + 3] = Translate.X;
             returns[i * 9 + 4] = Translate.Y;

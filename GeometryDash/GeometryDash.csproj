@@ -14,4 +14,9 @@
     <PackageReference Include="System.Composition.hosting" Version="9.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Triangle">
+      <HintPath>..\Client\bin\Debug\net9.0-windows\Triangle.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
