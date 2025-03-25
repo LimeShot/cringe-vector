@@ -38,7 +38,7 @@ public class PasteCommand : ICommandMenu {
         if (_shapeBuffer.Count == 1) {
             delta = Point - _shapeBuffer[0].Translate;
         } else {
-            Vector2 center = _canvas.GetCenterOfGBB(_shapeBuffer);
+            Vector2 center = _canvas.CalcTranslate(_shapeBuffer);
             delta = new(Point.X - center.X, Point.Y - center.Y);
         }
         List<IShape> localShapes = new();

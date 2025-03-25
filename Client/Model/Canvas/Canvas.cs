@@ -41,6 +41,8 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     private float _height;
     public float ScreenPerWorld = 1.0f;
     public event EventHandler<List<IShape>>? OnShapeChanged;
+    public Vector2[] GetGeneralBB { get; private set; }
+    public Vector2 GetTranslate { get; private set; }
 
     private readonly MyCommandHistory _myCommandHistory;
 
@@ -48,6 +50,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         Shapes = new();
         Width = 2000;
         Height = 1000;
+        GetGeneralBB = new Vector2[4];
         _myCommandHistory = myCommandHistory;
 
         PropertyChanged += ChangeFill;
@@ -131,27 +134,29 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         return false;
     }
 
-    public Vector2[] GetGeneralBoundingBox(List<IShape> shapeBuffer) {
+    public Vector2[] CalcGeneralBoundingBox(List<IShape> shapeBuffer) {
         if (shapeBuffer.Count == 0) {
             return null;
         }
-        Vector2 point1 = new Vector2(
+        Vector2 point3 = new Vector2(
             shapeBuffer.Select(shape => shape.BoundingBox.Min(v => v.X)).Min(),
             shapeBuffer.Select(shape => shape.BoundingBox.Min(v => v.Y)).Min()
         );
-        Vector2 point3 = new Vector2(
+        Vector2 point1 = new Vector2(
             shapeBuffer.Select(shape => shape.BoundingBox.Max(v => v.X)).Max(),
             shapeBuffer.Select(shape => shape.BoundingBox.Max(v => v.Y)).Max()
         );
+        Vector2 point0 = new(point3.X, point1.Y);
         Vector2 point2 = new(point1.X, point3.Y);
-        Vector2 point4 = new(point3.X, point1.Y);
-        return [point1, point2, point3, point4];
+        GetGeneralBB = [point0, point1, point2, point3];
+        return [point0, point1, point2, point3];
     }
 
-    public Vector2 GetCenterOfGBB(List<IShape> shapeBuffer) {
-        Vector2[] boundingBox = GetGeneralBoundingBox(shapeBuffer);
-        float deltaX = Math.Abs(boundingBox[3].X - boundingBox[0].X);
-        float deltaY = Math.Abs(boundingBox[3].Y - boundingBox[0].Y);
+    public Vector2 CalcTranslate(List<IShape> shapeBuffer) {
+        Vector2[] boundingBox = CalcGeneralBoundingBox(shapeBuffer);
+        float deltaX = boundingBox[1].X - boundingBox[3].X;
+        float deltaY = boundingBox[1].Y - boundingBox[3].Y;
+        GetTranslate = (boundingBox[0].X + deltaX / 2, boundingBox[0].Y - deltaY / 2);
         return new Vector2(boundingBox[0].X + deltaX / 2, boundingBox[0].Y - deltaY / 2);
     }
 
