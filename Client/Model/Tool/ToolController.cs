@@ -164,15 +164,50 @@ public partial class ToolController : ObservableObject {
 }
 
 public class StringToIntConverter : IValueConverter {
+    private const int MinSides = 3;
+    private const int MaxSides = 20;
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-        return value?.ToString() ?? "6";
+        return value?.ToString() ?? MinSides.ToString();
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-        if (int.TryParse(value?.ToString(), NumberStyles.Integer, culture, out int result)) {
+        string? input = value?.ToString();
+
+        // Если строка пустая или null, возвращаем null или текущее значение свойства
+        if (string.IsNullOrWhiteSpace(input)) {
+            return DependencyProperty.UnsetValue; // Не обновляем источник, оставляем пользователю свободу ввода
+        }
+
+        if (int.TryParse(input, out int result)) {
+            if (result < MinSides)
+                return MinSides;
+            if (result > MaxSides)
+                return MaxSides;
             return result;
         }
-        return 6;
+
+        // Если ввод некорректен (например, буквы), не обновляем источник
+        return DependencyProperty.UnsetValue;
+    }
+}
+
+public class IntRangeValidationRule : ValidationRule {
+    private const int MinSides = 3;
+    private const int MaxSides = 20;
+
+    public override ValidationResult Validate(object value, CultureInfo cultureInfo) {
+        string input = value?.ToString();
+        if (string.IsNullOrWhiteSpace(input)) {
+            return new ValidationResult(false, "Введите число.");
+        }
+        if (!int.TryParse(input, out int result)) {
+            return new ValidationResult(false, "Должно быть целое число.");
+        }
+        if (result < MinSides || result > MaxSides) {
+            return new ValidationResult(false, $"Число должно быть от {MinSides} до {MaxSides}.");
+        }
+        return ValidationResult.ValidResult;
     }
 }
 

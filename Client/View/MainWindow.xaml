@@ -416,12 +416,19 @@
                              Margin="5"
                              Padding="2"
                              BorderThickness="1"
-                             BorderBrush="Gray"
-                             Text="{Binding DataContext.ToolController.CurrentCreateTool.PolygonSides, 
-                                       RelativeSource={RelativeSource AncestorType=Window}, 
-                                       Mode=TwoWay, 
-                                       UpdateSourceTrigger=PropertyChanged, 
-                                       Converter={StaticResource StringToIntConverter}}"/>
+                             BorderBrush="Gray">
+                        <TextBox.Text>
+                            <Binding Path="DataContext.ToolController.CurrentCreateTool.PolygonSides"
+                                     RelativeSource="{RelativeSource AncestorType=Window}"
+                                     Mode="TwoWay"
+                                     UpdateSourceTrigger="PropertyChanged"
+                                     Converter="{StaticResource StringToIntConverter}">
+                                <Binding.ValidationRules>
+                                    <local:IntRangeValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
