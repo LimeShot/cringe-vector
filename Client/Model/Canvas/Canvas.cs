@@ -127,7 +127,6 @@ public partial class MyCanvas : ObservableObject, ICanvas {
                     (byte)(StartFillColor.Y * 255f),
                     (byte)(StartFillColor.Z * 255f)
                 );
-
                 break;
             }
         }
@@ -208,7 +207,6 @@ public partial class MyCanvas : ObservableObject, ICanvas {
             }
         }
         StartFillColor = new_color;
-
     }
 
     private void ChangeFill(object? sender, PropertyChangedEventArgs e) {

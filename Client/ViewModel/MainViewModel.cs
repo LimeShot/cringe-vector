@@ -199,8 +199,11 @@ public partial class MainViewModel : ObservableObject {
         if (_commandHistory.UndoCmdCount > 0) {
             var type = _commandHistory.GetLastUndoCommandType();
             _commandHistory.Undo();
-            if (type != CommandType.None)
+            if (type != CommandType.None) {
                 OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+                if (type == CommandType.MoveNode)
+                    Canvas.CalcTranslate(Canvas.SelectedShapes);
+            }
         }
     }
 
@@ -209,8 +212,11 @@ public partial class MainViewModel : ObservableObject {
         if (_commandHistory.RedoCmdCount > 0) {
             var type = _commandHistory.GetLastRedoCommandType();
             _commandHistory.Redo();
-            //if (type != CommandType.None)
-            //OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+            if (type != CommandType.None) {
+                OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
+                if (type == CommandType.MoveNode)
+                    Canvas.CalcTranslate(Canvas.SelectedShapes);
+            }
         }
     }
 
