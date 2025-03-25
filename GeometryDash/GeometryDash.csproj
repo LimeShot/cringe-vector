@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <Reference Include="Triangle">
-      <HintPath>..\Client\bin\Debug\net9.0-windows\Triangle.dll</HintPath>
+      <HintPath>Triangle.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
