@@ -131,7 +131,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
     public void OnChanged() {
         _startPoint = Vector2.Zero;
         _canvas.SelectedShapes.Clear();
-        _canvas.CalcTranslate(_canvas.SelectedShapes);
+        _canvas.GetGeneralBB = null;
         Mode = ChangeToolMode.None;
     }
 
