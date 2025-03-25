@@ -70,22 +70,22 @@ public class ImportFromCRNG : IImporter {
 public class ExportToSVG : IExporter {
 
 
-    private string shapeToSVG(IShape shape, float height, int styleNumber) {
+    private string shapeToSVG(IShape shape,  int styleNumber) {
         string line;
-        switch (shape.GetType().ToString()) {
-            case "CringeCraft.GeometryDash.Shape.Line":
+        switch (shape.ShapeType) {
+            case "Line":
                 line = $"<line class=\"st{styleNumber}\" x1=\"{shape.BoundingBox[0].X}\" y1=\"{shape.BoundingBox[0].Y * (-1)}\" x2=\"{shape.BoundingBox[1].X}\" y2=\"{shape.BoundingBox[1].Y * (-1)}\"/>";
                 break;
-            case "CringeCraft.GeometryDash.Shape.Rectangle":
+            case "Rectangle":
                 line = $"<rect class=\"st{styleNumber}\" x=\"{Math.Min(shape.Nodes[0].X, shape.Nodes[2].X)}\" y=\"{Math.Max(shape.Nodes[0].Y, shape.Nodes[2].Y) * (-1)}\" width=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[2].X)}\" height=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[2].Y)}\" transform=\"translate({shape.Translate.X}, {shape.Translate.Y * (-1)}) rotate({shape.Rotate})\"/>";
                 break;
-            case "CringeCraft.GeometryDash.Shape.Ellipse":
-                line = $"<ellipse class=\"st{styleNumber}\" cx=\"{shape.Translate.X}\" cy=\"{shape.Translate.Y * (-1)}\" rx=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[2].X) / 2}\" ry=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[2].Y) / 2}\" transform=\"rotate({shape.Rotate})\"/>";
+            case "Ellipse":
+                line = $"<ellipse class=\"st{styleNumber}\" cx=\"0\" cy=\"0\" rx=\"{Math.Abs(shape.Nodes[0].X - shape.Nodes[2].X) / 2}\" ry=\"{Math.Abs(shape.Nodes[0].Y - shape.Nodes[2].Y) / 2}\" transform=\"translate({shape.Translate.X}, {shape.Translate.Y * (-1)}) rotate({shape.Rotate})\"/>";
                 break;
-            case "CringeCraft.GeometryDash.Shape.Polygon":
+            case "Polygon":
                 line = $"<polygon class=\"st{styleNumber}\"  points=\"";
                 for (int i = 0; i < shape.Nodes.Length; i++) {
-                    line += $"{shape.Nodes[i].X},{shape.Nodes[i].Y} ";
+                    line += $"{shape.Nodes[i].X},{shape.Nodes[i].Y*(-1)} ";
                 }
                 line += $"\" transform=\"translate({shape.Translate.X}, {shape.Translate.Y * (-1)}) rotate({shape.Rotate})\"/>";
                 break;
@@ -104,7 +104,7 @@ public class ExportToSVG : IExporter {
             string textShape = "";
             List<ShapeStyle> style = new List<ShapeStyle>();
             textStyle += "<defs>\n<style>\n";
-            for (int i = 0; i < Field.Shapes.Count; i++) {
+            for (int i = Field.Shapes.Count-1; i >=0; i--) {
                 int j = 0;
                 for (; j < style.Count; j++)
                     if (style[j] == Field.Shapes[i].Style)
@@ -116,7 +116,7 @@ public class ExportToSVG : IExporter {
                         textStyle += $".st{j} {{\nstroke: rgb({Field.Shapes[i].Style.ColorOutline.X * 255}, {Field.Shapes[i].Style.ColorOutline.Y * 255}, {Field.Shapes[i].Style.ColorOutline.Z * 255});\nfill: none;\n}}\n";
                     style.Add(Field.Shapes[i].Style);
                 }
-                textShape += $"{shapeToSVG(Field.Shapes[i], Field.Height, j)}\n";// передем номер стиля
+                textShape += $"{shapeToSVG(Field.Shapes[i], j)}\n";// передем номер стиля
             }
             textStyle += "</style>\n</defs>\n";
             textShape += "</svg>";
@@ -127,6 +127,7 @@ public class ExportToSVG : IExporter {
         }
 
     }
+
 
     public void ExportStream(Stream outputStream, ICanvas Field) {
         // Устанавливаем культуру для корректного форматирования чисел
@@ -171,7 +172,7 @@ public class ExportToSVG : IExporter {
             // Записываем фигуры
             for (int i = 0; i < Field.Shapes.Count; i++) {
                 int styleIndex = style.IndexOf(Field.Shapes[i].Style);
-                writer.WriteLine(shapeToSVG(Field.Shapes[i], Field.Height, styleIndex));
+                writer.WriteLine(shapeToSVG(Field.Shapes[i], styleIndex));
             }
 
             // Закрываем SVG
