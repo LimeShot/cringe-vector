@@ -20,19 +20,22 @@ public interface IImporter {
 public class ExportToCRNG : IExporter {
     public void Export(string path, ICanvas Field) {
         // Настройки сериализации
-        //var data = new{Shapes, Height, Width};
         var settings = new JsonSerializerSettings {
             ContractResolver = new PrivateSetterContractResolver(),
             Converters = new List<JsonConverter> { new Vector2Converter(), new Vector3Converter() },
             Formatting = Formatting.Indented,
             TypeNameHandling = TypeNameHandling.Auto
         };
-        if (!File.Exists(path)) {
-            File.Create(path);
+        var fileInfo = new FileInfo(path);
+        var fileMode = fileInfo.Exists ? FileMode.Truncate : FileMode.CreateNew; //FileStream fs = File.Open(path, fileMode
+        using (FileStream fstream = File.Open(path, fileMode)) {
+            // Сериализация в JSON
+            string json = JsonConvert.SerializeObject(Field, settings);
+            byte[] buffer = Encoding.Default.GetBytes(json);
+            fstream.Flush();
+            fstream.WriteAsync(buffer, 0, buffer.Length);
         }
-        // Сериализация в JSON
-        string json = JsonConvert.SerializeObject(Field, settings);
-        File.WriteAllText(path, json);
+        
     }
 }
 
