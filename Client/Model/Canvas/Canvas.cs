@@ -72,6 +72,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
             shape.Z = z;
             z += _stepZ;
         }
+        OnShapeChanged?.Invoke(this, [.. Shapes]);
     }
 
     public void AddShape(IShape shape) {

@@ -21,7 +21,7 @@ public class DelCommand : ICommandMenu {
         Execute();
     }
 
-    private bool CanExecuteMenu() => _canvas.Shapes.Count != 0;
+    private bool CanExecuteMenu() => _canvas.SelectedShapes.Count != 0;
 
     public void ExecuteButton() {
         if (_canvas.SelectedShapes.Count != 0)
@@ -29,7 +29,7 @@ public class DelCommand : ICommandMenu {
     }
     private void Execute() {
         foreach (var shape in _canvas.SelectedShapes)
-            _canvas.Shapes.Remove(shape);
+            _canvas.RemoveShape(shape);
         _commandHistory.AddCommand(new DeleteCommand(_canvas.SelectedShapes.ToList(), _canvas));
         _canvas.SelectedShapes.Clear();
     }

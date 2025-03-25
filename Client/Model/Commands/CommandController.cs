@@ -27,9 +27,11 @@ public class CommandController {
         _camera = camera;
         _shapeBuffer = new();
         _commandHistory = commandHistory;
-        CommandsL.Add("Копировать", new CopyCommand(_canvas, commandHistory, _shapeBuffer));
-        CommandsL.Add("Вставить", new PasteCommand(_canvas, commandHistory, _shapeBuffer));
-        CommandsL.Add("Удалить", new DelCommand(_canvas, commandHistory));
+        CommandsL.Add("Копировать", new CopyCommand(_canvas, _commandHistory, _shapeBuffer));
+        CommandsL.Add("Вставить", new PasteCommand(_canvas, _commandHistory, _shapeBuffer));
+        CommandsL.Add("Удалить", new DelCommand(_canvas, _commandHistory));
+        CommandsL.Add("На передний план", new BringToFrontCommand(_canvas, _commandHistory));
+        CommandsL.Add("На задний план", new BringToBackCommand(_canvas, _commandHistory));
     }
 
     public void CreateMenu(Vector2 position) {
