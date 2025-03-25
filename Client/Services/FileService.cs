@@ -2,9 +2,10 @@ using Microsoft.Win32;
 using System.IO;
 using CringeCraft.IO;
 using CringeCraft.GeometryDash;
+using CringeCraft.Client.Model.Canvas;
 
 public static class FileService {
-    public static (string? filePath, string? errorMessage) OpenFile(ICanvas canvas) {
+    public static (string? filePath, string? errorMessage) OpenFile(MyCanvas canvas) {
         OpenFileDialog openFileDialog = new() {
             Title = "Открыть файл",
             Filter = "CRNG файлы (*.crng)|*.crng|Все файлы (*.*)|*.*",
@@ -17,8 +18,10 @@ public static class FileService {
             try {
                 IImporter importer = filePath.EndsWith(".crng", StringComparison.OrdinalIgnoreCase)
                     ? new ImportFromCRNG()
-                    : new ImportFromCRNG();//Если здесь когда-нибудь будет svg...
-
+                    : new ImportFromCRNG();
+                canvas.Shapes.Clear();
+                canvas.SelectedShapes.Clear();
+                canvas.GetGeneralBB = null;
                 var (shapes, width, height) = importer.Import(filePath);
                 if (shapes != null)
                     canvas.Shapes = shapes;

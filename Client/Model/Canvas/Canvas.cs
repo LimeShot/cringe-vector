@@ -5,12 +5,10 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CringeCraft.GeometryDash;
 using OpenTK.Mathematics;
-using System.IO.Compression;
 using System.ComponentModel;
 using System.Windows.Media;
 using CringeCraft.Client.Model.Commands.CommandHistory;
 using System.Windows;
-using System.Diagnostics;
 
 /// <summary>
 /// Представляет холст для хранения фигур

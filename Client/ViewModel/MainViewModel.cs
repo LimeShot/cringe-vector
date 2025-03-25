@@ -164,6 +164,7 @@ public partial class MainViewModel : ObservableObject {
         if (filePath != null) {
             Console.WriteLine($"Открыт файл: {filePath}");
             Canvas.Shapes.CollectionChanged += Shapes_CollectionChanged;
+            _commandHistory.ClearHistory();
         } else if (errorMessage != null) {
             MessageBox.Show(errorMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
