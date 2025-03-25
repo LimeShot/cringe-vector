@@ -31,6 +31,7 @@ public class RenderingService {
             out vec3 VertColor;
 
             uniform mat4 uProjection, uView;
+            uniform float uTime;
 
             const float PI = 3.1415926535897932384626433832795;
 
@@ -51,7 +52,7 @@ public class RenderingService {
 
             void main() {
                 gl_Position = uProjection * uView * (rotate(deg2rad(aRotate)) * vec4(aPos, 1.0) + vec4(aTranslate, 0.0, 0.0));
-                VertColor = aColor;
+                VertColor = aColor.x >= 0 ? aColor : vec3(abs(sin(uTime)) * 0.8);
             }
             ", @"
             #version 330 core
@@ -281,44 +282,22 @@ public class RenderingService {
     }
 
     public void OnBoundingBoxChanged(Vector2[]? bbox) {
-        _bbox = bbox;
-        if (bbox == null || bbox.Length < 2) {
+        if (bbox == null) {
             _vaoBoundingBox?.SetData([]);
-            return;
-        }
-
-        float z = 1.0f - 1e-3f;
-        float[] boundingBoxVertices;
-
-        if (bbox.Length == 2) {
-            // Случай с двумя точками — линия
-            Vector2 p0 = bbox[0]; // Первая точка
-            Vector2 p1 = bbox[1]; // Вторая точка
-            boundingBoxVertices =
-            [
-            p0.X, p0.Y, z, 0, 0, 0, 0, 0, 0, // Первая точка
-            p1.X, p1.Y, z, 0, 0, 0, 0, 0, 0  // Вторая точка
-            ];
-        } else if (bbox.Length == 4) {
-            // Случай с четырьмя точками — замкнутый контур
-            boundingBoxVertices =
-            [
-            bbox[3].X, bbox[3].Y, z, 0, 0, 0, 0, 0, 0,
-            bbox[2].X, bbox[2].Y, z, 0, 0, 0, 0, 0, 0,
-            bbox[2].X, bbox[2].Y, z, 0, 0, 0, 0, 0, 0,
-            bbox[1].X, bbox[1].Y, z, 0, 0, 0, 0, 0, 0,
-            bbox[1].X, bbox[1].Y, z, 0, 0, 0, 0, 0, 0,
-            bbox[0].X, bbox[0].Y, z, 0, 0, 0, 0, 0, 0,
-            bbox[0].X, bbox[0].Y, z, 0, 0, 0, 0, 0, 0,
-            bbox[3].X, bbox[3].Y, z, 0, 0, 0, 0, 0, 0
-            ];
         } else {
-            // Если точек не 2 и не 4, очищаем массив
-            _vaoBoundingBox?.SetData([]);
-            return;
+            float z = 1.0f - 1e-3f;
+            float[] boundingBoxVertices = {
+                bbox[3].X, bbox[3].Y, z, 0, 0, 0, -1, -1, -1, bbox[2].X, bbox[2].Y, z, 0, 0, 0, -1, -1, -1,
+                bbox[2].X, bbox[2].Y, z, 0, 0, 0, -1, -1, -1, bbox[1].X, bbox[1].Y, z, 0, 0, 0, -1, -1, -1,
+                bbox[1].X, bbox[1].Y, z, 0, 0, 0, -1, -1, -1, bbox[0].X, bbox[0].Y, z, 0, 0, 0, -1, -1, -1,
+                bbox[0].X, bbox[0].Y, z, 0, 0, 0, -1, -1, -1, bbox[3].X, bbox[3].Y, z, 0, 0, 0, -1, -1, -1,
+                bbox[0].X, bbox[0].Y, z, 5, 5, 0, 0, 0, 0,
+                bbox[1].X, bbox[1].Y, z, 5, 5, 0, 0, 0, 0,
+                bbox[2].X, bbox[2].Y, z, 5, 5, 0, 0, 0, 0,
+                bbox[3].X, bbox[3].Y, z, 5, 5, 0, 0, 0, 0
+            };
+            _vaoBoundingBox?.SetData(boundingBoxVertices);
         }
-
-        _vaoBoundingBox?.SetData(boundingBoxVertices);
     }
 
     private void rebuildVBOs() {
@@ -354,10 +333,11 @@ public class RenderingService {
         GL.UseProgram(_shaderLine.Id);
         _shaderLine.SetUniform("uProjection", _projection);
         _shaderLine.SetUniform("uView", _view);
+        _shaderLine.SetUniform("uTime", (float)DateTime.Now.TimeOfDay.TotalMilliseconds / 250.0f);
         GL.BindVertexArray(_vaoLine.Id);
         GL.DrawArrays(PrimitiveType.Lines, 0, _vaoLine.Length / _vaoLine.Stride);
         GL.BindVertexArray(_vaoBoundingBox.Id);
-        GL.DrawArrays(PrimitiveType.Lines, 0, _vaoBoundingBox.Length / _vaoBoundingBox.Stride);
+        GL.DrawArrays(PrimitiveType.Lines, 0, _vaoBoundingBox.Length == 0 ? 0 : 8);
 
         GL.UseProgram(_shaderTriangle.Id);
         _shaderTriangle.SetUniform("uProjection", _projection);
@@ -372,6 +352,8 @@ public class RenderingService {
         _shaderCircle.SetUniform("uView", _view);
         GL.BindVertexArray(_vaoCircle.Id);
         GL.DrawArrays(PrimitiveType.Points, 0, _vaoCircle.Length / _vaoCircle.Stride);
+        GL.BindVertexArray(_vaoBoundingBox.Id);
+        GL.DrawArrays(PrimitiveType.Points, _vaoBoundingBox.Length == 0 ? 0 : 8, _vaoBoundingBox.Length == 0 ? 0 : 4);
 
         GL.UseProgram(_shaderCircumference.Id);
         _shaderCircumference.SetUniform("uProjection", _projection);

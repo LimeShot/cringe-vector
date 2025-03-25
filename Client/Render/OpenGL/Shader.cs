@@ -111,6 +111,13 @@ public class Shader : IDisposable {
         GL.UniformMatrix4(location, false, ref value);
     }
 
+    public void SetUniform(string name, float value) {
+        int location = GL.GetUniformLocation(_id, name);
+        if (location == -1)
+            throw new ArgumentException($"Uniform {name} not found in shader.");
+        GL.Uniform1(location, value);
+    }
+
     public void Dispose() {
         if (!_disposed) {
             GL.DeleteProgram(_id);
