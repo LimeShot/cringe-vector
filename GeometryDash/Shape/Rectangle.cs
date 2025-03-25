@@ -69,7 +69,7 @@ public partial class Rectangle : IShape {
         CalcBB();
     }
 
-    public Rectangle(Vector2 p1, float side, float z, float deltaZ, float rotateAngle, ShapeStyle shapeStyle) {
+    public Rectangle(Vector2 p1, float side, float rotateAngle, float z, float deltaZ, ShapeStyle shapeStyle) {
         Translate = p1;
         Z = z;
         DeltaZ = deltaZ;
