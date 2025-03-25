@@ -40,6 +40,7 @@ public partial class ToolController : ObservableObject {
 
         Tools.Add("Change", new ChangeTool("change", canvas, _commandHistory)); //Иконку то пофиксить надо
         Tools.Add("Camera", new CameraTool("change", camera));
+        Tools.Add("MoveNode", new MoveNodeTool("movenode", canvas));
 
         foreach (var item in ShapeFactory.AvailableShapes)
             Tools.Add(item, new CreateTool(item, canvas, OnShapeChanged, commandHistory));
