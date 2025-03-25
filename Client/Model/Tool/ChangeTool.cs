@@ -27,17 +27,19 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
     public void MouseDownEvent(Vector2 startPoint) {
         _startPoint = startPoint;
         _firstPoint = startPoint;
-        _canvas.CalcTranslate(_canvas.SelectedShapes);
 
         if (_canvas.SelectedShapes.Count == 0) {
             _canvas.SelectShape(startPoint);
+            _canvas.CalcTranslate(_canvas.SelectedShapes);
             if (_canvas.SelectedShapes.Count > 0)
                 Mode = ChangeToolMode.Move;
         } else {
+            _canvas.CalcTranslate(_canvas.SelectedShapes);
             SelectMode(startPoint);
             if (Mode == ChangeToolMode.None) {
                 _canvas.SelectedShapes.Clear();
                 _canvas.SelectShape(startPoint);
+                _canvas.CalcTranslate(_canvas.SelectedShapes);
                 if (_canvas.SelectedShapes.Count > 0)
                     Mode = ChangeToolMode.Move;
             }
@@ -100,17 +102,12 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
 
 
     private int TryGetBBNode(Vector2 point) {
-        if (_canvas.SelectedShapes.Count != 1) return -1; // Пока поддерживаем только одну фигуру
-        var shape = _canvas.SelectedShapes[0];
-        var nodes = shape.BoundingBox;
-
-        //Работает только при условии 1-ой фигуры
         bool isInside = _canvas.IsPointInsideSelectedBB(point); // Точная проверка внутри коробки
 
         int bbNode = -1;
 
-        for (int i = 0; i < nodes.Count(); i++) {
-            float distance = Vector2.Distance(point, nodes[i]);
+        for (int i = 0; i < _canvas.GetGeneralBB.Count(); i++) {
+            float distance = Vector2.Distance(point, _canvas.GetGeneralBB[i]);
             if (distance <= NodeSelectionRadius) {
                 bbNode = i;
             } else if (!isInside && distance <= RotateActivationRadius) {

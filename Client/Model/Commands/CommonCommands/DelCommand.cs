@@ -34,5 +34,6 @@ public class DelCommand : ICommandMenu {
             _canvas.RemoveShape(shape);
         _commandHistory.AddCommand(new DeleteCommand(_canvas.SelectedShapes.ToList(), _canvas));
         _canvas.SelectedShapes.Clear();
+        _canvas.GetGeneralBB = null;
     }
 }
