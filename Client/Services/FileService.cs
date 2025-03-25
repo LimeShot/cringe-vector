@@ -30,6 +30,10 @@ public static class FileService {
                 canvas.Width = width;
                 canvas.Height = height;
 
+                if (shapes.Count > 0) {
+                    canvas.IsShapesVisible = System.Windows.Visibility.Visible;
+                }
+
                 return (filePath, null);
             } catch (Exception) {
                 return (null, $"Ошибка при открытии файла.");
