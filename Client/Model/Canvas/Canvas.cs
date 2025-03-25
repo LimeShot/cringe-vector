@@ -129,15 +129,24 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     }
 
     public bool IsPointInsideSelectedBB(Vector2 point) {
-        var min = GetGeneralBB.First();
-        var max = GetGeneralBB.First();
-        for (int i = 1; i < GetGeneralBB.Length; i++) {
-            var node = GetGeneralBB[i];
+        if (GetGeneralBB is null)
+            return false;
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-GetRotate), out Matrix2 result);
+        Vector2[] localBB =
+        [
+            result * (GetGeneralBB[0] - GetTranslate),
+            result * (GetGeneralBB[1] - GetTranslate),
+            result * (GetGeneralBB[2] - GetTranslate),
+            result * (GetGeneralBB[3] - GetTranslate),
+        ];
+        var min = localBB.First();
+        var max = localBB.First();
+        for (int i = 1; i < localBB.Length; i++) {
+            var node = localBB[i];
             min = Vector2.ComponentMin(node, min);
             max = Vector2.ComponentMax(node, max);
         }
-        Matrix2.CreateRotation(MathHelper.DegreesToRadians(GetRotate), out Matrix2 result);
-        var localPoint = result * point;
+        var localPoint = result * (point - GetTranslate);
         return localPoint.X >= min.X && localPoint.X <= max.X &&
             localPoint.Y >= min.Y && localPoint.Y <= max.Y;
     }
