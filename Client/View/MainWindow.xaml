@@ -181,8 +181,17 @@
     </Window.InputBindings>
 
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        <Menu x:Name="TopMenu"
+              DockPanel.Dock="Top">
             <MenuItem Header="_Файл">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SubmenuOpened">
+                        <i:InvokeCommandAction Command="{Binding TopMenuOpenedCommand}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SubmenuClosed">
+                        <i:InvokeCommandAction Command="{Binding TopMenuClosedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <MenuItem Header="_Создать">
                     <MenuItem.Icon>
                         <Image Source="pack://siteoforigin:,,,/assets/icons/new.png"
@@ -210,6 +219,14 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Холст">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SubmenuOpened">
+                        <i:InvokeCommandAction Command="{Binding TopMenuOpenedCommand}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SubmenuClosed">
+                        <i:InvokeCommandAction Command="{Binding TopMenuClosedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <MenuItem Header="_Изменить размер"
                           Command="{Binding ChangeCanvasSizeCommand}">
                     <MenuItem.Icon>
@@ -239,6 +256,14 @@
             </MenuItem>
 
             <MenuItem Header="_Действия">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SubmenuOpened">
+                        <i:InvokeCommandAction Command="{Binding TopMenuOpenedCommand}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SubmenuClosed">
+                        <i:InvokeCommandAction Command="{Binding TopMenuClosedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <MenuItem Header="Отменить"
                           Command="{Binding UndoCommand}"
                           InputGestureText="Ctrl+Z">
@@ -272,7 +297,9 @@
             <TextBlock Text="Цвет контура:"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <xctk:ColorPicker Width="120"
+            <xctk:ColorPicker x:Name="OutlineColorPicker"
+                              IsTabStop="False"
+                              Width="120"
                               Margin="5"
                               SelectedColor="{Binding Canvas.SelectedOutlineColor, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
@@ -286,7 +313,9 @@
             <TextBlock Text="Цвет заливки:"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <xctk:ColorPicker Width="120"
+            <xctk:ColorPicker x:Name="FillColorPicker"
+                              IsTabStop="False"
+                              Width="120"
                               Margin="5"
                               SelectedColor="{Binding Canvas.SelectedFillColor, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
@@ -315,6 +344,7 @@
 
         <Grid x:Name="MainGrid">
             <glWpfControl:GLWpfControl x:Name="OpenTkControl"
+                                       Focusable="True"
                                        Cursor="{Binding ToolController.CurrentCursor}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">

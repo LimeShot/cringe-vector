@@ -15,6 +15,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
     private Vector2 _startPoint;
     private bool _isResized = false;
     private readonly float _delta = 5;
+    private bool createdOnLastClick = false;
 
     public event EventHandler<List<IShape>>? OnShapeChanged = e;
     public string Name { get; set; } = name;
@@ -23,10 +24,11 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
         _startPoint = startPoint;
         Console.WriteLine(startPoint);
         _shape = AddShape(startPoint);
+        createdOnLastClick = true;
     }
 
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
-        if (isMousePressed && _shape != null) {
+        if (isMousePressed && _shape != null && createdOnLastClick) {
             _shape.Resize(1, currentPoint);
             _isResized = true;
         }
@@ -39,6 +41,7 @@ public class CreateTool(string name, MyCanvas canvas, EventHandler<List<IShape>>
             _shape.NormalizeIndexNodes();
             _isResized = false;
         }
+        createdOnLastClick = false;
         _commandHistory.AddCommand(new CreateCommand(_shape, _canvas));
     }
 
