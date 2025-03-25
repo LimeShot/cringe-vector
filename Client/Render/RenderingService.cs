@@ -282,18 +282,43 @@ public class RenderingService {
 
     public void OnBoundingBoxChanged(Vector2[]? bbox) {
         _bbox = bbox;
-        if (bbox == null) {
+        if (bbox == null || bbox.Length < 2) {
             _vaoBoundingBox?.SetData([]);
-        } else {
-            float z = 1.0f - 1e-3f;
-            float[] boundingBoxVertices = {
-                bbox[3].X, bbox[3].Y, z, 0, 0,  0, 0, 0, 0, bbox[2].X, bbox[2].Y, z, 0, 0, 0, 0, 0, 0,
-                bbox[2].X, bbox[2].Y, z, 0, 0,  0, 0, 0, 0, bbox[1].X, bbox[1].Y, z, 0, 0, 0, 0, 0, 0,
-                bbox[1].X, bbox[1].Y, z, 0, 0,  0, 0, 0, 0, bbox[0].X, bbox[0].Y, z, 0, 0, 0, 0, 0, 0,
-                bbox[0].X, bbox[0].Y, z, 0, 0,  0, 0, 0, 0, bbox[3].X, bbox[3].Y, z, 0, 0, 0, 0, 0, 0,
-            };
-            _vaoBoundingBox?.SetData(boundingBoxVertices);
+            return;
         }
+
+        float z = 1.0f - 1e-3f;
+        float[] boundingBoxVertices;
+
+        if (bbox.Length == 2) {
+            // Случай с двумя точками — линия
+            Vector2 p0 = bbox[0]; // Первая точка
+            Vector2 p1 = bbox[1]; // Вторая точка
+            boundingBoxVertices =
+            [
+            p0.X, p0.Y, z, 0, 0, 0, 0, 0, 0, // Первая точка
+            p1.X, p1.Y, z, 0, 0, 0, 0, 0, 0  // Вторая точка
+            ];
+        } else if (bbox.Length == 4) {
+            // Случай с четырьмя точками — замкнутый контур
+            boundingBoxVertices =
+            [
+            bbox[3].X, bbox[3].Y, z, 0, 0, 0, 0, 0, 0,
+            bbox[2].X, bbox[2].Y, z, 0, 0, 0, 0, 0, 0,
+            bbox[2].X, bbox[2].Y, z, 0, 0, 0, 0, 0, 0,
+            bbox[1].X, bbox[1].Y, z, 0, 0, 0, 0, 0, 0,
+            bbox[1].X, bbox[1].Y, z, 0, 0, 0, 0, 0, 0,
+            bbox[0].X, bbox[0].Y, z, 0, 0, 0, 0, 0, 0,
+            bbox[0].X, bbox[0].Y, z, 0, 0, 0, 0, 0, 0,
+            bbox[3].X, bbox[3].Y, z, 0, 0, 0, 0, 0, 0
+            ];
+        } else {
+            // Если точек не 2 и не 4, очищаем массив
+            _vaoBoundingBox?.SetData([]);
+            return;
+        }
+
+        _vaoBoundingBox?.SetData(boundingBoxVertices);
     }
 
     private void rebuildVBOs() {
