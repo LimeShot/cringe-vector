@@ -15,7 +15,8 @@ using System.Windows.Data;
 using System.Globalization;
 
 namespace CringeCraft.Client.Model.Tool;
-public partial class ToolController : ObservableObject {
+public partial class ToolController : ObservableObject
+{
     public Dictionary<string, ITool> Tools = new();
     private readonly MainWindow _window;
     private ToggleButton? _selectedButton;
@@ -40,7 +41,8 @@ public partial class ToolController : ObservableObject {
 
     public event EventHandler<List<IShape>>? OnShapeChanged;
 
-    public ToolController(Camera camera, MainWindow window, MyCanvas canvas, MyCommandHistory commandHistory) {
+    public ToolController(Camera camera, MainWindow window, MyCanvas canvas, MyCommandHistory commandHistory)
+    {
         _window = window;
         _canvas = canvas;
         _camera = camera;
@@ -58,31 +60,40 @@ public partial class ToolController : ObservableObject {
         CreateButtons();
     }
 
-    public void OnMouseDown(Vector2 startPoint) {
+    public void OnMouseDown(Vector2 startPoint)
+    {
         _isCtrlPressed = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
         _currentTool.MouseDownEvent(startPoint, _isCtrlPressed);
     }
 
-    public void OnMouseMove(Vector2 currentPoint, bool IsMousePressed) {
+    public void OnMouseMove(Vector2 currentPoint, bool IsMousePressed)
+    {
         _currentTool.MouseMoveEvent(currentPoint, IsMousePressed);
         UpdateCursor();
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
-    public void OnMouseUp(Vector2 endPoint) {
+    public void OnMouseUp(Vector2 endPoint)
+    {
         _currentTool.MouseUpEvent(endPoint);
         OnShapeChanged?.Invoke(this, _canvas.Shapes.ToList());
     }
 
-    public void OnMouseWheel(float delta, Vector2 currentPoint) {
+    public void OnMouseWheel(float delta, Vector2 currentPoint)
+    {
         _currentTool.MouseWheelEvent(delta, currentPoint);
     }
 
-    public void SetTool(string toolName) {
-        if (Tools.TryGetValue(toolName, out var tool)) {
-            if (_buttons.TryGetValue(toolName, out var targetButton)) {
-                if (_selectedButton != targetButton) {
-                    if (_selectedButton != null) {
+    public void SetTool(string toolName)
+    {
+        if (Tools.TryGetValue(toolName, out var tool))
+        {
+            if (_buttons.TryGetValue(toolName, out var targetButton))
+            {
+                if (_selectedButton != targetButton)
+                {
+                    if (_selectedButton != null)
+                    {
                         _selectedButton.IsChecked = false;
                     }
 
@@ -94,12 +105,15 @@ public partial class ToolController : ObservableObject {
             _currentTool?.OnChanged();
             _currentTool = tool;
 
-            if (_currentTool is CreateTool createTool) {
+            if (_currentTool is CreateTool createTool)
+            {
                 IsCreateToolActive = true;
                 CurrentCreateTool = createTool;
                 // Проверяем, является ли инструмент инструментом для многоугольника
                 IsPolygonToolActive = createTool.Name.Equals("Polygon", StringComparison.OrdinalIgnoreCase);
-            } else {
+            }
+            else
+            {
                 IsCreateToolActive = false;
                 IsPolygonToolActive = false;
                 CurrentCreateTool = null;
@@ -108,18 +122,24 @@ public partial class ToolController : ObservableObject {
     }
 
     [RelayCommand]
-    private void SelectShapeInList(IShape shape) {
-        if (!_canvas.SelectedShapes.Contains(shape)) {
+    private void SelectShapeInList(IShape shape)
+    {
+        if (!_canvas.SelectedShapes.Contains(shape))
+        {
             SetTool("Change");
             _canvas.SelectedShapes.Clear();
             _canvas.SelectedShapes.Add(shape);
         }
     }
 
-    private void UpdateCursor() {
-        if (_currentTool is ChangeTool changeTool) {
-            CurrentCursor = changeTool.Mode switch {
-                ChangeToolMode.Resize => changeTool.bbIndex switch {
+    private void UpdateCursor()
+    {
+        if (_currentTool is ChangeTool changeTool)
+        {
+            CurrentCursor = changeTool.Mode switch
+            {
+                ChangeToolMode.Resize => changeTool.bbIndex switch
+                {
                     0 => Cursors.SizeNWSE,
                     1 => Cursors.SizeNESW,
                     2 => Cursors.SizeNWSE,
@@ -130,30 +150,38 @@ public partial class ToolController : ObservableObject {
                 ChangeToolMode.Move => Cursors.SizeAll,
                 _ => Cursors.Arrow
             };
-        } else {
+        }
+        else
+        {
             CurrentCursor = Cursors.Arrow;
         }
     }
-    public void CreateButtons() {
-        foreach (string typeTool in Tools!.Keys) {
-            var toggleButton = new ToggleButton {
+    public void CreateButtons()
+    {
+        foreach (string typeTool in Tools!.Keys)
+        {
+            var toggleButton = new ToggleButton
+            {
                 Height = 30,
                 Width = 30
             };
 
             string imagePath = $"pack://siteoforigin:,,,/assets/tools/{typeTool}.png";
-            var toggleImage = new Image {
+            var toggleImage = new Image
+            {
                 Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute)),
             };
             toggleButton.Content = toggleImage;
 
-            toggleButton.Checked += (s, e) => {
+            toggleButton.Checked += (s, e) =>
+            {
                 if (_selectedButton != null && _selectedButton != toggleButton)
                     _selectedButton.IsChecked = false;
                 _selectedButton = toggleButton;
                 SetTool(typeTool);
             };
-            toggleButton.Unchecked += (s, e) => {
+            toggleButton.Unchecked += (s, e) =>
+            {
                 if (_selectedButton == toggleButton)
                     _selectedButton = null;
             };
@@ -163,23 +191,28 @@ public partial class ToolController : ObservableObject {
     }
 }
 
-public class StringToIntConverter : IValueConverter {
+public class StringToIntConverter : IValueConverter
+{
     private const int MinSides = 3;
     private const int MaxSides = 20;
 
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
         return value?.ToString() ?? MinSides.ToString();
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
         string? input = value?.ToString();
 
         // Если строка пустая или null, возвращаем null или текущее значение свойства
-        if (string.IsNullOrWhiteSpace(input)) {
+        if (string.IsNullOrWhiteSpace(input))
+        {
             return DependencyProperty.UnsetValue; // Не обновляем источник, оставляем пользователю свободу ввода
         }
 
-        if (int.TryParse(input, out int result)) {
+        if (int.TryParse(input, out int result))
+        {
             if (result < MinSides)
                 return MinSides;
             if (result > MaxSides)
@@ -192,32 +225,41 @@ public class StringToIntConverter : IValueConverter {
     }
 }
 
-public class IntRangeValidationRule : ValidationRule {
+public class IntRangeValidationRule : ValidationRule
+{
     private const int MinSides = 3;
     private const int MaxSides = 20;
 
-    public override ValidationResult Validate(object value, CultureInfo cultureInfo) {
-        string input = value?.ToString();
-        if (string.IsNullOrWhiteSpace(input)) {
+    public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+    {
+        string? input = value?.ToString();
+        if (string.IsNullOrWhiteSpace(input))
+        {
             return new ValidationResult(false, "Введите число.");
         }
-        if (!int.TryParse(input, out int result)) {
+        if (!int.TryParse(input, out int result))
+        {
             return new ValidationResult(false, "Должно быть целое число.");
         }
-        if (result < MinSides || result > MaxSides) {
+        if (result < MinSides || result > MaxSides)
+        {
             return new ValidationResult(false, $"Число должно быть от {MinSides} до {MaxSides}.");
         }
         return ValidationResult.ValidResult;
     }
 }
 
-public class StringToFloatConverter : IValueConverter {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+public class StringToFloatConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
         return value?.ToString() ?? "0";
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-        if (float.TryParse(value?.ToString(), NumberStyles.Float, culture, out float result)) {
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (float.TryParse(value?.ToString(), NumberStyles.Float, culture, out float result))
+        {
             return result;
         }
         return 0f;

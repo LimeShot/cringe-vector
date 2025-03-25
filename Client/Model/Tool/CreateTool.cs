@@ -20,8 +20,6 @@ public partial class CreateTool : ObservableObject, ITool {
     [ObservableProperty]
     private int _polygonSides = 6; // Значение по умолчанию — 6 сторон
 
-    private const float NodeSelectionRadius = 4.0f;
-    private bool _isCtrlPressed;
     private readonly float _delta = 5;
     private bool createdOnLastClick = false;
 
@@ -38,7 +36,6 @@ public partial class CreateTool : ObservableObject, ITool {
     }
 
     public void MouseDownEvent(Vector2 startPoint, bool isCtrlPressed) {
-        _isCtrlPressed = isCtrlPressed;
         _startPoint = startPoint;
         _shape = AddShape(startPoint);
         createdOnLastClick = true;
