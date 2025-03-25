@@ -128,6 +128,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
                 break;
             }
         }
+        CalcTranslate(SelectedShapes);
     }
 
     public bool IsPointInsideSelectedBB(Vector2 point) {
@@ -170,6 +171,10 @@ public partial class MyCanvas : ObservableObject, ICanvas {
             GetRotate = 0.0f;
             GetTranslate = (GetGeneralBB[0] + GetGeneralBB[2]) / 2f;
             OnPropertyChanged(nameof(GetGeneralBB));
+        } else {
+            GetRotate = 0.0f;
+            GetTranslate = new Vector2(0f, 0f);
+            GetGeneralBB = null;
         }
     }
 
