@@ -1,18 +1,25 @@
 namespace CringeCraft.Client.Model;
 
+using System.Windows.Documents;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+
 using CringeCraft.Client.Render;
 
 using OpenTK.Mathematics;
 
 
-public class Camera {
+public partial class Camera : ObservableObject {
+
+   [ObservableProperty]
+   private string _percentZoom = $"Zoom: 100%";
+   private Vector2 _viewportSize;
+
    public Vector2 Position { get; set; } = Vector2.Zero;
    public float Zoom { get; private set; } = 1.0f;
    public float MinZoom { get; set; } = 0.1f;
    public float MaxZoom { get; set; } = 5.0f;
    public event Action<Matrix4, Matrix4> MatrixProjecitonPortChanged;
-
-   private Vector2 _viewportSize;
 
    public Camera(RenderingService rendering) {
       _viewportSize = Vector2.Zero;
@@ -36,15 +43,11 @@ public class Camera {
    }
 
    public void AdjustZoom(float delta, Vector2 zoomCenter) {
-      float oldZoom = Zoom;
       Console.WriteLine(delta);
+      float oldZoom = Zoom;
       float newZoom = Zoom + delta * 0.001f;
       Zoom = Math.Clamp(newZoom, MinZoom, MaxZoom);
-
-      if (Math.Abs(newZoom - oldZoom) > float.Epsilon) {
-         // Корректируем позицию только при реальном изменении масштаба
-         Position += (zoomCenter - Position) * (1.0f - oldZoom / newZoom);
-      }
+      PercentZoom = $"Zoom: {Math.Round(Zoom * 100)}%";
       UpdateViewMatrix();
    }
 

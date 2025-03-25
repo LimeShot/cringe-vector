@@ -33,7 +33,9 @@ public partial class MainViewModel : ObservableObject {
     private readonly CommandController _commandController;
     private readonly MyCommandHistory _commandHistory;
     private readonly MainWindow _window;
-    private readonly Camera _camera;
+
+    [ObservableProperty]
+    private Camera _camera;
     private bool _isMouseDownProcessing = false;
 
     public Vector2 StartPoint { get; private set; }
