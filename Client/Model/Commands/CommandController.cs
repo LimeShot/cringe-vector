@@ -7,6 +7,7 @@ using CringeCraft.Client.Model.Commands.CommandHistory;
 using CringeCraft.GeometryDash.Shape;
 using CommunityToolkit.Mvvm.Input;
 using System.Diagnostics;
+using CringeCraft.Client.ViewModel;
 
 namespace CringeCraft.Client.Model.Commands;
 
@@ -21,7 +22,9 @@ public class CommandController {
     private readonly Camera _camera;
     private readonly MyCommandHistory _commandHistory;
     private readonly List<IShape> _shapeBuffer;
+
     public Dictionary<string, ICommandMenu> CommandsL = new();
+
     public CommandController(MyCanvas canvas, Camera camera, MyCommandHistory commandHistory) {
         _canvas = canvas;
         _camera = camera;
@@ -36,6 +39,7 @@ public class CommandController {
 
     public void CreateMenu(Vector2 position) {
         ContextMenu contextMenu = new();
+        PopupStateManager.NotifyPopUpOpened();
         if (!_canvas.IsPointInsideSelectedBB(position)) {
             _canvas.SelectedShapes.Clear();
             _canvas.SelectShape(position);
@@ -48,6 +52,8 @@ public class CommandController {
             });
             command.Value.Point = position;
         }
+
+        contextMenu.Closed += (s, e) => PopupStateManager.NotifyPopUpClosed();
         contextMenu.HorizontalOffset = 0;
         contextMenu.VerticalOffset = 0;
         contextMenu.IsOpen = true;
