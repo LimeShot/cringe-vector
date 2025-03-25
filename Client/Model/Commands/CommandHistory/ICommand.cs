@@ -11,5 +11,6 @@ public enum CommandType {
     Move,
     Resize,
     Rotate,
-    MoveNode
+    MoveNode,
+    Reflect
 }

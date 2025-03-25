@@ -178,6 +178,12 @@
         <KeyBinding Key="Up"
                     Modifiers="Control+Shift"
                     Command="{Binding BringToFrontCommand}"/>
+        <KeyBinding Key="V"
+                    Modifiers="Control+Alt"
+                    Command="{Binding ReflectVerticallyCommand}"/>
+        <KeyBinding Key="G"
+                    Modifiers="Control+Alt"
+                    Command="{Binding ReflectHorizontallyCommand}"/>
     </Window.InputBindings>
 
     <DockPanel>

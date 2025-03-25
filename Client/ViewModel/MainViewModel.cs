@@ -211,8 +211,7 @@ public partial class MainViewModel : ObservableObject {
             _commandHistory.Undo();
             if (type != CommandType.None) {
                 OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
-                if (type == CommandType.MoveNode)
-                    Canvas.CalcTranslate(Canvas.SelectedShapes);
+                Canvas.CalcTranslate(Canvas.SelectedShapes);
             }
         }
     }
@@ -224,8 +223,7 @@ public partial class MainViewModel : ObservableObject {
             _commandHistory.Redo();
             if (type != CommandType.None) {
                 OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
-                if (type == CommandType.MoveNode)
-                    Canvas.CalcTranslate(Canvas.SelectedShapes);
+                Canvas.CalcTranslate(Canvas.SelectedShapes);
             }
         }
     }
@@ -301,6 +299,16 @@ public partial class MainViewModel : ObservableObject {
     [RelayCommand]
     private void BringToFront() {
         _commandController.CommandsL["На передний план"].ExecuteButton();
+    }
+
+    [RelayCommand]
+    private void ReflectVertically() {
+        _commandController.CommandsL["Отразить по вертикали"].ExecuteButton();
+    }
+
+    [RelayCommand]
+    private void ReflectHorizontally() {
+        _commandController.CommandsL["Отразить по горизонтали"].ExecuteButton();
     }
 }
 

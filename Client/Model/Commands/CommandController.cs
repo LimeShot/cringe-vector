@@ -35,6 +35,8 @@ public class CommandController {
         CommandsL.Add("Удалить", new DelCommand(_canvas, _commandHistory));
         CommandsL.Add("На передний план", new BringToFrontCommand(_canvas, _commandHistory));
         CommandsL.Add("На задний план", new BringToBackCommand(_canvas, _commandHistory));
+        CommandsL.Add("Отразить по вертикали", new ReflectVerticallyCommand(_canvas, _commandHistory));
+        CommandsL.Add("Отразить по горизонтали", new ReflectHorizontallyCommand(_canvas, _commandHistory));
     }
 
     public void CreateMenu(Vector2 position) {

@@ -251,4 +251,6 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         _myCommandHistory.AddCommand(new DeleteAllCommand(Shapes));
         Shapes.Clear();
     }
+
+    public void CringeEvent() => OnShapeChanged?.Invoke(this, SelectedShapes);
 }
