@@ -130,13 +130,11 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         if (GetGeneralBB is null)
             return false;
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(-GetRotate), out Matrix2 result);
-        Vector2[] localBB =
-        [
-            result * (GetGeneralBB[0] - GetTranslate),
-            result * (GetGeneralBB[1] - GetTranslate),
-            result * (GetGeneralBB[2] - GetTranslate),
-            result * (GetGeneralBB[3] - GetTranslate),
-        ];
+
+        Vector2[] localBB = new Vector2[GetGeneralBB.Length];
+        for (int i = 0; i < GetGeneralBB.Length; i++) {
+            localBB[i] = result * (GetGeneralBB[i] - GetTranslate);
+        }
         var min = localBB.First();
         var max = localBB.First();
         for (int i = 1; i < localBB.Length; i++) {
