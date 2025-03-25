@@ -252,7 +252,6 @@
                       Margin="10,0,0,0"/>
 
             <!-- Простая советская вертикальная линия -->
-            <!-- Как за щеку, только повернуто вертикально, десу! (^_−)☆ -->
             <Border Background="White"
                     Width="2"
                     Height="33"
@@ -284,7 +283,7 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
-                    <TextBlock Text="(°):"
+                    <TextBlock Text="Угол (°):"
                                VerticalAlignment="Center"
                                Margin="5,0,5,0"/>
                     <TextBox Width="50"
@@ -319,7 +318,7 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
-                    <TextBlock Text="Стор:"
+                    <TextBlock Text="Количество углов:"
                                VerticalAlignment="Center"
                                Margin="5,0,5,0"/>
                     <TextBox Width="50"
