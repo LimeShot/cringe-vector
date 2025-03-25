@@ -13,7 +13,6 @@ public class RenderingService {
     private VAO? _vaoLine, _vaoTriangle, _vaoCircle, _vaoCircumference;
     private VAO? _vaoBackground, _vaoBoundingBox;
     private Matrix4 _projection = Matrix4.Identity, _view = Matrix4.Identity;
-    private Vector2[]? _bbox;
 
     public RenderingService(MyCanvas Cringe) {
         _canvas = Cringe;
@@ -286,7 +285,24 @@ public class RenderingService {
             _vaoBoundingBox?.SetData([]);
         } else {
             float z = 1.0f - 1e-3f;
-            float[] boundingBoxVertices = {
+
+
+            if (bbox.Length == 2) {
+                // Случай с двумя точками — линия
+                float[] boundingBoxVertices = {
+                bbox[0].X, bbox[0].Y, z, 0, 0, 0, -1, -1, -1, bbox[1].X, bbox[1].Y, z, 0, 0, 0, -1, -1, -1,
+                bbox[1].X, bbox[1].Y, z, 0, 0, 0, -1, -1, -1, bbox[0].X, bbox[0].Y, z, 0, 0, 0, -1, -1, -1,
+                bbox[0].X, bbox[0].Y, z, 0, 0, 0, -1, -1, -1, bbox[1].X, bbox[1].Y, z, 0, 0, 0, -1, -1, -1,
+                bbox[1].X, bbox[1].Y, z, 0, 0, 0, -1, -1, -1, bbox[0].X, bbox[0].Y, z, 0, 0, 0, -1, -1, -1,
+                bbox[0].X, bbox[0].Y, z, 5, 5, 0, 0, 0, 0,
+                bbox[1].X, bbox[1].Y, z, 5, 5, 0, 0, 0, 0,
+                bbox[0].X, bbox[0].Y, z, 5, 5, 0, 0, 0, 0,
+                bbox[1].X, bbox[1].Y, z, 5, 5, 0, 0, 0, 0
+            };
+                _vaoBoundingBox?.SetData(boundingBoxVertices);
+            } else if (bbox.Length == 4) {
+                // Случай с четырьмя точками — замкнутый контур
+                float[] boundingBoxVertices = {
                 bbox[3].X, bbox[3].Y, z, 0, 0, 0, -1, -1, -1, bbox[2].X, bbox[2].Y, z, 0, 0, 0, -1, -1, -1,
                 bbox[2].X, bbox[2].Y, z, 0, 0, 0, -1, -1, -1, bbox[1].X, bbox[1].Y, z, 0, 0, 0, -1, -1, -1,
                 bbox[1].X, bbox[1].Y, z, 0, 0, 0, -1, -1, -1, bbox[0].X, bbox[0].Y, z, 0, 0, 0, -1, -1, -1,
@@ -296,7 +312,12 @@ public class RenderingService {
                 bbox[2].X, bbox[2].Y, z, 5, 5, 0, 0, 0, 0,
                 bbox[3].X, bbox[3].Y, z, 5, 5, 0, 0, 0, 0
             };
-            _vaoBoundingBox?.SetData(boundingBoxVertices);
+                _vaoBoundingBox?.SetData(boundingBoxVertices);
+            } else {
+                // Если точек не 2 и не 4, очищаем массив
+                _vaoBoundingBox?.SetData([]);
+                return;
+            }
         }
     }
 
