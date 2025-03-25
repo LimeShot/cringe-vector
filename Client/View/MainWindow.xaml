@@ -251,9 +251,14 @@
                       IsChecked="{Binding Canvas.HasFill}"
                       Margin="10,0,0,0"/>
 
-            <!-- Простая советская горизонтальная линия -->
-            <Border Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}"
-                    Width="1"/>
+            <!-- Простая советская вертикальная линия -->
+            <!-- Как за щеку, только повернуто вертикально, десу! (^_−)☆ -->
+            <Border Background="White"
+                    Width="2"
+                    Height="33"
+                    Margin="10,0"
+                    HorizontalAlignment="Center">
+            </Border>
 
             <StackPanel x:Name="ToolOptionsPanel"
                         HorizontalAlignment="Center"
