@@ -115,8 +115,6 @@ public partial class MyCanvas : ObservableObject, ICanvas {
                 StartOutLineColor = shape.Style.ColorOutline;
                 StartFillColor = shape.Style.ColorFill;
                 HasFill = shape.Style.Fill;
-                flag_outlineColor = false;
-                flag_fillColor = false;
                 SelectedOutlineColor = Color.FromRgb(
                     (byte)(StartOutLineColor.X * 255f),
                     (byte)(StartOutLineColor.Y * 255f),
@@ -177,34 +175,52 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     }
 
     public void ChangeOutLineColor(Color color) {
-        if (!flag_outlineColor) {
-            flag_outlineColor = true;
-            return;
-        }
-
         var new_color = new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
 
         if (SelectedShapes.Count > 0) {
             foreach (IShape shape in SelectedShapes) {
-                shape.Style.ColorOutline = new_color;
+                var shape_color = Color.FromRgb(
+                    (byte)(shape.Style.ColorOutline.X * 255f),
+                    (byte)(shape.Style.ColorOutline.Y * 255f),
+                    (byte)(shape.Style.ColorOutline.Z * 255f)
+                );
+                if (shape_color != SelectedOutlineColor) {
+                    shape.Style.ColorOutline = new_color;
+                } else {
+                    flag_outlineColor = false;
+                }
             }
+        }
+        OnShapeChanged?.Invoke(this, SelectedShapes);
+        if (!flag_outlineColor) {
+            flag_outlineColor = true;
+            return;
         }
         StartOutLineColor = new_color;
     }
 
     public void ChangeFillColor(Color color) {
-        if (!flag_fillColor) {
-            flag_fillColor = true;
-            return;
-        }
-
         var new_color = new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
 
         if (SelectedShapes.Count > 0) {
             foreach (IShape shape in SelectedShapes) {
-                shape.Style.ColorFill = new_color;
-                shape.Style.Fill = HasFill;
+                var shape_color = Color.FromRgb(
+                    (byte)(shape.Style.ColorFill.X * 255f),
+                    (byte)(shape.Style.ColorFill.Y * 255f),
+                    (byte)(shape.Style.ColorFill.Z * 255f)
+                );
+                if (shape_color != SelectedFillColor) {
+                    shape.Style.ColorFill = new_color;
+                    shape.Style.Fill = HasFill;
+                } else {
+                    flag_fillColor = false;
+                }
             }
+        }
+        OnShapeChanged?.Invoke(this, SelectedShapes);
+        if (!flag_fillColor) {
+            flag_fillColor = true;
+            return;
         }
         StartFillColor = new_color;
     }
