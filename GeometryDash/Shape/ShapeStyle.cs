@@ -1,6 +1,6 @@
-using OpenTK.Mathematics;
-
 namespace CringeCraft.GeometryDash.Shape;
+
+using OpenTK.Mathematics;
 
 public class ShapeStyle {
     public Vector3 ColorOutline { set; get; }
@@ -11,7 +11,7 @@ public class ShapeStyle {
     public ShapeStyle() {
         ColorOutline = (0.0f, 0.0f, 0.0f);
         ColorFill = (0.0f, 0.0f, 0.0f);
-        Fill = true;
+        Fill = false;
         Visible = true;
     }
 
@@ -21,4 +21,47 @@ public class ShapeStyle {
         Fill = fill;
         Visible = visible;
     }
+
+    public ShapeStyle(ShapeStyle other) {
+        ColorOutline = other.ColorOutline;
+        ColorFill = other.ColorFill;
+        Fill = other.Fill;
+        Visible = other.Visible;
+    }
+
+    public ShapeStyle Clone() {
+        return new ShapeStyle(ColorOutline, ColorFill, Fill, Visible);
+    }
+
+    public static bool operator ==(ShapeStyle a, ShapeStyle b) {
+        if (ReferenceEquals(a, b)) return true;
+        if (a is null || b is null) return false;
+        return a.ColorOutline == b.ColorOutline
+            && a.ColorFill == b.ColorFill
+            && a.Fill == b.Fill
+            && a.Visible == b.Visible;
+    }
+
+    public static bool operator !=(ShapeStyle a, ShapeStyle b) => !(a == b);
+
+    public void CopyFrom(ShapeStyle other) {
+        this.ColorOutline = other.ColorOutline;
+        this.ColorFill = other.ColorFill;
+        this.Fill = other.Fill;
+        this.Visible = other.Visible;
+    }
+    public override bool Equals(object? obj) {
+        if (obj is not ShapeStyle other)
+            return false;
+
+        return ColorOutline.Equals(other.ColorOutline)
+            && ColorFill.Equals(other.ColorFill)
+            && Fill == other.Fill
+            && Visible == other.Visible;
+    }
+
+    public override int GetHashCode() {
+        return HashCode.Combine(ColorOutline, ColorFill, Fill, Visible);
+    }
+
 }

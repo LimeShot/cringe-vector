@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+    <ItemGroup>
+    <ProjectReference Include="..\GeometryDash\GeometryDash.csproj" />
+  </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="SkiaSharp" Version="3.116.1" />
+      <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+      <PackageReference Include="Svg" Version="3.4.7" />
+    </ItemGroup>
 </Project>

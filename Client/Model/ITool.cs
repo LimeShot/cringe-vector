@@ -1,6 +1,0 @@
-namespace Tools;
-
-interface ITool
-{
-    
-}
