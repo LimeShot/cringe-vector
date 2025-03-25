@@ -149,6 +149,7 @@ public partial class MainViewModel : ObservableObject {
         var (filePath, errorMessage) = FileService.OpenFile(Canvas);
         if (filePath != null) {
             Console.WriteLine($"Открыт файл: {filePath}");
+            Canvas.Shapes.CollectionChanged += Shapes_CollectionChanged;
         } else if (errorMessage != null) {
             MessageBox.Show(errorMessage, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }

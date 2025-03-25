@@ -205,23 +205,15 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     public void MoveShapeUp(IShape shape) {
         var index = Shapes.IndexOf(shape);
 
-        var z_new = Shapes[index - 1].Z;
-        Shapes[index - 1].Z = shape.Z;
-        shape.Z = z_new;
-
-        Shapes[index] = Shapes[index - 1];
-        Shapes[index - 1] = shape;
+        (Shapes[index - 1].Z, shape.Z) = (shape.Z, Shapes[index - 1].Z);
+        (Shapes[index - 1], Shapes[index]) = (Shapes[index], Shapes[index - 1]);
     }
 
     public void MoveShapeDown(IShape shape) {
         var index = Shapes.IndexOf(shape);
 
-        var z_new = Shapes[index + 1].Z;
-        Shapes[index + 1].Z = shape.Z;
-        shape.Z = z_new;
-
-        Shapes[index] = Shapes[index + 1];
-        Shapes[index + 1] = shape;
+        (Shapes[index + 1].Z, shape.Z) = (shape.Z, Shapes[index + 1].Z);
+        (Shapes[index + 1], Shapes[index]) = (Shapes[index], Shapes[index + 1]);
     }
 
     public void DeleteAllShapes() {
