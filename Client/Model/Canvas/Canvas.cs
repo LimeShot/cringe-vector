@@ -8,6 +8,7 @@ using OpenTK.Mathematics;
 using System.IO.Compression;
 using System.ComponentModel;
 using System.Windows.Media;
+using CringeCraft.Client.Model.Commands.CommandHistory;
 
 /// <summary>
 /// Представляет холст для хранения фигур
@@ -41,10 +42,14 @@ public partial class MyCanvas : ObservableObject, ICanvas {
     public float ScreenPerWorld = 1.0f;
     public event EventHandler<List<IShape>>? OnShapeChanged;
 
-    public MyCanvas() {
+    private readonly MyCommandHistory _myCommandHistory;
+
+    public MyCanvas(MyCommandHistory myCommandHistory) {
         Shapes = new();
         Width = 2000;
         Height = 1000;
+        _myCommandHistory = myCommandHistory;
+
         PropertyChanged += ChangeFill;
     }
 
@@ -216,6 +221,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
 
     public void DeleteAllShapes() {
         SelectedShapes.Clear();
+        _myCommandHistory.AddCommand(new DeleteAllCommand(Shapes));
         Shapes.Clear();
     }
 }

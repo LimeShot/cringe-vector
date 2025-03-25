@@ -43,10 +43,10 @@ public partial class MainViewModel : ObservableObject {
 
     public MainViewModel(MainWindow window) {
         _window = window;
-        _canvas = new();
+        _commandHistory = new MyCommandHistory();
+        _canvas = new(_commandHistory);
         _renderingService = new(_canvas);
         _camera = new(_renderingService);
-        _commandHistory = new MyCommandHistory();
         _commandController = new(_canvas, _camera, _commandHistory);
         _toolController = new(_camera, window, _canvas, _commandHistory);
 
