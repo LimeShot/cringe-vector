@@ -77,7 +77,7 @@ public partial class Polygon : IShape, IChangableShape {
         return new Polygon(this);
     }
 
-    public Polygon(Vector2 p1, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
+    public Polygon(Vector2 p1, float z, float deltaZ, ShapeStyle shapeStyle, int n) {
         float diagonal = 1e-5f;
         Translate = p1;
         Z = z;
@@ -85,7 +85,7 @@ public partial class Polygon : IShape, IChangableShape {
         Rotate = 0.0f;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
-        int countVertices = 6;
+        int countVertices = n;
         Nodes = new Vector2[countVertices];
         float angle = -360.0f / countVertices;
         for (int i = 0; i < countVertices; i++) {
@@ -95,30 +95,14 @@ public partial class Polygon : IShape, IChangableShape {
         CalcBB();
     }
 
-    public Polygon(Vector2 p1, float diagonal, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
+    public Polygon(Vector2 p1, float diagonal, float rotate, float z, float deltaZ, ShapeStyle shapeStyle, int n) {
         Translate = p1;
         Z = z;
         DeltaZ = deltaZ;
-        Rotate = 0.0f;
-        Style = shapeStyle ?? new();
+        Rotate = rotate;
+        Style = shapeStyle;
         BoundingBox = new Vector2[4];
-        int countVertices = 6;
-        Nodes = new Vector2[countVertices];
-        float angle = -360.0f / countVertices;
-        for (int i = 0; i < countVertices; i++) {
-            Matrix2.CreateRotation(MathHelper.DegreesToRadians(i * angle), out Matrix2 result);
-            Nodes[i] = result * new Vector2(diagonal / 2, 0.0f);
-        }
-        CalcBB();
-    }
-
-    public Polygon(Vector2 p1, float diagonal, int countVertices, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
-        Translate = p1;
-        Z = z;
-        DeltaZ = deltaZ;
-        Rotate = 0.0f;
-        Style = shapeStyle ?? new();
-        BoundingBox = new Vector2[4];
+        int countVertices = n;
         Nodes = new Vector2[countVertices];
         float angle = -360.0f / countVertices;
         for (int i = 0; i < countVertices; i++) {

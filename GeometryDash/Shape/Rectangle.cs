@@ -69,11 +69,11 @@ public partial class Rectangle : IShape {
         CalcBB();
     }
 
-    public Rectangle(Vector2 p1, float side, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
+    public Rectangle(Vector2 p1, float side, float z, float deltaZ, float rotateAngle, ShapeStyle shapeStyle) {
         Translate = p1;
         Z = z;
         DeltaZ = deltaZ;
-        Rotate = 0.0f;
+        Rotate = rotateAngle;
         Style = shapeStyle ?? new();
         BoundingBox = new Vector2[4];
         Nodes = new Vector2[4];

@@ -36,12 +36,12 @@ public partial class Ellipse : IShape {
         CalcBB();
     }
 
-    public Ellipse(Vector2 p1, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
+    public Ellipse(Vector2 p1, float z, float deltaZ, ShapeStyle shapeStyle) {
         Translate = p1;
         Z = z;
         DeltaZ = deltaZ;
         Rotate = 0.0f;
-        Style = shapeStyle ?? new();
+        Style = shapeStyle;
         BoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         for (int i = 0; i < 4; i++) {
@@ -50,12 +50,12 @@ public partial class Ellipse : IShape {
         CalcBB();
     }
 
-    public Ellipse(Vector2 p1, float diagonal, float z, float deltaZ, ShapeStyle? shapeStyle = null) {
+    public Ellipse(Vector2 p1, float diagonal, float rotateAngle, float z, float deltaZ, ShapeStyle shapeStyle) {
         Translate = p1;
         Z = z;
         DeltaZ = deltaZ;
-        Rotate = 0.0f;
-        Style = shapeStyle ?? new();
+        Rotate = rotateAngle;
+        Style = shapeStyle;
         BoundingBox = new Vector2[4];
         Nodes = new Vector2[4];
         float diagonalDev2 = diagonal / 2;
@@ -209,7 +209,7 @@ public partial class Ellipse : IShape {
     }
 
     public override int GetHashCode() {
-        var hash = new HashCode(); 
+        var hash = new HashCode();
         hash.Add(Translate);
         hash.Add(Z);
         hash.Add(DeltaZ);
@@ -223,9 +223,9 @@ public partial class Ellipse : IShape {
     }
 
     public static bool operator ==(Ellipse? a, Ellipse? b) {
-        if (ReferenceEquals(a, b)) 
+        if (ReferenceEquals(a, b))
             return true;
-        if (a is null || b is null) 
+        if (a is null || b is null)
             return false;
         return a.Equals(b);
     }

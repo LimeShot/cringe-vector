@@ -16,7 +16,6 @@ using OpenTK.Wpf;
 using CringeCraft.Client.Model.Commands;
 using VectorPaint;
 using CringeCraft.Client.Model.Commands.CommandHistory;
-using OpenTK.Graphics.OpenGL;
 using System.ComponentModel;
 using System.Windows.Controls.Primitives;
 using OpenTK.Mathematics;
