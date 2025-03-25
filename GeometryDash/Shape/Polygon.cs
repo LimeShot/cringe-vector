@@ -1,6 +1,7 @@
 namespace CringeCraft.GeometryDash.Shape;
 
 using OpenTK.Mathematics;
+using EarClipperLib;
 
 using System.Composition;
 using System.Diagnostics;
@@ -158,8 +159,29 @@ public partial class Polygon : IShape {
     }
 
     public float[] GetTriangleVertices() {
-        // TODO: Сделать триангуляцию
-        return [];
+        if (!Style.Visible || !Style.Fill) return [];
+        List<Vector3m> points = new List<Vector3m>();
+        for (int i = 0; i < Nodes.Length; i++) {
+            points.Add(new Vector3m(Nodes[i].X, Nodes[i].Y, 0));
+        }
+        EarClipping earClipping = new EarClipping();
+        earClipping.SetPoints(points);
+        earClipping.Triangulate();
+        var res = earClipping.Result;
+        int len = res.Count;
+        float[] returns = new float[len * 9];
+        for (int i = 0; i < len; i++) {
+            returns[i * 9] = (float)res[i].X;
+            returns[i * 9 + 1] = (float)res[i].Y;
+            returns[i * 9 + 2] = Z;
+            returns[i * 9 + 3] = Translate.X;
+            returns[i * 9 + 4] = Translate.Y;
+            returns[i * 9 + 5] = Rotate;
+            returns[i * 9 + 6] = Style.ColorFill.X;
+            returns[i * 9 + 7] = Style.ColorFill.Y;
+            returns[i * 9 + 8] = Style.ColorFill.Z;
+        }
+        return returns;
     }
 
     public float[] GetCircumferenceVertices() {
