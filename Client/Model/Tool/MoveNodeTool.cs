@@ -6,12 +6,12 @@ using CringeCraft.Client.Model.Commands.CommandHistory;
 using OpenTK.Mathematics;
 
 
-public class MoveNodeTool(string name, MyCanvas canvas, MyCommandHistory myCommandHistory) : ITool {
-    public string Name => name;
+public class MoveNodeTool : ITool {
+    public string Name { get; }
 
-    private readonly MyCanvas _canvas = canvas;
+    private readonly MyCanvas _canvas;
     private bool _isCtrlPressed;
-    private readonly MyCommandHistory _myCommandHistory = myCommandHistory;
+    private readonly MyCommandHistory _myCommandHistory;
     private bool _isSelect = false;
     private int _nodeIndex = -1;
     private Vector2 _startPoint;
@@ -19,9 +19,17 @@ public class MoveNodeTool(string name, MyCanvas canvas, MyCommandHistory myComma
     private IChangableShape? _shape;
     private const float _eps = 5;
 
+    public event Action? OnBoundingBoxChanged;
+
+    public MoveNodeTool(string name, MyCanvas canvas, MyCommandHistory myCommandHistory) {
+        Name = name;
+        _canvas = canvas;
+        _myCommandHistory = myCommandHistory;
+        OnBoundingBoxChanged += canvas.OnCringeBoundingBoxChanged;
+    }
+
 
     public void MouseDownEvent(Vector2 startPoint, bool isCtrlPressed) {
-        _canvas.CalcTranslate(_canvas.SelectedShapes);
         _startPoint = startPoint;
         _isCtrlPressed = isCtrlPressed;
         if (_canvas.SelectedShapes.Count == 0) {
@@ -31,14 +39,19 @@ public class MoveNodeTool(string name, MyCanvas canvas, MyCommandHistory myComma
                 _nodeIndex = GetNodeIndex(startPoint, _canvas.SelectedShapes[0]);
             }
         } else if (_canvas.SelectedShapes.Count == 1) {
-            _isSelect = true;
-            _nodeIndex = GetNodeIndex(startPoint, _canvas.SelectedShapes[0]);
+            if (_canvas.IsPointInsideSelectedBB(startPoint)) {
+                _isSelect = true;
+                _nodeIndex = GetNodeIndex(startPoint, _canvas.SelectedShapes[0]);
+            } else {
+                _canvas.SelectedShapes.Clear();
+                OnBoundingBoxChanged?.Invoke();
+            }
         }
     }
 
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
         if (!_isSelect || _nodeIndex == -1) return;
-        _canvas.CalcTranslate(_canvas.SelectedShapes);
+        OnBoundingBoxChanged?.Invoke();
 
         if (_canvas.SelectedShapes[0] is IChangableShape) {
             _shape = (IChangableShape)_canvas.SelectedShapes[0];
