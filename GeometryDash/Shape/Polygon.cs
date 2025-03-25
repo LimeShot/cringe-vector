@@ -25,13 +25,8 @@ public partial class Polygon : IShape, IChangableShape {
     private void CalcBB() {
         Rotate = (float)Math.Round(Rotate, 1);
         Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 result);
-        Vector2 maxPoint = new(0, 0), minPoint = new(0, 0);
-        foreach (var node in Nodes) {
-            maxPoint.X = MathF.Max(maxPoint.X, node.X);
-            minPoint.X = MathF.Min(minPoint.X, node.X);
-            maxPoint.Y = MathF.Max(maxPoint.Y, node.Y);
-            minPoint.Y = MathF.Min(minPoint.Y, node.Y);
-        }
+        Vector2 minPoint = Nodes.Aggregate((a, b) => Vector2.ComponentMin(a, b));
+        Vector2 maxPoint = Nodes.Aggregate((a, b) => Vector2.ComponentMax(a, b));
         Vector2[] localBB =
         [
             result * new Vector2(minPoint.X, maxPoint.Y),
@@ -263,24 +258,22 @@ public partial class Polygon : IShape, IChangableShape {
     }
 
     public void MoveNode(int index, Vector2 newNode) {
-        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 result);
-        Vector2 notRotateNewNode = result * (newNode - Translate) + Translate;
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(-Rotate), out Matrix2 inverseRotation);
+        Matrix2.CreateRotation(MathHelper.DegreesToRadians(Rotate), out Matrix2 rotation);
+        Nodes[index] = inverseRotation * (newNode - Translate);
         int countNodes = Nodes.Length;
         Vector2[] globalNodes = new Vector2[countNodes];
-        Vector2 maxPoint = new(0, 0), minPoint = new(0, 0);
+        Vector2 maxPoint = new(float.MinValue, float.MinValue), minPoint = new(float.MaxValue, float.MaxValue);
         for (int i = 0; i < countNodes; i++) {
-            if (i == index)
-                globalNodes[i] = notRotateNewNode;
-            else
-                globalNodes[i] = Nodes[i] + Translate;
+            globalNodes[i] = rotation * Nodes[i] + Translate;
             maxPoint.X = MathF.Max(maxPoint.X, globalNodes[i].X);
-            minPoint.X = MathF.Min(minPoint.X, globalNodes[i].X);
             maxPoint.Y = MathF.Max(maxPoint.Y, globalNodes[i].Y);
+            minPoint.X = MathF.Min(minPoint.X, globalNodes[i].X);
             minPoint.Y = MathF.Min(minPoint.Y, globalNodes[i].Y);
         }
-        Translate = (minPoint + maxPoint) / 2;
+        Translate = (minPoint + maxPoint) / 2f;
         for (int i = 0; i < countNodes; i++) {
-            Nodes[i] = globalNodes[i] - Translate;
+            Nodes[i] = inverseRotation * (globalNodes[i] - Translate);
         }
         CalcBB();
     }
