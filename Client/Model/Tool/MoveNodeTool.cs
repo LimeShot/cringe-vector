@@ -55,7 +55,7 @@ public class MoveNodeTool(string name, MyCanvas canvas) : ITool {
     }
 
     public void MouseWheelEvent(float delta, Vector2 currentPoint) {
-        throw new NotImplementedException();
+        return;
     }
 
     public void OnChanged() {
