@@ -18,7 +18,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
     private readonly MyCommandHistory _commandHistory = commandHistory;
     private Vector2 _startPoint;
     private Vector2 _firstPoint;
-    private bool _isSeveralShapes;
+    private bool _isSeveralShapes = false;
     public int bbIndex { get; private set; } = -1;
     public ChangeToolMode Mode { get; private set; } = ChangeToolMode.None;
     private bool _isResized = false;
@@ -28,7 +28,6 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
     public void MouseDownEvent(Vector2 startPoint, bool isCtrlPressed) {
         _startPoint = startPoint;
         _firstPoint = startPoint;
-        _isSeveralShapes = isCtrlPressed;
 
         if (_canvas.SelectedShapes.Count == 0) {
             _canvas.SelectShape(startPoint);
@@ -57,6 +56,9 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
 
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
         if (_canvas.SelectedShapes.Count == 0) return;
+
+        if (_canvas.SelectedShapes.Count > 1) _isSeveralShapes = true;
+        else _isSeveralShapes = false;
 
         if (isMousePressed) {
             _canvas.CalcTranslate(_canvas.SelectedShapes);
@@ -135,6 +137,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
     public void OnChanged() {
         _startPoint = Vector2.Zero;
         _canvas.SelectedShapes.Clear();
+        _canvas.CalcTranslate(_canvas.SelectedShapes);
         Mode = ChangeToolMode.None;
     }
 

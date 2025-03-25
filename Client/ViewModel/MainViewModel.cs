@@ -309,6 +309,12 @@ public partial class MainViewModel : ObservableObject {
     private void ReflectHorizontally() {
         _commandController.CommandsL["Отразить по горизонтали"].ExecuteButton();
     }
+
+    [RelayCommand]
+    private void SelectAll() {
+        Canvas.SelectedShapes = Canvas.Shapes.ToList();
+        Canvas.CalcTranslate(Canvas.SelectedShapes);
+    }
 }
 
 public static class PopupStateManager {

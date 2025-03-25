@@ -186,6 +186,9 @@
         <KeyBinding Key="G"
                     Modifiers="Control+Alt"
                     Command="{Binding ReflectHorizontallyCommand}"/>
+        <KeyBinding Key="A"
+                    Modifiers="Control"
+                    Command="{Binding SelectAllCommand}"/>
     </Window.InputBindings>
 
     <DockPanel>
