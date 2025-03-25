@@ -15,6 +15,7 @@ public class MoveNodeTool(string name, MyCanvas canvas) : ITool {
 
 
     public void MouseDownEvent(Vector2 startPoint) {
+        _canvas.CalcTranslate(_canvas.SelectedShapes);
 
         if (_canvas.SelectedShapes.Count == 0) {
             _canvas.SelectShape(startPoint);
@@ -30,9 +31,12 @@ public class MoveNodeTool(string name, MyCanvas canvas) : ITool {
 
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
         if (!_isSelect || _nodeIndex == -1) return;
+        _canvas.CalcTranslate(_canvas.SelectedShapes);
 
-        IShape shape = _canvas.SelectedShapes[0];
-        shape.MoveNode(_nodeIndex, currentPoint);
+        if (_canvas.SelectedShapes[0] is IChangableShape) {
+            IChangableShape shape = (IChangableShape)_canvas.SelectedShapes[0];
+            shape.MoveNode(_nodeIndex, currentPoint);
+        }
     }
 
     public void MouseUpEvent(Vector2 endPoint) {
@@ -55,7 +59,7 @@ public class MoveNodeTool(string name, MyCanvas canvas) : ITool {
     }
 
     public void MouseWheelEvent(float delta, Vector2 currentPoint) {
-        throw new NotImplementedException();
+        return;
     }
 
     public void OnChanged() {

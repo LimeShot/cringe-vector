@@ -27,6 +27,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
     public void MouseDownEvent(Vector2 startPoint) {
         _startPoint = startPoint;
         _firstPoint = startPoint;
+        _canvas.CalcTranslate(_canvas.SelectedShapes);
 
         if (_canvas.SelectedShapes.Count == 0) {
             _canvas.SelectShape(startPoint);
@@ -47,7 +48,7 @@ public class ChangeTool(string name, MyCanvas canvas, MyCommandHistory commandHi
 
     public void MouseMoveEvent(Vector2 currentPoint, bool isMousePressed) {
         if (_canvas.SelectedShapes.Count == 0) return;
-
+        _canvas.CalcTranslate(_canvas.SelectedShapes);
 
         if (isMousePressed) {
             switch (Mode) {

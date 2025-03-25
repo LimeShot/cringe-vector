@@ -12,7 +12,7 @@ using TriangleNet.Meshing;
 [Export(typeof(IShape))]
 [ExportMetadata("Name", "Polygon")]
 [ExportMetadata("Icon", "polygon.png")]
-public partial class Polygon : IShape {
+public partial class Polygon : IShape, IChangableShape {
     // TODO: Добавить event OnChange в методы set
     public Vector2 Translate { private set; get; }
     public float Z { set; get; }

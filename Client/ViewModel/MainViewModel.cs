@@ -28,17 +28,20 @@ public partial class MainViewModel : ObservableObject {
 
     [ObservableProperty]
     private ToolController _toolController;
-
+    private bool _isPopupOpen = false;
     private readonly RenderingService _renderingService;
     private readonly CommandController _commandController;
     private readonly MyCommandHistory _commandHistory;
     private readonly MainWindow _window;
-    private readonly Camera _camera;
-    private bool _flag = false;
+
+    [ObservableProperty]
+    private Camera _camera;
+    private bool _isMouseDownProcessing = false;
 
     public Vector2 StartPoint { get; private set; }
     public Vector2 CurrentPoint { get; set; }
     public Vector2 CMPosition { get; private set; }
+
     public event EventHandler<List<IShape>>? OnShapeChanged;
 
     public MainViewModel(MainWindow window) {
@@ -52,10 +55,13 @@ public partial class MainViewModel : ObservableObject {
 
         _canvas.Shapes.CollectionChanged += Shapes_CollectionChanged; // Подписка на изменении коллекции
         _canvas.PropertyChanged += Canvas_SizeChanged;
+        _canvas.PropertyChanged += BoundingBoxChanged;
         _canvas.OnShapeChanged += Shapes_PropertyChanged;
         _toolController.OnShapeChanged += Shapes_PropertyChanged; // Подписка на изменении фигур
         OnShapeChanged += Shapes_PropertyChanged;
+        PopupStateManager.PopupStateChanged += state => _isPopupOpen = state;
     }
+
     private void Shapes_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         if (e.NewItems != null) {
             var newShapes = e.NewItems.Cast<IShape>().ToArray();
@@ -83,6 +89,12 @@ public partial class MainViewModel : ObservableObject {
         }
     }
 
+    private void BoundingBoxChanged(object? sender, PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(Canvas.GetGeneralBB)) {
+            _renderingService.OnBoundingBoxChanged(Canvas.GetGeneralBB);
+        }
+    }
+
     public void InitializeOpenGL() {
         _renderingService.Initialize();
     }
@@ -101,25 +113,20 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void OnMouseDown(MouseEventArgs e) {
-        if (e != null && _flag == false && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) { //добавить клик на холст
+        if (e != null && !_isPopupOpen && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
             StartPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseDown(StartPoint);
         } else if (e != null && e.RightButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
-            _flag = true;
-            ToolController.SetTool("Change");
             var screenPoint = e.GetPosition((IInputElement)e.Source);
             CMPosition = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             _commandController.CreateMenu(CMPosition);
-        } else if (e != null && e.LeftButton == MouseButtonState.Pressed && e.Source is GLWpfControl) {
-            _flag = false;
-            _canvas.SelectedShapes.Clear();
         }
     }
 
     [RelayCommand]
     private void OnMouseMove(MouseEventArgs e) {
-        if (e != null && _flag == false && e.Source is GLWpfControl) {
+        if (e != null && !_isPopupOpen && e.Source is GLWpfControl && !_isMouseDownProcessing) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
             CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseMove(CurrentPoint, e.LeftButton == MouseButtonState.Pressed);
@@ -128,7 +135,7 @@ public partial class MainViewModel : ObservableObject {
 
     [RelayCommand]
     private void OnMouseUp(MouseEventArgs e) {
-        if (e != null && _flag == false) {
+        if (e != null) {
             var screenPoint = e.GetPosition((IInputElement)e.Source);
             CurrentPoint = _camera.ScreenToWorld(new Vector2((float)screenPoint.X, (float)screenPoint.Y));
             ToolController.OnMouseUp(CurrentPoint);
@@ -171,8 +178,9 @@ public partial class MainViewModel : ObservableObject {
         resizeCanvasDialog.ShowDialog();
         if (resizeCanvasDialog.Tag is bool result && result) {
             if (result == true) {
-                Canvas.Width = (float)resizeCanvasDialog.CanvasWidth;
-                Canvas.Height = (float)resizeCanvasDialog.CanvasHeight;
+                Canvas.Width = resizeCanvasDialog.CanvasWidth;
+                Canvas.Height = resizeCanvasDialog.CanvasHeight;
+                Canvas.CanvasSize = $"Холст: {Canvas.Width}x{Canvas.Height}";
             }
         }
     }
@@ -259,4 +267,37 @@ public partial class MainViewModel : ObservableObject {
         Canvas.DeleteAllShapes();
         OnShapeChanged?.Invoke(this, Canvas.Shapes.ToList());
     }
+
+    [RelayCommand]
+    private void TopMenuOpened() {
+        PopupStateManager.NotifyPopUpOpened();
+    }
+
+    [RelayCommand]
+    private void TopMenuClosed() {
+        PopupStateManager.NotifyPopUpClosed();
+    }
+
+    [RelayCommand]
+    private void BringToBack() {
+        _commandController.CommandsL["На задний план"].ExecuteButton();
+    }
+
+    [RelayCommand]
+    private void BringToFront() {
+        _commandController.CommandsL["На передний план"].ExecuteButton();
+    }
 }
+
+public static class PopupStateManager {
+    public static event Action<bool>? PopupStateChanged;
+
+    public static void NotifyPopUpOpened() {
+        PopupStateChanged?.Invoke(true);
+    }
+
+    public static void NotifyPopUpClosed() {
+        PopupStateChanged?.Invoke(false);
+    }
+}
+

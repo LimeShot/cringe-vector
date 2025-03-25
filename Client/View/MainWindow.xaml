@@ -172,11 +172,26 @@
         <KeyBinding Key="O"
                     Modifiers="Control"
                     Command="{Binding OpenFileCommand}"/>
+        <KeyBinding Key="Down"
+                    Modifiers="Control+Shift"
+                    Command="{Binding BringToBackCommand}"/>
+        <KeyBinding Key="Up"
+                    Modifiers="Control+Shift"
+                    Command="{Binding BringToFrontCommand}"/>
     </Window.InputBindings>
 
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        <Menu x:Name="TopMenu"
+              DockPanel.Dock="Top">
             <MenuItem Header="_Файл">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SubmenuOpened">
+                        <i:InvokeCommandAction Command="{Binding TopMenuOpenedCommand}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SubmenuClosed">
+                        <i:InvokeCommandAction Command="{Binding TopMenuClosedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <MenuItem Header="_Создать">
                     <MenuItem.Icon>
                         <Image Source="pack://siteoforigin:,,,/assets/icons/new.png"
@@ -204,35 +219,70 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Холст">
-            <MenuItem Header="_Изменить размер" Command="{Binding ChangeCanvasSizeCommand}">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/canvas_size.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SubmenuOpened">
+                        <i:InvokeCommandAction Command="{Binding TopMenuOpenedCommand}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SubmenuClosed">
+                        <i:InvokeCommandAction Command="{Binding TopMenuClosedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <MenuItem Header="_Изменить размер"
+                          Command="{Binding ChangeCanvasSizeCommand}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/canvas_size.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Очистить холст"
+                          Command="{Binding DeleteAllShapesCommand}"
+                          CommandParameter="{Binding}">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/clear_canvas.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Выделить все"
+                          Command="{Binding SelectAllCommand}"
+                          InputGestureText="Ctrl+A">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/sellect_all.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
-            <MenuItem Header="Очистить холст" Command="{Binding DeleteAllShapesCommand}" CommandParameter="{Binding}">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/clear_canvas.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
+
+            <MenuItem Header="_Действия">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SubmenuOpened">
+                        <i:InvokeCommandAction Command="{Binding TopMenuOpenedCommand}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SubmenuClosed">
+                        <i:InvokeCommandAction Command="{Binding TopMenuClosedCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <MenuItem Header="Отменить"
+                          Command="{Binding UndoCommand}"
+                          InputGestureText="Ctrl+Z">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/undo.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Повторить"
+                          Command="{Binding RedoCommand}"
+                          InputGestureText="Ctrl+Y">
+                    <MenuItem.Icon>
+                        <Image Source="pack://siteoforigin:,,,/assets/icons/redo.png"
+                               Width="16"
+                               Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
-            <MenuItem Header="Выделить все" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/sellect_all.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
-            </MenuItem>
-        </MenuItem>
-        
-        <MenuItem Header="_Действия">
-            <MenuItem Header="Отменить" Command="{Binding UndoCommand}" InputGestureText="Ctrl+Z">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/undo.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem Header="Повторить" Command="{Binding RedoCommand}" InputGestureText="Ctrl+Y">
-                <MenuItem.Icon>
-                    <Image Source="pack://siteoforigin:,,,/assets/icons/redo.png" Width="16" Height="16"/>
-                </MenuItem.Icon>
-            </MenuItem>
-        </MenuItem>
         </Menu>
 
         <!-- Простая советская горизонтальная линия -->
@@ -247,7 +297,9 @@
             <TextBlock Text="Цвет контура:"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <xctk:ColorPicker Width="120"
+            <xctk:ColorPicker x:Name="OutlineColorPicker"
+                              IsTabStop="False"
+                              Width="120"
                               Margin="5"
                               SelectedColor="{Binding Canvas.SelectedOutlineColor, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
@@ -261,7 +313,9 @@
             <TextBlock Text="Цвет заливки:"
                        VerticalAlignment="Center"
                        Margin="5"/>
-            <xctk:ColorPicker Width="120"
+            <xctk:ColorPicker x:Name="FillColorPicker"
+                              IsTabStop="False"
+                              Width="120"
                               Margin="5"
                               SelectedColor="{Binding Canvas.SelectedFillColor, UpdateSourceTrigger=PropertyChanged}">
                 <i:Interaction.Triggers>
@@ -280,16 +334,17 @@
 
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Text="Холст: 500x500"/>
+                <TextBlock Text="{Binding Canvas.CanvasSize}"/>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <TextBlock Text="Нет выделения"/>
+                <TextBlock Text="{Binding Camera.PercentZoom}"/>
             </StatusBarItem>
         </StatusBar>
 
         <Grid x:Name="MainGrid">
             <glWpfControl:GLWpfControl x:Name="OpenTkControl"
+                                       Focusable="True"
                                        Cursor="{Binding ToolController.CurrentCursor}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">
@@ -340,7 +395,8 @@
                 Margin="5"
                 Padding="5"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Top">
+                VerticalAlignment="Top"
+                Visibility="{Binding Canvas.IsShapesVisible}">
 
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="3"

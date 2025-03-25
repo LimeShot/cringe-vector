@@ -9,6 +9,8 @@ using System.IO.Compression;
 using System.ComponentModel;
 using System.Windows.Media;
 using CringeCraft.Client.Model.Commands.CommandHistory;
+using System.Windows;
+using System.Diagnostics;
 
 /// <summary>
 /// Представляет холст для хранения фигур
@@ -37,11 +39,21 @@ public partial class MyCanvas : ObservableObject, ICanvas {
 
     [ObservableProperty]
     private float _width;
+
     [ObservableProperty]
     private float _height;
+
+    [ObservableProperty]
+    private string _canvasSize;
+
+    [ObservableProperty]
+    private Visibility _isShapesVisible;
+
     public float ScreenPerWorld = 1.0f;
     public event EventHandler<List<IShape>>? OnShapeChanged;
-    public Vector2[] GetGeneralBB { get; private set; }
+
+    [ObservableProperty]
+    private Vector2[] _getGeneralBB;
     public Vector2 GetTranslate { get; private set; }
 
     private readonly MyCommandHistory _myCommandHistory;
@@ -50,10 +62,14 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         Shapes = new();
         Width = 2000;
         Height = 1000;
+        CanvasSize = $"Холст: {Width}x{Height}";
+        IsShapesVisible = Visibility.Hidden;
         GetGeneralBB = new Vector2[4];
         _myCommandHistory = myCommandHistory;
 
         PropertyChanged += ChangeFill;
+        Shapes.CollectionChanged += (s, e) =>
+            IsShapesVisible = Shapes.Count > 0 ? Visibility.Visible : Visibility.Hidden;
     }
 
     private void recalculateZFromRemove(int index) {
@@ -72,6 +88,7 @@ public partial class MyCanvas : ObservableObject, ICanvas {
             shape.Z = z;
             z += _stepZ;
         }
+        OnShapeChanged?.Invoke(this, [.. Shapes]);
     }
 
     public void AddShape(IShape shape) {
@@ -134,30 +151,32 @@ public partial class MyCanvas : ObservableObject, ICanvas {
         return false;
     }
 
-    public Vector2[] CalcGeneralBoundingBox(List<IShape> shapeBuffer) {
-        if (shapeBuffer.Count == 0) {
-            return null;
-        }
-        Vector2 point3 = new Vector2(
+    public void CalcGeneralBoundingBox(List<IShape> shapeBuffer) {
+        Vector2 point3 = (
             shapeBuffer.Select(shape => shape.BoundingBox.Min(v => v.X)).Min(),
             shapeBuffer.Select(shape => shape.BoundingBox.Min(v => v.Y)).Min()
         );
-        Vector2 point1 = new Vector2(
+        Vector2 point1 = (
             shapeBuffer.Select(shape => shape.BoundingBox.Max(v => v.X)).Max(),
             shapeBuffer.Select(shape => shape.BoundingBox.Max(v => v.Y)).Max()
         );
-        Vector2 point0 = new(point3.X, point1.Y);
-        Vector2 point2 = new(point1.X, point3.Y);
+        Vector2 point0 = (point3.X, point1.Y);
+        Vector2 point2 = (point1.X, point3.Y);
         GetGeneralBB = [point0, point1, point2, point3];
-        return [point0, point1, point2, point3];
     }
 
-    public Vector2 CalcTranslate(List<IShape> shapeBuffer) {
-        Vector2[] boundingBox = CalcGeneralBoundingBox(shapeBuffer);
-        float deltaX = boundingBox[1].X - boundingBox[3].X;
-        float deltaY = boundingBox[1].Y - boundingBox[3].Y;
-        GetTranslate = (boundingBox[0].X + deltaX / 2, boundingBox[0].Y - deltaY / 2);
-        return new Vector2(boundingBox[0].X + deltaX / 2, boundingBox[0].Y - deltaY / 2);
+    public void CalcTranslate(List<IShape> shapeBuffer) {
+        if (shapeBuffer.Count == 1) {
+            var shape = shapeBuffer.First();
+            GetGeneralBB = shape.BoundingBox;
+            GetTranslate = shape.Translate;
+            OnPropertyChanged(nameof(GetGeneralBB));
+        } else if (shapeBuffer.Count > 1) {
+            CalcGeneralBoundingBox(shapeBuffer);
+            float deltaX = GetGeneralBB[1].X - GetGeneralBB[3].X;
+            float deltaY = GetGeneralBB[1].Y - GetGeneralBB[3].Y;
+            GetTranslate = (GetGeneralBB[0].X + deltaX / 2, GetGeneralBB[0].Y - deltaY / 2);
+        }
     }
 
     public void ChangeOutLineColor(Color color) {
