@@ -48,6 +48,8 @@ public class MyCommandHistory {
     public void ClearHistory() {
         _cancelledCommands.Clear();
         _commands.Clear();
+        UndoCmdCount = 0;
+        RedoCmdCount = 0;
     }
 
     public CommandType GetLastUndoCommandType() {
