@@ -170,7 +170,7 @@ public class ExportToSVG : IExporter {
             writer.WriteLine("</defs>");
 
             // Записываем фигуры
-            for (int i = 0; i < Field.Shapes.Count; i++) {
+            for (int i = Field.Shapes.Count - 1; i >= 0; i--)  {
                 int styleIndex = style.IndexOf(Field.Shapes[i].Style);
                 writer.WriteLine(shapeToSVG(Field.Shapes[i], styleIndex));
             }
