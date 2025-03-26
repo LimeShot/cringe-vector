@@ -1,0 +1,39 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" viewBox="-200 -200 400 400">
+<defs>
+<style>
+.st0 {
+stroke: rgb(0, 0, 0);
+fill: rgb(255, 255, 0);
+}
+.st1 {
+stroke: rgb(0, 0, 0);
+fill: rgb(255, 0, 0);
+}
+.st2 {
+stroke: rgb(0, 0, 0);
+fill: rgb(0, 0, 0);
+}
+.st3 {
+stroke: rgb(0, 0, 0);
+fill: rgb(240, 255, 255);
+}
+</style>
+</defs>
+<polygon class="st0"  points="-5.237322,1.9368672 26.494614,-6.8084564 15.330007,-54.40873 -25.570341,-2.6440225 -10.474633,26.923475 -26.494614,41.498997 -18.792694,54.40873 -4.004998,51.493626 -6.4696207,38.167423 22.181522,28.172777 " transform="translate(46.333374, 20.777607) rotate(26.6)"/>
+<ellipse class="st0" cx="0" cy="0" rx="11.35136" ry="32.432434" transform="translate(-60.224503, -29.409042) rotate(341.8)"/>
+<ellipse class="st0" cx="0" cy="0" rx="11.35136" ry="32.432434" transform="translate(9.5052185, -33.671555) rotate(18.2)"/>
+<polygon class="st0"  points="41.03426,-9.826229 39.78013,-13.999844 40.450794,-29.389275 29.389229,-40.450844 15.450809,-47.552837 4.7683716E-06,-49.999756 -15.450886,-47.552803 -29.389275,-40.450794 -40.45082,-29.389214 -47.55285,-15.450877 -42.39541,-3.9384232 -42.99477,5.482658 -40.4508,29.389214 -29.389217,40.450798 -15.450892,47.552803 -4.1007996E-05,49.999977 15.450817,47.552807 29.389202,40.45082 40.4508,29.389236 47.55279,15.450824 " transform="translate(-26.106606, 33.672783) rotate(9.6)"/>
+<ellipse class="st1" cx="0" cy="0" rx="14.199997" ry="17" transform="translate(-55.437195, 45.7737) rotate(0)"/>
+<ellipse class="st1" cx="0" cy="0" rx="14.000015" ry="16.799995" transform="translate(6.9682617, 46.395344) rotate(0)"/>
+<ellipse class="st2" cx="0" cy="0" rx="8" ry="8" transform="translate(-46.463577, 12.3062525) rotate(0)"/>
+<ellipse class="st2" cx="0" cy="0" rx="6.6229515" ry="6.786892" transform="translate(-8.723633, 13.238544) rotate(0)"/>
+<ellipse class="st3" cx="0" cy="0" rx="4.0983543" ry="3.7705002" transform="translate(-6.5269165, 15.350605) rotate(-7.6)"/>
+<line class="st2" x1="-33.963768" y1="42.66324" x2="-28.592323" y2="46.844795"/>
+<line class="st2" x1="-12.770756" y1="43.558464" x2="-16.651302" y2="47.43901"/>
+<line class="st2" x1="-27.994328" y1="47.140587" x2="-24.1123" y2="42.963028"/>
+<line class="st2" x1="-16.355541" y1="47.446796" x2="-23.51601" y2="43.55898"/>
+<ellipse class="st2" cx="0" cy="0" rx="4.328377" ry="2.9850807" transform="translate(-24.859467, 28.932331) rotate(0)"/>
+<ellipse class="st2" cx="0" cy="0" rx="6.4179153" ry="8.059702" transform="translate(17.827164, -56.440857) rotate(0)"/>
+<ellipse class="st2" cx="0" cy="0" rx="5.5223846" ry="6.4179134" transform="translate(-68.14302, -53.30652) rotate(0)"/>
+<ellipse class="st3" cx="0" cy="0" rx="3.0252075" ry="3.5294118" transform="translate(-43.58634, 14.157676) rotate(0)"/>
+</svg>
